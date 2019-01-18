@@ -14,5 +14,6 @@ class GitProvider extends AbstractProvider
     protected $commands = [
         '\Articstudio\PhpBin\Commands\Git\Menu',
         '\Articstudio\PhpBin\Commands\Git\Subtree\Push',
+        '\Articstudio\PhpBin\Commands\Git\Subtree\Add',
     ];
 }
