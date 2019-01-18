@@ -29,7 +29,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "subtree": {
+            "Articstudio/git-test": "git@github.com:articstudio/git-test.git"
+        }
     },
     "extra": {},
     "autoload": {
