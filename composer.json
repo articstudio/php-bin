@@ -3,7 +3,9 @@
     "description": "Partiklo Database Migrations.",
     "keywords": [
         "partiklo",
-        "database"
+        "database",
+        "migrations",
+        "database-migrations"
     ],
     "type": "library",
     "homepage": "https://github.com/articstudio/partio-database-migrations",
