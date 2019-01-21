@@ -67,7 +67,7 @@ class Add extends PhpBinCommand {
 			];
 		$menu         = $this->menu( 'Subtree packages', $menu_options );
 
-		return $menu->open();
+		return $menu_options[$menu->open()];
 	}
 
 	protected function addGitSubtree( $package_name, $git_repository ) {
