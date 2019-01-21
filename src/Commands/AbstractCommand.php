@@ -30,10 +30,10 @@ abstract class AbstractCommand extends SymfonyCommand
         return new Menu($title, $options);
     }
 
-    public function question(string $question, $default = null, ?OutputInterface $output = null, ?InputInterface $input = null)
+    public function question(string $txt, $default = null, ?OutputInterface $output = null, ?InputInterface $input = null)
     {
         $question_helper = $this->getHelper('question');
-        $question = new Question($question, $default);
+        $question = new Question($txt, $default);
         return $question_helper->ask(
                 ($input ?? new ArrayInput([])),
                 ($output ?? new ConsoleOutput),
@@ -41,10 +41,10 @@ abstract class AbstractCommand extends SymfonyCommand
         );
     }
 
-    public function confirmation(string $question, $default = false, ?OutputInterface $output = null, ?InputInterface $input = null)
+    public function confirmation(string $txt, $default = false, ?OutputInterface $output = null, ?InputInterface $input = null)
     {
         $question_helper = $this->getHelper('question');
-        $question = new ConfirmationQuestion($question, $default);
+        $question = new ConfirmationQuestion($txt, $default);
         return !!$question_helper->ask(
                 ($input ?? new ArrayInput([])),
                 ($output ?? new ConsoleOutput),
