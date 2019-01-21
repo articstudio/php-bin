@@ -1,76 +1,85 @@
 <?php
 namespace Articstudio\PhpBin\Commands\Git\Subtree;
 
-use Articstudio\PhpBin\Application;
 use Articstudio\PhpBin\Commands\AbstractCommand as PhpBinCommand;
 use Articstudio\PhpBin\PhpBinException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\Console\Question\Question;
 
 class Add extends PhpBinCommand
 {
 
-	protected $menuOptions = [ ];
-	/**
-	 * Command name
-	 *
-	 * @var string
-	 */
-	protected static $defaultName = 'git:subtree:add';
+    use Concerns\HasSubtreesConfig;
 
-	protected function configure()
-	{
-		$this->addArgument('package_name', InputArgument::OPTIONAL, 'Nom del package:');
-	}
+    protected $menuOptions = [];
 
-	protected function execute(InputInterface $input, OutputInterface $output)
-	{
-		$composer = Application::getInstance()->getComposer();
-		$io = $this->getStyle($output, $input);
-		$repositories = $composer['data']['config']['subtree'];
-		$package_name = $input->getArgument('package_name') ?: null;
+    /**
+     * Command name
+     *
+     * @var string
+     */
+    protected static $defaultName = 'git:subtree:add';
 
-		if($package_name !== null){
-			//Console
-			if(!isset($repositories[$package_name])) {
-				throw new PhpBinException('Package '. $package_name . ' configuration not found');
-			}
-			$cmd = 'git subtree add --prefix=' . $package_name . '/ ' . $repositories[$package_name] . ' master';
+    protected function configure()
+    {
+        $this->addArgument('package_name', InputArgument::OPTIONAL, 'Nom del package:');
+    }
 
-			$called_shell = $this->callShell($cmd);
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $packages = $this->getSubtrees();
+        $input_package_name = $input->getArgument('package_name') ?: null;
+        $input_repository = null;
+        $input_store = null;
 
-			if(!is_array($called_shell)) {
-				throw new PhpBinException('Error adding the  package ' . $package_name . ' subtree from ' . $repositories[$package_name] . '');
-			}
+        if ($input_package_name === null) {
+            $input_package_name = $this->showPackagesMenu($packages);
+        }
 
-			$io->writeln('Package "' . $package_name . '" subtree from "' . $repositories[$package_name] . '" added CORRECTLY!');
-		}else {
-			//Menu
-			$io->writeln("Console");
-			$other_option = "Select other package: ";
-			$helper = $this->getHelper('question');
-			$subtrees = array_keys($repositories);
-			array_push($subtrees, $other_option);
-			$question = new ChoiceQuestion(
-				'Please select a package for add to subtree',
-				$subtrees,
-				0
-			);
-			$question->setErrorMessage('Package %s is invalid.');
-			$package_name = $helper->ask($input, $output, $question);
+        $input_repository = $packages[$input_package_name] ?? null;
 
-			$new_question = new Question('Please enter the name of the package: ', '');
-			if($package_name === $other_option ) {
-				$package_name = $helper->ask($input, $output, $new_question);
-			}
+        if ($input_package_name === 'new') {
+            list($input_package_name, $input_repository, $input_store) = $this->showNewPackageQuestions();
+        }
 
-			$io->writeln($package_name);
-		}
+        if ($input_store) {
+            //Store
+        }
 
-	}
+        $txt = $this->addGitSubtree($input_package_name, $input_repository);
+        $io = $this->getStyle($output, $input);
+        $io->writeln($txt);
 
+        return 1;
+    }
 
+    protected function showNewPackageQuestions(?bool $force_store = null)
+    {
+        $package_name = $this->question('Please enter the name of the package: ');
+        $git_repository = $this->question('Please enter the URL of the git repository: ');
+        $store = $force_store === null ? $this->confirmation('Store this package/repository to the Composer config? ') : $force_store;
+        return [$package_name, $git_repository, $store];
+    }
+
+    protected function showPackagesMenu(array $packages)
+    {
+        $menu_options = $packages + [
+            'new' => 'New package'
+        ];
+        $menu = $this->menu('Subtree packages', $menu_options);
+        return $menu->open();
+    }
+
+    protected function addGitSubtree($package_name, $git_repository)
+    {
+        $cmd = 'git subtree add --prefix=' . $package_name . '/ ' . $git_repository . ' master';
+
+        list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($cmd, false);
+
+        if ($exit_code !== 1) {
+            throw new PhpBinException('Error adding the  package ' . $package_name . ' subtree from ' . $git_repository . '');
+        }
+        return $output;
+    }
 }
