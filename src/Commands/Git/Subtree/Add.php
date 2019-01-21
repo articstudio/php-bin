@@ -48,7 +48,7 @@ class Add extends PhpBinCommand {
 		}
 
 		$txt = $this->addGitSubtree( $input_package_name, $input_repository );
-		$io->writeln( $txt );
+//		$io->writeln( $txt );
 
 		return 1;
 	}
