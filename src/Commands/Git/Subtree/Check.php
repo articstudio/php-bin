@@ -33,15 +33,13 @@ class Check extends PhpBinCommand {
 			}
 		}
 
-		$io->writeln("");
+		$io->writeln( "" );
 
 		$io->writeln( "Git subtrees: " );
-		if ( isset( $subtrees_git ) && is_array($subtrees_git)) {
-			foreach ( $subtrees_git as $name => $url ) {
-				$io->writeln( "\t" . $name . ' => ' . $url );
-			}
+		if ( isset( $subtrees_git ) ) {
+			$io->writeln( "\t" . $subtrees_git );
 		}
-		$io->writeln("");
+		$io->writeln( "" );
 
 	}
 }

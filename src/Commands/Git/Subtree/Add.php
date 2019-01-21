@@ -80,6 +80,6 @@ class Add extends PhpBinCommand {
 		}
 		$error_msg = $exit_code_txt . "\n" . $error;
 
-		return $output ?: $error_msg;
+		return $output !== '' ? $output : $error_msg;
 	}
 }
