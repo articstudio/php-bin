@@ -75,7 +75,7 @@ class Add extends PhpBinCommand {
 
 		list( $exit_code, $output, $exit_code_txt, $error ) = $this->callShell( $cmd, false );
 
-		if ( $exit_code !== 1 ) {
+		if ( $exit_code === 1 ) {
 			throw new PhpBinException( 'Error adding the  package ' . $package_name . ' subtree from ' . $git_repository . '' );
 		}
 		$error_msg = $exit_code_txt . "\n" . $error;
