@@ -32,14 +32,13 @@ class Add extends PhpBinCommand {
 		$input_package_name = $input->getArgument( 'package_name' ) ?: null;
 		$input_repository   = null;
 		$input_store        = null;
-
 		if ( $input_package_name === null ) {
 			$input_package_name = $this->showPackagesMenu( $packages );
 		}
 
 		$input_repository = $packages[ $input_package_name ] ?? null;
 
-		if ( $input_package_name === 'new' ) {
+		if ( $input_package_name === 'New package' ) {
 			list( $input_package_name, $input_repository, $input_store ) = $this->showNewPackageQuestions();
 		}
 
