@@ -24,6 +24,17 @@ trait HasWriteComposer {
 		$this->writeComposer( $config, $composer_file );
 	}
 
+	public function removeSubtreeToComposer( string $itemToRemove ) {
+		$composer      = Application::getInstance()->getComposer();
+		$composer_file = $composer['file'];
+		$config        = $composer['data'];
+		unset( $composer['data']['config']['subtree'][ $itemToRemove ] );
+		$subtrees                    = $composer['data']['config']['subtree'];
+		$config['config']['subtree'] = $subtrees;
+
+		$this->writeComposer( $config, $composer_file );
+	}
+
 	private function writeComposer( array $config, string $composer_file ) {
 		$clean_config = array_map( function ( $value ) {
 			return $value === array() ? new \stdClass() : $value;
