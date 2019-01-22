@@ -21,6 +21,7 @@ class Menu extends PhpBinMenuCommand
     protected $menuOptions = [
         'git:subtree:add' => 'Subtree Add',
         'git:subtree:push' => 'Subtree Push',
+        'git:subtree:pull' => 'Subtree Pull',
         'git:subtree:check' => 'Subtree Check',
     ];
     
