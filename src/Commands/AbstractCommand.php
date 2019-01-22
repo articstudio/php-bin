@@ -10,6 +10,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Articstudio\PhpBin\PhpBinException;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 
 abstract class AbstractCommand extends SymfonyCommand
 {
@@ -17,6 +18,7 @@ abstract class AbstractCommand extends SymfonyCommand
     use \Articstudio\PhpBin\Concerns\HasOutput;
     use \Articstudio\PhpBin\Concerns\HasShell;
     use \Articstudio\PhpBin\Concerns\HasPhpBin;
+
 
     /**
      * Create menu
@@ -51,6 +53,20 @@ abstract class AbstractCommand extends SymfonyCommand
                 $question
         );
     }
+
+	public function choiceQuestion(string $txt, array $options, ?OutputInterface $output = null, ?InputInterface $input = null)
+	{
+		$question_helper = $this->getHelper('question');
+		$question = new ChoiceQuestion($txt, $options);
+		$question->setMultiselect(true);
+		return $question_helper->ask(
+			($input ?? new ArrayInput([])),
+			($output ?? new ConsoleOutput),
+			$question
+		);
+
+
+	}
 
     /**
      * Call command by name
