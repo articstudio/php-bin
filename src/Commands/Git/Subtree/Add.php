@@ -46,6 +46,10 @@ class Add extends PhpBinCommand {
 			$this->addSubtreeToComposer( array( $input_package_name => $input_repository ) );
 		}
 
+		if(!$this->checkPackageInComposer($input_package_name)) {
+			throw new PhpBinException('Package '. $input_package_name . ' configuration not found');
+		}
+
 		$txt = $this->addGitSubtree( $input_package_name, $input_repository );
 		$io->writeln( $txt );
 
