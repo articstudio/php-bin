@@ -46,7 +46,7 @@ class Add extends PhpBinCommand {
 			$this->addSubtreeToComposer( array( $input_package_name => $input_repository ) );
 		}
 
-		if(!$this->checkPackageInComposer($input_package_name)) {
+		if(($input_store || $input_store == null ) && !$this->checkPackageInComposer($input_package_name)) {
 			throw new PhpBinException('Package '. $input_package_name . ' configuration not found');
 		}
 
