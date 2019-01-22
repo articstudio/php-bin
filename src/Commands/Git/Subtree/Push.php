@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputArgument;
 class Push extends PhpBinCommand {
 
 	use Concerns\HasSubtreesConfig;
+	use Concerns\HasSelectBehaviour;
 
 	/**
 	 * Command name
@@ -35,10 +36,11 @@ class Push extends PhpBinCommand {
 
 		if ( empty( $package_names ) ) {
 
-			$option = $this->showPackagesMenu();
+			$option = $this->showPackagesMenu('Push');
 			if ( $option === 'select' ) {
-				$choices_repositories = $this->showPackagesChoices( array_keys( $repositories ) );
-				$repositories = $this->getCommonPackages( $repositories, $choices_repositories );
+				$message = 'Select one or multiple packages to would to push:';
+				$choices_repositories = $this->showPackagesChoices( $message, array_keys( $repositories ) );
+				$repositories         = $this->getCommonPackages( $repositories, $choices_repositories );
 			}
 
 		}
@@ -60,55 +62,7 @@ class Push extends PhpBinCommand {
 			}
 		}
 
-		$this->showResumePush( $result );
+		$this->showResume( $result );
 
-	}
-
-	protected function showPackagesMenu() {
-		$menu_options = [
-			'select' => 'Select subtrees',
-			'all'    => 'Push all subtrees'
-		];
-		$menu         = $this->menu( 'Subtree packages', $menu_options );
-
-		return $menu->open();
-	}
-
-	protected function showPackagesChoices( array $packages ) {
-		return $this->choiceQuestion( 'Select one or multiple packages to would to push:', $packages );
-	}
-
-	protected function getCommonPackages( $repositories, $choices_repositories ) {
-		$res = array();
-		foreach ( $repositories as $repository => $repository_url ) {
-			if ( in_array( $repository, $choices_repositories ) ) {
-				$res[ $repository ] = $repository_url;
-			}
-		}
-
-		return $res;
-	}
-
-	protected function showResumePush( array $result ) {
-
-		echo "\n" . 'RESUME:' . "\n\n";
-		echo 'Skipped packages:' . "\n";
-		foreach ( $result['skipped'] as $package_name ) {
-			echo '    - ' . $package_name . "\n";
-		}
-		echo "\n" . 'Done packages:' . "\n";
-		foreach ( $result['done'] as $package_name ) {
-			echo '    - ' . $package_name . "\n";
-		}
-		echo "\n" . 'Error packages:' . "\n";
-		foreach ( $result['error'] as $package_name ) {
-			echo '    - ' . $package_name . "\n";
-		}
-		echo "\n" . 'Not found packages:' . "\n";
-		foreach ( $result['not_found'] as $package_name ) {
-			echo '    - ' . $package_name . "\n";
-		}
-
-		echo "\n";
 	}
 }
