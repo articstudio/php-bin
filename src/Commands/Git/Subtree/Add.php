@@ -32,8 +32,10 @@ class Add extends PhpBinCommand {
 		$input_package_name = $input->getArgument( 'package_name' ) ?: null;
 		$input_repository   = null;
 		$input_store        = null;
+		$isMenu             = false;
 		if ( $input_package_name === null ) {
 			$input_package_name = $this->showPackagesMenu( $packages );
+			$isMenu             = true;
 		}
 
 		$input_repository = $packages[ $input_package_name ] ?? null;
@@ -46,8 +48,8 @@ class Add extends PhpBinCommand {
 			$this->addSubtreeToComposer( array( $input_package_name => $input_repository ) );
 		}
 
-		if(($input_store || $input_store == null ) && !$this->checkPackageInComposer($input_package_name)) {
-			throw new PhpBinException('Package '. $input_package_name . ' configuration not found');
+		if ( !$isMenu && ! $this->checkPackageInComposer( $input_package_name ) ) {
+			throw new PhpBinException( 'Package ' . $input_package_name . ' configuration not found' );
 		}
 
 		$txt = $this->addGitSubtree( $input_package_name, $input_repository );
@@ -70,7 +72,7 @@ class Add extends PhpBinCommand {
 			];
 		$menu         = $this->menu( 'Subtree packages', $menu_options );
 
-		return $menu_options[$menu->open()];
+		return $menu_options[ $menu->open() ];
 	}
 
 	protected function addGitSubtree( $package_name, $git_repository ) {
