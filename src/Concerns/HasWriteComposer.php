@@ -35,28 +35,22 @@ trait HasWriteComposer {
 		$this->writeComposer( $config, $composer_file );
 	}
 
-	public function addPackageToComposerRequire( array $itemToAdd, string $composer_file ) {
-		$composer                    =  json_encode( $composer_file, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT );
-		$subtrees                    = $composer['require'] + $itemToAdd;
-		$config['config']['subtree'] = $subtrees;
+	public function addPackageToComposerRequire( array $itemToAdd, string $composer_file, string $env ) {
 
-		$this->writeComposer( $config, $composer_file );
+		$composer = json_decode( file_get_contents( $composer_file ), true );
+		$packages         = $composer[ $env ] + $itemToAdd;
+		$composer[ $env ] = $packages;
+
+		$this->writeComposer( $composer, $composer_file );
 	}
 
-	public function addPackageToComposerRequireDev( array $itemToAdd , string $composer_file  ) {
-		$composer                    =  json_encode( $composer_file, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT );
-		$subtrees                    = $composer['require-dev'] + $itemToAdd;
-		$config['config']['subtree'] = $subtrees;
-
-		$this->writeComposer( $config, $composer_file );
-	}
 
 	private function writeComposer( array $config, string $composer_file ) {
 		$clean_config = array_map( function ( $value ) {
 			return $value === array() ? new \stdClass() : $value;
 		}, $config );
 
-		if(empty($clean_config['config']['subtree'])) {
+		if ( empty( $clean_config['config']['subtree'] ) ) {
 			$clean_config['config']['subtree'] = new \stdClass();
 		}
 
@@ -68,7 +62,7 @@ trait HasWriteComposer {
 		);
 		$composer_file = fopen( $composer_file, "w" ) or die( "Unable to open file!" );
 		fwrite( $composer_file, $printed );
-		fclose($composer_file);
+		fclose( $composer_file );
 	}
 
 }

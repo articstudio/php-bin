@@ -29,10 +29,16 @@ class Install extends PhpBinCommand {
 
 	protected function execute( InputInterface $input, OutputInterface $output ) {
 
-		$composer           = $this->getComposerData();
-		$input_package_name = $input->getArgument( 'package_name' ) ?: null;
-		$input_module_name  = $input->getArgument( 'module_name' ) ?: null;
-		$env                = $input->getArgument( 'envoirment' ) ?: null;
+		$composer             = $this->getComposerData();
+		$input_package_name   = $input->getArgument( 'package_name' ) ?: null;
+		$input_module_name    = $input->getArgument( 'module_name' ) ?: null;
+		$env                  = $input->getArgument( 'envoirment' ) ?: null;
+		$composer_dir         = $this->getComposerPath();
+		$composer_module_file = $composer_dir . '/' . $input_module_name . '/composer.json';
+
+		if ( ! $composer_module_file ) {
+			throw new PhpBinException( 'composer.json file not found: ' . $composer_module_file );
+		}
 
 		if ( $input_package_name === null || $input_module_name === null ) {
 			//MENU
@@ -40,23 +46,15 @@ class Install extends PhpBinCommand {
 		}
 
 		$version = $this->searchPackageVersion( $input_package_name, $composer );
-		$this->requireDevPackage( $version, $input_package_name );
+		$version = $this->requireDevPackage( $version, $input_package_name );
 
-		$partiklo_file = $input_module_name . '/composer.json';
-
-		if ( ! $partiklo_file ) {
-			throw new PhpBinException( 'composer.json file not found: ' . $partiklo_file );
-		}
-
-		$composer                                = $this->readJsonFile( $partiklo_file );
-		$env                                     = ( $env && ( $env === 'd' || $env === 'D' ) ) ? 'require-dev' : 'require';
-		$composer[ $env ][ $input_package_name ] = $version;
-
+		$env = ( $env && ( $env === 'd' || $env === 'D' ) ) ? 'require-dev' : 'require';
 		$env = ( $env !== 'require-dev' ) ? 'require-dev' : 'require';
-		if ( isset( $composer[ $env ] ) && key_exists( $input_package_name, $composer[ $env ] ) ) {
+
+		if ( key_exists($env, $composer) && key_exists( $input_package_name, $composer[ $env ] ) ) {
 			unset( $composer[ $env ][ $input_package_name ] );
 		}
-
+		$this->addPackageToComposerRequire( array( $input_package_name => $version ), $composer_module_file, $env );
 
 	}
 
@@ -69,7 +67,7 @@ class Install extends PhpBinCommand {
 				if ( $exit_code === 1 ) {
 					throw new PhpBinException( "Error installing package: " . $input_package_name );
 				}
-				$composer = $this->readJsonFile( $this->getComposerFile() );
+				$composer = json_decode( file_get_contents( $this->getComposerFile() ), true );
 				$version  = $this->searchPackageVersion( $input_package_name, $composer );
 			} catch ( PhpBinException $exception ) {
 				echo 'Caught exception package: ', $exception->getMessage() . "\n";
@@ -85,6 +83,8 @@ class Install extends PhpBinCommand {
 				exit( 1 );
 			}
 		}
+
+		return $version;
 
 	}
 

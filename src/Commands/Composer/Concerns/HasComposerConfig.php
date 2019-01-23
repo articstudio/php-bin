@@ -20,4 +20,8 @@ trait HasComposerConfig {
 		return Application::getInstance()->getComposer()['file'] ?? '';
 	}
 
+	public function getComposerPath() {
+		return Application::getInstance()->getComposer()['directory'];
+	}
+
 }
