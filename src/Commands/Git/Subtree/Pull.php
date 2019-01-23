@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: mauro
+ * Date: 22/01/19
+ * Time: 11:09
+ */
 
 namespace Articstudio\PhpBin\Commands\Git\Subtree;
 
@@ -7,7 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 
-class Push extends PhpBinCommand {
+class Pull extends PhpBinCommand {
 
 	use Concerns\HasSubtreesConfig;
 	use Concerns\HasSelectBehaviour;
@@ -17,13 +23,14 @@ class Push extends PhpBinCommand {
 	 *
 	 * @var string
 	 */
-	protected static $defaultName = 'git:subtree:push';
+	protected static $defaultName = 'git:subtree:pull';
 
 	protected function configure() {
 		$this->addArgument( 'package_name', InputArgument::IS_ARRAY, 'Nom del package:' );
 	}
 
 	protected function execute( InputInterface $input, OutputInterface $output ) {
+
 		$repositories = $this->getSubtrees();
 		$result       = array(
 			'skipped'   => [],
@@ -36,14 +43,14 @@ class Push extends PhpBinCommand {
 
 		if ( empty( $package_names ) ) {
 
-			$option = $this->showPackagesMenu( 'Push' );
+			$option = $this->showPackagesMenu( 'Pull' );
 
 			if ( $option === null ) {
 				return 1;
 			}
 
 			if ( $option === 'select' ) {
-				$message              = 'Select one or multiple packages to would to push:';
+				$message              = 'Select one or multiple packages to would to pull:';
 				$choices_repositories = $this->showPackagesChoices( $message, array_keys( $repositories ) );
 				$repositories         = $this->getCommonPackages( $repositories, $choices_repositories );
 			}
@@ -52,7 +59,7 @@ class Push extends PhpBinCommand {
 
 		foreach ( $repositories as $repo_package => $repo_url ) {
 			if ( empty( $package_names ) || in_array( $repo_package, $package_names ) ) {
-				$cmd = 'git subtree push --prefix=' . $repo_package . '/ ' . $repo_url . ' master';
+				$cmd = 'git subtree pull --prefix=' . $repo_package . '/ ' . $repo_package . ' master --squash';
 				list( $exit_code, $output, $exit_code_txt, $error ) = $this->callShell( $cmd, false );
 				$key              = $exit_code === 0 ? 'done' : 'error';
 				$result[ $key ][] = $repo_package;
@@ -70,4 +77,5 @@ class Push extends PhpBinCommand {
 		$this->showResume( $result );
 
 	}
+
 }
