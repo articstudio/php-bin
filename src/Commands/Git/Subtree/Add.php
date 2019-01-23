@@ -63,7 +63,7 @@ class Add extends PhpBinCommand {
 	}
 
 	protected function commitChanges(string $message) {
-		$cmd = 'git commit -m "' . $message . '"';
+		$cmd = 'git commit -m "' . $message . '" composer.json';
 
 		list( $exit_code, $output, $exit_code_txt, $error ) = $this->callShell( $cmd, false );
 
