@@ -35,6 +35,26 @@ trait HasWriteComposer {
 		$this->writeComposer( $config, $composer_file );
 	}
 
+	public function addPackageToComposerRequire( array $itemToAdd ) {
+		$composer                    = Application::getInstance()->getComposer();
+		$composer_file               = $composer['file'];
+		$config                      = $composer['data'];
+		$subtrees                    = $composer['data']['require'] + $itemToAdd;
+		$config['config']['subtree'] = $subtrees;
+
+		$this->writeComposer( $config, $composer_file );
+	}
+
+	public function addPackageToComposerRequireDev( array $itemToAdd ) {
+		$composer                    = Application::getInstance()->getComposer();
+		$composer_file               = $composer['file'];
+		$config                      = $composer['data'];
+		$subtrees                    = $composer['data']['require-dev'] + $itemToAdd;
+		$config['config']['subtree'] = $subtrees;
+
+		$this->writeComposer( $config, $composer_file );
+	}
+
 	private function writeComposer( array $config, string $composer_file ) {
 		$clean_config = array_map( function ( $value ) {
 			return $value === array() ? new \stdClass() : $value;
@@ -48,6 +68,7 @@ trait HasWriteComposer {
 		);
 		$composer_file = fopen( $composer_file, "w" ) or die( "Unable to open file!" );
 		fwrite( $composer_file, $printed );
+		fclose($composer_file);
 	}
 
 }
