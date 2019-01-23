@@ -56,6 +56,10 @@ trait HasWriteComposer {
 			return $value === array() ? new \stdClass() : $value;
 		}, $config );
 
+		if(empty($clean_config['config']['subtree'])) {
+			$clean_config['config']['subtree'] = new \stdClass();
+		}
+
 		$json    = json_encode( $clean_config, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT );
 		$printer = new Printer();
 
