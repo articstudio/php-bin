@@ -34,7 +34,7 @@ class Install extends PhpBinCommand {
 		$input_module_name  = $input->getArgument( 'module_name' ) ?: null;
 		$env                = $input->getArgument( 'envoirment' ) ?: null;
 
-		if ( $input_package_name === null || $input_module_name === null || $env === null ) {
+		if ( $input_package_name === null || $input_module_name === null ) {
 			//MENU
 			die;
 		}
@@ -48,7 +48,7 @@ class Install extends PhpBinCommand {
 			throw new PhpBinException( 'composer.json file not found: ' . $partiklo_file );
 		}
 
-		$composer                                = json_decode( file_get_contents( $partiklo_file ), true );
+		$composer                                = $this->readJsonFile( $partiklo_file );
 		$env                                     = ( $env && ( $env === 'd' || $env === 'D' ) ) ? 'require-dev' : 'require';
 		$composer[ $env ][ $input_package_name ] = $version;
 
@@ -69,7 +69,7 @@ class Install extends PhpBinCommand {
 				if ( $exit_code === 1 ) {
 					throw new PhpBinException( "Error installing package: " . $input_package_name );
 				}
-				$composer = json_decode( file_get_contents( $this->getComposerFile() ), true );
+				$composer = $this->readJsonFile( $this->getComposerFile() );
 				$version  = $this->searchPackageVersion( $input_package_name, $composer );
 			} catch ( PhpBinException $exception ) {
 				echo 'Caught exception package: ', $exception->getMessage() . "\n";
@@ -99,18 +99,5 @@ class Install extends PhpBinCommand {
 
 		return $result;
 
-	}
-
-	private function showHelp() {
-		printf( "Usage: \n" );
-		printf( "\t composer install-dev PACKAGE-TO-INSTALL PARTIKLO-NAME [-d|-D] \n" );
-		printf( "\t\t PACKAGE-TO-INSTALL: name of package will install to partiklo \n" );
-		printf( "\t\t PARTIKLO-NAME: name of the partiklo where the package will be installed, this name appears into respective package.json \n" );
-		printf( "\t\t [-d|-D]: Put the package and version into devDependencies scope \n" );
-
-		printf( "\n " );
-		printf( "\t Example: \n" );
-		printf( "\t\t composer install-dev psr/log partiklo/contracts -d\n" );
-		printf( "\t\tcomposer install-dev psr/log partiklo/contracts\n" );
 	}
 }

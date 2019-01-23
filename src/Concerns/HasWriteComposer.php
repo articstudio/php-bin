@@ -35,21 +35,17 @@ trait HasWriteComposer {
 		$this->writeComposer( $config, $composer_file );
 	}
 
-	public function addPackageToComposerRequire( array $itemToAdd ) {
-		$composer                    = Application::getInstance()->getComposer();
-		$composer_file               = $composer['file'];
-		$config                      = $composer['data'];
-		$subtrees                    = $composer['data']['require'] + $itemToAdd;
+	public function addPackageToComposerRequire( array $itemToAdd, string $composer_file ) {
+		$composer                    =  json_encode( $composer_file, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT );
+		$subtrees                    = $composer['require'] + $itemToAdd;
 		$config['config']['subtree'] = $subtrees;
 
 		$this->writeComposer( $config, $composer_file );
 	}
 
-	public function addPackageToComposerRequireDev( array $itemToAdd ) {
-		$composer                    = Application::getInstance()->getComposer();
-		$composer_file               = $composer['file'];
-		$config                      = $composer['data'];
-		$subtrees                    = $composer['data']['require-dev'] + $itemToAdd;
+	public function addPackageToComposerRequireDev( array $itemToAdd , string $composer_file  ) {
+		$composer                    =  json_encode( $composer_file, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT );
+		$subtrees                    = $composer['require-dev'] + $itemToAdd;
 		$config['config']['subtree'] = $subtrees;
 
 		$this->writeComposer( $config, $composer_file );
