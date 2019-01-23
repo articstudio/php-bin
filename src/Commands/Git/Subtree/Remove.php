@@ -64,7 +64,7 @@ class Remove extends PhpBinCommand {
 		foreach ( $repositories as $repo_package => $repo_url ) {
 			if ( empty( $package_names ) || in_array( $repo_package, $package_names ) ) {
 				$remove_package_name = $repo_package;
-				$cmd                 = 'git remote rm ' . $repo_package . ' || git rm -r ' . $repo_package . '/  && git commit -m "Removing ' . $repo_package . ' subtree"';
+				$cmd                 = 'git remote rm ' . $repo_package . ' || git rm -r ' . $repo_package . '/  || git commit -m "Removing ' . $repo_package . ' subtree"';
 				list( $exit_code, $output, $exit_code_txt, $error ) = $this->callShell( $cmd, false );
 				$key              = $exit_code === 0 ? 'done' : 'error';
 				$result[ $key ][] = $repo_package;
