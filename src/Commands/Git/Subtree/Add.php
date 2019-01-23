@@ -82,12 +82,12 @@ class Add extends PhpBinCommand {
 
 	protected function addGitSubtree( $package_name, $git_repository ) {
 		$cmd = 'git remote add ' . $package_name . ' ' . $git_repository .
-		       ' && git subtree add --prefix=' . $package_name . '/ ' . $git_repository . ' master';
+		       ' || git subtree add --prefix=' . $package_name . '/ ' . $git_repository . ' master';
 
 		list( $exit_code, $output, $exit_code_txt, $error ) = $this->callShell( $cmd, false );
 
 		if ( $exit_code === 1 ) {
-			throw new PhpBinException( 'Error adding the  package ' . $package_name . ' subtree from ' . $git_repository . '' );
+			throw new PhpBinException( 'Error adding the package ' . $package_name . ' subtree from ' . $git_repository . '' );
 		}
 		$error_msg = $exit_code_txt . "\n" . $error;
 
