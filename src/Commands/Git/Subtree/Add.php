@@ -13,7 +13,6 @@ class Add extends PhpBinCommand {
 	use \Articstudio\PhpBin\Concerns\HasWriteComposer;
 	use Concerns\HasSubtreesConfig;
 
-	protected $menuOptions = [];
 
 	/**
 	 * Command name
@@ -38,6 +37,10 @@ class Add extends PhpBinCommand {
 			$isMenu             = true;
 		}
 
+		if ( $input_package_name === null ) {
+			return 1;
+		}
+
 		$input_repository = $packages[ $input_package_name ] ?? null;
 
 		if ( $input_package_name === 'New package' ) {
@@ -48,7 +51,7 @@ class Add extends PhpBinCommand {
 			$this->addSubtreeToComposer( array( $input_package_name => $input_repository ) );
 		}
 
-		if ( !$isMenu && ! $this->checkPackageInComposer( $input_package_name ) ) {
+		if ( ! $isMenu && ! $this->checkPackageInComposer( $input_package_name ) ) {
 			throw new PhpBinException( 'Package ' . $input_package_name . ' configuration not found' );
 		}
 
@@ -72,7 +75,9 @@ class Add extends PhpBinCommand {
 			];
 		$menu         = $this->menu( 'Subtree packages', $menu_options );
 
-		return $menu_options[ $menu->open() ];
+		$selected_option = $menu->open();
+
+		return key_exists( $selected_option, $menu_options ) ? $menu_options[ $selected_option ] : null;
 	}
 
 	protected function addGitSubtree( $package_name, $git_repository ) {

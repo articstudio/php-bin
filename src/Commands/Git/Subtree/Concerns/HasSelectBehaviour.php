@@ -19,7 +19,7 @@ trait HasSelectBehaviour {
 		];
 		$menu         = $this->menu( 'Subtree packages', $menu_options );
 
-		return $menu->open();
+		return $menu->open() ?? null;
 	}
 
 	public function showPackagesChoices( string $message, array $packages ) {
