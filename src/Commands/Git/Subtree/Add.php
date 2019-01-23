@@ -49,6 +49,7 @@ class Add extends PhpBinCommand {
 
 		if ( $input_store ) {
 			$this->addSubtreeToComposer( array( $input_package_name => $input_repository ) );
+			$this->commitChanges("Add subtree " . $input_package_name);
 		}
 
 		if ( ! $isMenu && ! $this->checkPackageInComposer( $input_package_name ) ) {
@@ -59,6 +60,19 @@ class Add extends PhpBinCommand {
 		$io->writeln( $txt );
 
 		return 1;
+	}
+
+	protected function commitChanges(string $message) {
+		$cmd = 'git commit -m "' . $message . '"';
+
+		list( $exit_code, $output, $exit_code_txt, $error ) = $this->callShell( $cmd, false );
+
+		if ( $exit_code === 1 ) {
+			throw new PhpBinException( 'Error commit ' . $message );
+		}
+		$error_msg = $exit_code_txt . "\n" . $error;
+
+		return $output !== '' ? $output : $error_msg;
 	}
 
 	protected function showNewPackageQuestions( ?bool $force_store = null ) {
