@@ -43,9 +43,14 @@ class Pull extends PhpBinCommand {
 
 		if ( empty( $package_names ) ) {
 
-			$option = $this->showPackagesMenu('Pull');
+			$option = $this->showPackagesMenu( 'Pull' );
+
+			if ( $option === null ) {
+				return 1;
+			}
+
 			if ( $option === 'select' ) {
-				$message = 'Select one or multiple packages to would to pull:';
+				$message              = 'Select one or multiple packages to would to pull:';
 				$choices_repositories = $this->showPackagesChoices( $message, array_keys( $repositories ) );
 				$repositories         = $this->getCommonPackages( $repositories, $choices_repositories );
 			}
@@ -54,7 +59,7 @@ class Pull extends PhpBinCommand {
 
 		foreach ( $repositories as $repo_package => $repo_url ) {
 			if ( empty( $package_names ) || in_array( $repo_package, $package_names ) ) {
-				$cmd = 'git subtree pull --prefix=' . $repo_package . '/ '. $repo_package . ' master --squash';
+				$cmd = 'git subtree pull --prefix=' . $repo_package . '/ ' . $repo_package . ' master --squash';
 				list( $exit_code, $output, $exit_code_txt, $error ) = $this->callShell( $cmd, false );
 				$key              = $exit_code === 0 ? 'done' : 'error';
 				$result[ $key ][] = $repo_package;

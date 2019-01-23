@@ -36,9 +36,14 @@ class Push extends PhpBinCommand {
 
 		if ( empty( $package_names ) ) {
 
-			$option = $this->showPackagesMenu('Push');
+			$option = $this->showPackagesMenu( 'Push' );
+
+			if ( $option === null ) {
+				return 1;
+			}
+
 			if ( $option === 'select' ) {
-				$message = 'Select one or multiple packages to would to push:';
+				$message              = 'Select one or multiple packages to would to push:';
 				$choices_repositories = $this->showPackagesChoices( $message, array_keys( $repositories ) );
 				$repositories         = $this->getCommonPackages( $repositories, $choices_repositories );
 			}

@@ -33,10 +33,10 @@ class Remove extends PhpBinCommand {
 
 	protected function execute( InputInterface $input, OutputInterface $output ) {
 
-		$repositories = $this->getSubtrees();
-		$input_store  = null;
+		$repositories        = $this->getSubtrees();
+		$input_store         = null;
 		$remove_package_name = null;
-		$result       = array(
+		$result              = array(
 			'skipped'   => [],
 			'done'      => [],
 			'error'     => [],
@@ -48,6 +48,11 @@ class Remove extends PhpBinCommand {
 		if ( empty( $package_names ) ) {
 
 			$option = $this->showPackagesMenu( 'Remove' );
+
+			if ( $option === null ) {
+				return 1;
+			}
+
 			if ( $option === 'select' ) {
 				$message              = 'Select one or multiple packages to would to remove:';
 				$choices_repositories = $this->showPackagesChoices( $message, array_keys( $repositories ) );
@@ -59,7 +64,7 @@ class Remove extends PhpBinCommand {
 		foreach ( $repositories as $repo_package => $repo_url ) {
 			if ( empty( $package_names ) || in_array( $repo_package, $package_names ) ) {
 				$remove_package_name = $repo_package;
-				$cmd = 'git remote rm '.$repo_package . ' && git rm -r ' . $repo_package . '/  && git commit -m "Removing ' . $repo_package . ' subtree"';
+				$cmd                 = 'git remote rm ' . $repo_package . ' && git rm -r ' . $repo_package . '/  && git commit -m "Removing ' . $repo_package . ' subtree"';
 				list( $exit_code, $output, $exit_code_txt, $error ) = $this->callShell( $cmd, false );
 				$key              = $exit_code === 0 ? 'done' : 'error';
 				$result[ $key ][] = $repo_package;
@@ -77,7 +82,7 @@ class Remove extends PhpBinCommand {
 		$input_store = $this->showNewPackageQuestions();
 
 		if ( $input_store ) {
-			$this->removeSubtreeToComposer($remove_package_name );
+			$this->removeSubtreeToComposer( $remove_package_name );
 		}
 
 		$this->showResume( $result );
