@@ -35,9 +35,9 @@ class GetDevPackages extends PhpBinCommand {
 	}
 
 	protected function execute( InputInterface $input, OutputInterface $output ) {
-		$this->composer = $this->getComposerData();
-		$module_dir     = $input->getArgument( 'module_name' ) ?: null;
-		$modules        = $this->getSubtrees();
+		$this->composer         = $this->getComposerData();
+		$module_dir             = $input->getArgument( 'module_name' ) ?: null;
+		$modules                = [];
 		if ( $module_dir === null ) {
 			//MENU
 			$option = $this->showPackagesMenu();
@@ -47,7 +47,10 @@ class GetDevPackages extends PhpBinCommand {
 			if ( $option === 'select' ) {
 				$modules[ $this->showNewPackageQuestions() ] = '';
 			}
-		} else {
+			if ( $option === 'all' ) {
+				$modules = $this->getSubtrees();
+			}
+		}else {
 			$modules[ $module_dir ] = '';
 		}
 
