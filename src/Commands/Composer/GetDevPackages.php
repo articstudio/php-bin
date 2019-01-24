@@ -19,6 +19,7 @@ class GetDevPackages extends PhpBinCommand {
 
 	use \Articstudio\PhpBin\Concerns\HasWriteComposer;
 	use Concerns\HasComposerConfig;
+	use Concerns\HasComposerBehaviour;
 	use \Articstudio\PhpBin\Commands\Git\Subtree\Concerns\HasSubtreesConfig;
 
 	protected $composer;
@@ -37,22 +38,7 @@ class GetDevPackages extends PhpBinCommand {
 	protected function execute( InputInterface $input, OutputInterface $output ) {
 		$this->composer         = $this->getComposerData();
 		$module_dir             = $input->getArgument( 'module_name' ) ?: null;
-		$modules                = [];
-		if ( $module_dir === null ) {
-			//MENU
-			$option = $this->showPackagesMenu();
-			if ( $option === null ) {
-				return 1;
-			}
-			if ( $option === 'select' ) {
-				$modules[ $this->showNewPackageQuestions() ] = '';
-			}
-			if ( $option === 'all' ) {
-				$modules = $this->getSubtrees();
-			}
-		}else {
-			$modules[ $module_dir ] = '';
-		}
+		$modules                = $this->checkParametersPackages($module_dir);
 
 		$requires_dev = array(
 			'require-dev' => array()
@@ -69,6 +55,7 @@ class GetDevPackages extends PhpBinCommand {
 
 		$this->writeComposer( $this->composer, $this->getComposerFile() );
 	}
+
 
 	protected function addDependencies( $dependencies, $fname ) {
 		if ( ! $dependencies ) {
@@ -89,16 +76,6 @@ class GetDevPackages extends PhpBinCommand {
 		}
 	}
 
-	private function getComposerJson( $dirname ) {
-		$command = 'find ' . $dirname . ' -type f -name "composer.json"';
-		list( $exit_code, $output, $exit_code_txt, $error ) = $this->callShell( $command, false );
-		$return = array_filter( explode( "\n", $output ), function ( $value ) {
-			return $value !== '';
-		} );
-
-		return ( $exit_code === 0 ) ? $return : [];
-	}
-
 	private function mergeDependencies( $fname ) {
 		printf( "%s: \n", $fname );
 		$data = json_decode( file_get_contents( $fname ), true );
@@ -108,16 +85,6 @@ class GetDevPackages extends PhpBinCommand {
 		if ( key_exists( 'require-dev', $data ) ) {
 			$this->addDependencies( $data['require-dev'], $fname );
 		}
-	}
-
-	public function showPackagesMenu() {
-		$menu_options = [
-			'select' => 'Get a single module',
-			'all'    => 'Get all modules'
-		];
-		$menu         = $this->menu( 'Modules', $menu_options );
-
-		return $menu->open() ?? null;
 	}
 
 	protected function showNewPackageQuestions() {

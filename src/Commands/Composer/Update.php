@@ -1,22 +1,77 @@
 <?php
+
 namespace Articstudio\PhpBin\Commands\Composer;
 
 use Articstudio\PhpBin\Commands\AbstractShellCommand as PhpBinShellCommand;
 
-class Update extends PhpBinShellCommand
-{
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
-    /**
-     * Shell command
-     *
-     * @var string
-     */
-    protected $shellCommand = 'composer update';
+class Update extends PhpBinShellCommand {
 
-    /**
-     * Command name
-     *
-     * @var string
-     */
-    protected static $defaultName = 'composer:update';
+	use \Articstudio\PhpBin\Concerns\HasWriteComposer;
+	use Concerns\HasComposerConfig;
+	use Concerns\HasComposerBehaviour;
+	use \Articstudio\PhpBin\Commands\Git\Subtree\Concerns\HasSubtreesConfig;
+
+	protected $composer;
+	protected $versions;
+
+	/**
+	 * Command name
+	 *
+	 * @var string
+	 */
+	protected static $defaultName = 'composer:update';
+
+	protected function configure() {
+		$this->addArgument( 'module_name', InputArgument::OPTIONAL, 'Nom del mòdul:' );
+	}
+
+	protected function execute( InputInterface $input, OutputInterface $output ) {
+
+		$this->composer = $this->getComposerData();
+		$this->versions = array_merge( $this->composer['require-dev'], $this->composer['require'] );
+		$module_dir     = $input->getArgument( 'module_name' ) ?: null;
+		$modules        = $this->checkParametersPackages( $module_dir );
+
+
+		foreach ( $modules as $module_name => $module_url ) {
+			array_map( function ( $name ) {
+				$this->overrideAllDependenciesVersions( $name );
+			}, $this->getComposerJson( $module_name ) );
+		}
+
+	}
+
+	private function replaceDependenciesVersions( $obj ) {
+		$result = [];
+		foreach ( $obj as $package => $version ) {
+			$result[ $package ] = key_exists( $package, $this->versions ) ? $this->versions[ $package ] : $obj[ $package ];
+			printf( ( $this->versions[ $package ] === $obj[ $package ] ? '=' : '+' ) . "%s@%s \n", $package, $result[ $package ] );
+		}
+
+		return $result;
+	}
+
+	private function overrideAllDependenciesVersions( $fname ) {
+		printf( "%s: \n", $fname );
+
+		$this->composer = json_decode( file_get_contents( $fname ), true );
+
+		$requires_dev   = array(
+			'require-dev' => array()
+		);
+		$this->composer = array_merge( $this->composer, $requires_dev );
+
+		printf( ">> require-dev \n" );
+		$this->composer['require-dev'] = $this->replaceDependenciesVersions( $this->composer['require-dev'] );
+		printf( ">> require \n" );
+		$this->composer['require'] = $this->replaceDependenciesVersions( $this->composer['require'] );
+
+		$json = json_encode( $this->composer, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT );
+		$partiklo_file = fopen( $fname, "w" ) or die( "Unable to open file!" );
+		fwrite( $partiklo_file, $json );
+	}
 }
