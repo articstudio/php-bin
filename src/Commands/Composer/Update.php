@@ -23,7 +23,7 @@ class Update extends PhpBinShellCommand {
 	 *
 	 * @var string
 	 */
-	protected static $defaultName = 'composer:update';
+	protected static $defaultName = 'composer:update-versions';
 
 	protected function configure() {
 		$this->addArgument( 'module_name', InputArgument::OPTIONAL, 'Nom del mòdul:' );
@@ -41,7 +41,9 @@ class Update extends PhpBinShellCommand {
 			array_map( function ( $name ) {
 				$this->overrideAllDependenciesVersions( $name );
 			}, $this->getComposerJson( $module_name ) );
+
 		}
+
 
 	}
 
@@ -49,7 +51,8 @@ class Update extends PhpBinShellCommand {
 		$result = [];
 		foreach ( $obj as $package => $version ) {
 			$result[ $package ] = key_exists( $package, $this->versions ) ? $this->versions[ $package ] : $obj[ $package ];
-			printf( ( $this->versions[ $package ] === $obj[ $package ] ? '=' : '+' ) . "%s@%s \n", $package, $result[ $package ] );
+			if(key_exists($package, $this->versions))
+				printf( ( $this->versions[ $package ] === $obj[ $package ] ? '=' : '+' ) . "%s@%s \n", $package, $result[ $package ] );
 		}
 
 		return $result;
@@ -70,8 +73,11 @@ class Update extends PhpBinShellCommand {
 		printf( ">> require \n" );
 		$this->composer['require'] = $this->replaceDependenciesVersions( $this->composer['require'] );
 
-		$json = json_encode( $this->composer, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT );
-		$partiklo_file = fopen( $fname, "w" ) or die( "Unable to open file!" );
-		fwrite( $partiklo_file, $json );
+
+		$this->writeComposer( $this->composer, $fname );
+	}
+
+	protected function showNewPackageQuestions() {
+		return $this->question( 'Please enter the name of the module where you want to solve the versions problems: ' );
 	}
 }
