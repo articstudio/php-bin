@@ -29,33 +29,36 @@ class Install extends PhpBinCommand {
 
 	protected function execute( InputInterface $input, OutputInterface $output ) {
 
-		$composer             = $this->getComposerData();
-		$input_package_name   = $input->getArgument( 'package_name' ) ?: null;
-		$input_module_name    = $input->getArgument( 'module_name' ) ?: null;
-		$env                  = $input->getArgument( 'envoirment' ) ?: null;
-		$composer_dir         = $this->getComposerPath();
+		$composer           = $this->getComposerData();
+		$input_package_name = $input->getArgument( 'package_name' ) ?: null;
+		$input_module_name  = $input->getArgument( 'module_name' ) ?: null;
+		$env                = $input->getArgument( 'envoirment' ) ?: null;
+		$composer_dir       = $this->getComposerPath();
+
+		if ( $input_package_name === null || $input_module_name === null ) {
+			//MENU
+			list( $input_package_name, $input_module_name, $env ) = $this->showNewPackageQuestions();
+		}
+
 		$composer_module_file = $composer_dir . '/' . $input_module_name . '/composer.json';
 
 		if ( ! $composer_module_file ) {
 			throw new PhpBinException( 'composer.json file not found: ' . $composer_module_file );
 		}
 
-		if ( $input_package_name === null || $input_module_name === null ) {
-			//MENU
-			die;
-		}
-
 		$version = $this->searchPackageVersion( $input_package_name, $composer );
 		$version = $this->requireDevPackage( $version, $input_package_name );
 
-		$env = ( $env && ( $env === 'd' || $env === 'D' ) ) ? 'require-dev' : 'require';
-		$env = ( $env !== 'require-dev' ) ? 'require-dev' : 'require';
-
-		if ( key_exists($env, $composer) && key_exists( $input_package_name, $composer[ $env ] ) ) {
-			unset( $composer[ $env ][ $input_package_name ] );
-		}
 		$this->addPackageToComposerRequire( array( $input_package_name => $version ), $composer_module_file, $env );
 
+	}
+
+	protected function showNewPackageQuestions() {
+		$package_name = $this->question( 'Please enter the name of the package to install: ' );
+		$module_name  = $this->question( 'Please enter the name of the module where you want to install the package: ' );
+		$env          = $this->confirmation( 'Do you want save this package in require-dev? (y/n)' ) ? 'd' : null;
+
+		return [ $package_name, $module_name, $env ];
 	}
 
 	private function requireDevPackage( $version, $input_package_name ) {

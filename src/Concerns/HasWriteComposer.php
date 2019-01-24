@@ -35,11 +35,22 @@ trait HasWriteComposer {
 		$this->writeComposer( $config, $composer_file );
 	}
 
-	public function addPackageToComposerRequire( array $itemToAdd, string $composer_file, string $env ) {
+	public function addPackageToComposerRequire( array $itemToAdd, string $composer_file, $env ) {
+
+		$input_package_name = array_keys($itemToAdd)[0];
 
 		$composer = json_decode( file_get_contents( $composer_file ), true );
+
+		$env = ( $env && ( $env === "d" || $env === "D" ) ) ? 'require-dev' : 'require';
+
 		$packages         = $composer[ $env ] + $itemToAdd;
 		$composer[ $env ] = $packages;
+
+		$env = ( $env !== 'require-dev' ) ? 'require-dev' : 'require';
+
+		if ( key_exists($env, $composer) && key_exists( $input_package_name, $composer[ $env ] ) ) {
+			unset( $composer[ $env ][ $input_package_name ] );
+		}
 
 		$this->writeComposer( $composer, $composer_file );
 	}
