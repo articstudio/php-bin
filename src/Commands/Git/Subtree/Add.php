@@ -37,7 +37,7 @@ class Add extends PhpBinCommand {
 					'new' => 'New package'
 				];
 			$user_choice    = $this->showMenu( "Subtree packages", $menu_options );
-			$input_package_name = array_search($user_choice, $packages);
+			$input_package_name = is_int($user_choice) ? array_keys($packages)[$user_choice] : $user_choice;
 			$isMenu             = true;
 		}
 
@@ -47,7 +47,7 @@ class Add extends PhpBinCommand {
 
 		$input_repository = $packages[ $input_package_name ] ?? null;
 
-		if ( $input_package_name === 'New package' ) {
+		if ( $input_package_name === 'new' ) {
 			list( $input_package_name, $input_repository, $input_store ) = $this->showNewPackageQuestions();
 		}
 
