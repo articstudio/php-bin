@@ -36,11 +36,12 @@ class Add extends PhpBinCommand {
 			$menu_options       = array_keys( $packages ) + [
 					'new' => 'New package'
 				];
-			$input_package_name = $this->showMenu( "Subtree packages", $menu_options );
+			$user_choice    = $this->showMenu( "Subtree packages", $menu_options );
+			$input_package_name = array_search($user_choice, $packages);
 			$isMenu             = true;
 		}
 
-		if ( $input_package_name === null ) {
+		if ( $input_package_name === null || $input_package_name === false ) {
 			return 1;
 		}
 
@@ -64,7 +65,7 @@ class Add extends PhpBinCommand {
 
 		return 1;
 	}
-  
+
 	protected function commitChanges( string $message ) {
 		$cmd = 'git commit -m "' . $message . '" composer.json';
 
@@ -77,7 +78,7 @@ class Add extends PhpBinCommand {
 
 		return $output !== '' ? $output : $error_msg;
 	}
-  
+
 	protected function showNewPackageQuestions( ?bool $force_store = null ) {
 		$package_name   = $this->question( 'Please enter the name of the package: ' );
 		$git_repository = $this->question( 'Please enter the URL of the git repository: ' );
@@ -85,6 +86,7 @@ class Add extends PhpBinCommand {
 
 		return [ $package_name, $git_repository, $store ];
 	}
+
 	protected function addGitSubtree( $package_name, $git_repository ) {
 		$cmd_remote_add  = 'git remote add ' . $package_name . ' ' . $git_repository;
 		$cmd_add_subtree = 'git subtree add --prefix=' . $package_name . '/ ' . $git_repository . ' master';
@@ -99,5 +101,11 @@ class Add extends PhpBinCommand {
 		$error_msg = $exit_code_txt . "\n" . $error;
 
 		return $output !== '' ? $output : $error_msg;
+	}
+
+	protected function getPackageByOptionUser($option, $packages) {
+		foreach ($packages as $package_name => $package_url) {
+
+		}
 	}
 }
