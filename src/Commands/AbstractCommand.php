@@ -36,7 +36,7 @@ abstract class AbstractCommand extends SymfonyCommand {
 		return $this->menu( $title, $menu_options )->open() ?? null;
 	}
 
-	public function showPackagesChoices( string $message, array $packages ) {
+	public function showChoices( string $message, array $packages ) {
 		return $this->choiceQuestion( $message, $packages );
 	}
 

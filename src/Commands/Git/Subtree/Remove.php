@@ -51,7 +51,7 @@ class Remove extends PhpBinCommand {
 
 			if ( $option === 'select' ) {
 				$message              = 'Select one or multiple packages to would to remove:';
-				$choices_repositories = $this->showPackagesChoices( $message, array_keys( $repositories ) );
+				$choices_repositories = $this->showChoices( $message, array_keys( $repositories ) );
 				$repositories         = $this->getCommonPackages( $repositories, $choices_repositories );
 			}
 

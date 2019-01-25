@@ -61,7 +61,7 @@ class Install extends PhpBinCommand {
 
 	protected function showNewPackageQuestions() {
 		$package_name = $this->question( 'Please enter the name of the package to install: ' );
-		$module_name = $this->showPackagesChoices( "Select a module where you want to install the package", array_keys( $this->getSubtrees() ) );
+		$module_name = $this->showChoices( "Select a module where you want to install the package", array_keys( $this->getSubtrees() ) );
 		$env         = $this->confirmation( 'Do you want save this package in require-dev? (y/n)' ) ? 'd' : null;
 
 		return [ $package_name, $module_name, $env ];
