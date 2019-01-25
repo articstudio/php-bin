@@ -51,7 +51,6 @@ trait HasWriteComposer {
 		if ( key_exists($env, $composer) && key_exists( $input_package_name, $composer[ $env ] ) ) {
 			unset( $composer[ $env ][ $input_package_name ] );
 		}
-
 		$this->writeComposer( $composer, $composer_file );
 	}
 

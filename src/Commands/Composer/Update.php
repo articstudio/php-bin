@@ -47,7 +47,7 @@ class Update extends PhpBinShellCommand {
 		}
 
 
-		foreach ( $modules as $module_name => $module_url ) {
+		foreach ( $modules as $module_name ) {
 			array_map( function ( $name ) {
 				$this->overrideAllDependenciesVersions( $name );
 			}, $this->getComposerJson( $module_name ) );

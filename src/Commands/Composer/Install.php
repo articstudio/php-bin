@@ -13,6 +13,7 @@ class Install extends PhpBinCommand {
 
 	use \Articstudio\PhpBin\Concerns\HasWriteComposer;
 	use Concerns\HasComposerConfig;
+	use \Articstudio\PhpBin\Commands\Git\Subtree\Concerns\HasSubtreesConfig;
 
 	/**
 	 * Command name
@@ -29,6 +30,7 @@ class Install extends PhpBinCommand {
 
 	protected function execute( InputInterface $input, OutputInterface $output ) {
 
+		$modules = [];
 		$composer           = $this->getComposerData();
 		$input_package_name = $input->getArgument( 'package_name' ) ?: null;
 		$input_module_name  = $input->getArgument( 'module_name' ) ?: null;
@@ -37,26 +39,30 @@ class Install extends PhpBinCommand {
 
 		if ( $input_package_name === null || $input_module_name === null ) {
 			//MENU
-			list( $input_package_name, $input_module_name, $env ) = $this->showNewPackageQuestions();
+			list( $input_package_name, $modules, $env ) = $this->showNewPackageQuestions();
+		}else {
+			$modules[] = $input_module_name;
 		}
 
-		$composer_module_file = $composer_dir . '/' . $input_module_name . '/composer.json';
+		foreach ( $modules as $input_module_name ) {
+			$composer_module_file = $composer_dir . '/' . $input_module_name . '/composer.json';
 
-		if ( ! $composer_module_file ) {
-			throw new PhpBinException( 'composer.json file not found: ' . $composer_module_file );
+			if ( ! file_exists($composer_module_file) ) {
+				throw new PhpBinException( 'composer.json file not found: ' . $composer_module_file );
+			}
+
+			$version = $this->searchPackageVersion( $input_package_name, $composer );
+			$version = $this->requireDevPackage( $version, $input_package_name );
+
+			$this->addPackageToComposerRequire( array( $input_package_name => $version ), $composer_module_file, $env );
 		}
-
-		$version = $this->searchPackageVersion( $input_package_name, $composer );
-		$version = $this->requireDevPackage( $version, $input_package_name );
-
-		$this->addPackageToComposerRequire( array( $input_package_name => $version ), $composer_module_file, $env );
 
 	}
 
 	protected function showNewPackageQuestions() {
 		$package_name = $this->question( 'Please enter the name of the package to install: ' );
-		$module_name  = $this->question( 'Please enter the name of the module where you want to install the package: ' );
-		$env          = $this->confirmation( 'Do you want save this package in require-dev? (y/n)' ) ? 'd' : null;
+		$module_name = $this->showPackagesChoices( "Select a module where you want to install the package", array_keys( $this->getSubtrees() ) );
+		$env         = $this->confirmation( 'Do you want save this package in require-dev? (y/n)' ) ? 'd' : null;
 
 		return [ $package_name, $module_name, $env ];
 	}

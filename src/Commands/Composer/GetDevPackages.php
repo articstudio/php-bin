@@ -53,7 +53,7 @@ class GetDevPackages extends PhpBinCommand {
 		$requires_dev = array(
 			'require-dev' => array()
 		);
-		foreach ( $modules as $module_name => $module_url ) {
+		foreach ( $modules as $module_name) {
 			$this->composer = array_merge( $this->composer, $requires_dev );
 
 			array_map( function ( $name ) {
