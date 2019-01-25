@@ -19,9 +19,10 @@ class Menu extends PhpBinMenuCommand
      * @var array
      */
     protected $menuOptions = [
-        'composer:install' => 'Install',
-        'composer:update' => 'Update',
+        'composer:install' => 'Install package',
+        'composer:update-versions' => 'Update versions',
         'composer:normalize' => 'Normalize',
+        'composer:dev-packages' => 'Dev packages',
     ];
     
     /**
