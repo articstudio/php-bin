@@ -28,7 +28,7 @@ trait HasComposerBehaviour {
 		} else if ( $option === 'all' ) {
 			$modules = array_keys( $this->getSubtrees() );
 		} else if ( $option === 'root' ) {
-			$modules[] = $this->getComposerPath();
+			$modules[] = $this->getComposerFile();
 		}
 
 		return $modules;
