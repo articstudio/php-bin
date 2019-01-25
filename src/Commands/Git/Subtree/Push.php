@@ -25,18 +25,16 @@ class Push extends PhpBinCommand {
 
 	protected function execute( InputInterface $input, OutputInterface $output ) {
 		$repositories = $this->getSubtrees();
-		$result       = array(
-			'skipped'   => [],
-			'done'      => [],
-			'error'     => [],
-			'not_found' => [],
-		);
 
 		$package_names = $input->getArgument( 'package_name' ) ?: array();
 
 		if ( empty( $package_names ) ) {
 
-			$option = $this->showPackagesMenu( 'Push' );
+			$menu_options = [
+				'select' => 'Select a subtree',
+				'all'    => 'All subtrees'
+			];
+			$option       = $this->showMenu( 'Push subtrees', $menu_options );
 
 			if ( $option === null ) {
 				return 1;
@@ -44,11 +42,24 @@ class Push extends PhpBinCommand {
 
 			if ( $option === 'select' ) {
 				$message              = 'Select one or multiple packages to would to push:';
-				$choices_repositories = $this->showPackagesChoices( $message, array_keys( $repositories ) );
+				$choices_repositories = $this->showChoices( $message, array_keys( $repositories ) );
 				$repositories         = $this->getCommonPackages( $repositories, $choices_repositories );
 			}
 
 		}
+
+		$result = $this->pushSubtree( $repositories, $package_names );
+		$this->showResume( $result );
+
+	}
+
+	private function pushSubtree( array $repositories, $package_names ) {
+		$result = array(
+			'skipped'   => [],
+			'done'      => [],
+			'error'     => [],
+			'not_found' => [],
+		);
 
 		foreach ( $repositories as $repo_package => $repo_url ) {
 			if ( empty( $package_names ) || in_array( $repo_package, $package_names ) ) {
@@ -67,7 +78,6 @@ class Push extends PhpBinCommand {
 			}
 		}
 
-		$this->showResume( $result );
-
+		return $result;
 	}
 }

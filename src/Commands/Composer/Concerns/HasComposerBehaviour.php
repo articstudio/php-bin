@@ -24,7 +24,7 @@ trait HasComposerBehaviour {
 	protected function getModulesByOption( $option ) {
 		$modules = [];
 		if ( $option === 'select' ) {
-			$modules = $this->showPackagesChoices( "Select a module to normalize composer: ", array_keys( $this->getSubtrees() ) );
+			$modules = $this->showChoices( "Select a module to normalize composer: ", array_keys( $this->getSubtrees() ) );
 		} else if ( $option === 'all' ) {
 			$modules = array_keys( $this->getSubtrees() );
 		} else if ( $option === 'root' ) {
