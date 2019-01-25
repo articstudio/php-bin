@@ -33,7 +33,10 @@ class Add extends PhpBinCommand {
 		$input_store        = null;
 		$isMenu             = false;
 		if ( $input_package_name === null ) {
-			$input_package_name = $this->showPackagesMenu( $packages );
+			$menu_options       = array_keys( $packages ) + [
+					'new' => 'New package'
+				];
+			$input_package_name = $this->showMenu( "Subtree packages", $menu_options );
 			$isMenu             = true;
 		}
 
@@ -49,6 +52,7 @@ class Add extends PhpBinCommand {
 
 		if ( $input_store ) {
 			$this->addSubtreeToComposer( array( $input_package_name => $input_repository ) );
+			$this->commitChanges( "Add subtree " . $input_package_name );
 		}
 
 		if ( ! $isMenu && ! $this->checkPackageInComposer( $input_package_name ) ) {
@@ -60,7 +64,20 @@ class Add extends PhpBinCommand {
 
 		return 1;
 	}
+  
+	protected function commitChanges( string $message ) {
+		$cmd = 'git commit -m "' . $message . '" composer.json';
 
+		list( $exit_code, $output, $exit_code_txt, $error ) = $this->callShell( $cmd, false );
+
+		if ( $exit_code === 1 ) {
+			throw new PhpBinException( 'Error commit ' . $message );
+		}
+		$error_msg = $exit_code_txt . "\n" . $error;
+
+		return $output !== '' ? $output : $error_msg;
+	}
+  
 	protected function showNewPackageQuestions( ?bool $force_store = null ) {
 		$package_name   = $this->question( 'Please enter the name of the package: ' );
 		$git_repository = $this->question( 'Please enter the URL of the git repository: ' );
@@ -68,27 +85,17 @@ class Add extends PhpBinCommand {
 
 		return [ $package_name, $git_repository, $store ];
 	}
-
-	protected function showPackagesMenu( array $packages ) {
-		$menu_options = array_keys( $packages ) + [
-				'new' => 'New package'
-			];
-		$menu         = $this->menu( 'Subtree packages', $menu_options );
-
-		$selected_option = $menu->open();
-
-		return key_exists( $selected_option, $menu_options ) ? $menu_options[ $selected_option ] : null;
-	}
-
 	protected function addGitSubtree( $package_name, $git_repository ) {
-		$cmd = 'git remote add ' . $package_name . ' ' . $git_repository .
-		       ' && git subtree add --prefix=' . $package_name . '/ ' . $git_repository . ' master';
+		$cmd_remote_add  = 'git remote add ' . $package_name . ' ' . $git_repository;
+		$cmd_add_subtree = 'git subtree add --prefix=' . $package_name . '/ ' . $git_repository . ' master';
 
-		list( $exit_code, $output, $exit_code_txt, $error ) = $this->callShell( $cmd, false );
+		$this->callShell( $cmd_remote_add, false );
+		list( $exit_code, $output, $exit_code_txt, $error ) = $this->callShell( $cmd_add_subtree, false );
 
 		if ( $exit_code === 1 ) {
-			throw new PhpBinException( 'Error adding the  package ' . $package_name . ' subtree from ' . $git_repository . '' );
+			throw new PhpBinException( 'Error adding the package ' . $package_name . ' subtree from ' . $git_repository . '' );
 		}
+
 		$error_msg = $exit_code_txt . "\n" . $error;
 
 		return $output !== '' ? $output : $error_msg;

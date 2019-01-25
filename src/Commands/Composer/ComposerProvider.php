@@ -16,5 +16,6 @@ class ComposerProvider extends AbstractProvider
         '\Articstudio\PhpBin\Commands\Composer\Install',
         '\Articstudio\PhpBin\Commands\Composer\Update',
         '\Articstudio\PhpBin\Commands\Composer\Normalize',
+        '\Articstudio\PhpBin\Commands\Composer\GetDevPackages',
     ];
 }
