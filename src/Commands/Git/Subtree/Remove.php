@@ -42,7 +42,6 @@ class Remove extends PhpBinCommand {
 
 			$menu_options = [
 				'select' => 'Select a subtree',
-				'write'  => 'Write a name of subtree',
 				'all'    => 'All subtrees'
 			];
 			$option       = $this->showMenu( 'Remove Subtrees', $menu_options );
