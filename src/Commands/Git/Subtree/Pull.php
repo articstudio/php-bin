@@ -32,20 +32,18 @@ class Pull extends PhpBinCommand {
 	protected function execute( InputInterface $input, OutputInterface $output ) {
 
 		$repositories = $this->getSubtrees();
-		$result       = array(
-			'skipped'   => [],
-			'done'      => [],
-			'error'     => [],
-			'not_found' => [],
-		);
 
 		$package_names = $input->getArgument( 'package_name' ) ?: array();
 
 		if ( empty( $package_names ) ) {
 
-			$option = $this->showPackagesMenu( 'Pull' );
+			$menu_options = [
+				'select' => 'Select a subtree',
+				'all'    => 'All subtrees'
+			];
+			$option       = $this->showMenu( 'Pull subtree', $menu_options );
 
-			if ( $option === null ) {
+			if ( $option === null || $option === false ) {
 				return 1;
 			}
 
@@ -57,6 +55,19 @@ class Pull extends PhpBinCommand {
 
 		}
 
+		$result = $this->subtreePull( $repositories, $package_names );
+
+		$this->showResume( $result );
+
+	}
+
+	private function subtreePull( array $repositories, $package_names ) {
+		$result = array(
+			'skipped'   => [],
+			'done'      => [],
+			'error'     => [],
+			'not_found' => [],
+		);
 		foreach ( $repositories as $repo_package => $repo_url ) {
 			if ( empty( $package_names ) || in_array( $repo_package, $package_names ) ) {
 				$cmd = 'git subtree pull --prefix=' . $repo_package . '/ ' . $repo_package . ' master --squash';
@@ -74,8 +85,7 @@ class Pull extends PhpBinCommand {
 			}
 		}
 
-		$this->showResume( $result );
-
+		return $result;
 	}
 
 }
