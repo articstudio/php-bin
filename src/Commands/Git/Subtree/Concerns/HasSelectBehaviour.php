@@ -12,20 +12,6 @@ namespace Articstudio\PhpBin\Commands\Git\Subtree\Concerns;
 trait HasSelectBehaviour {
 
 
-	public function showPackagesMenu(string $command) {
-		$menu_options = [
-			'select' => 'Select subtrees',
-			'all'    => $command . ' all subtrees'
-		];
-		$menu         = $this->menu( 'Subtree packages', $menu_options );
-
-		return $menu->open() ?? null;
-	}
-
-	public function showPackagesChoices( string $message, array $packages ) {
-		return $this->choiceQuestion( $message, $packages );
-	}
-
 	public function getCommonPackages( $repositories, $choices_repositories ) {
 		$res = array();
 		foreach ( $repositories as $repository => $repository_url ) {
