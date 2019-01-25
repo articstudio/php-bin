@@ -36,8 +36,8 @@ class Add extends PhpBinCommand {
 			$menu_options       = array_keys( $packages ) + [
 					'new' => 'New package'
 				];
-			$user_choice    = $this->showMenu( "Subtree packages", $menu_options );
-			$input_package_name = is_int($user_choice) ? array_keys($packages)[$user_choice] : $user_choice;
+			$user_choice        = $this->showMenu( "Subtree packages", $menu_options );
+			$input_package_name = is_int( $user_choice ) ? array_keys( $packages )[ $user_choice ] : $user_choice;
 			$isMenu             = true;
 		}
 
@@ -101,11 +101,5 @@ class Add extends PhpBinCommand {
 		$error_msg = $exit_code_txt . "\n" . $error;
 
 		return $output !== '' ? $output : $error_msg;
-	}
-
-	protected function getPackageByOptionUser($option, $packages) {
-		foreach ($packages as $package_name => $package_url) {
-
-		}
 	}
 }
