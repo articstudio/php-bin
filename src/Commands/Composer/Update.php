@@ -34,7 +34,17 @@ class Update extends PhpBinShellCommand {
 		$this->composer = $this->getComposerData();
 		$this->versions = array_merge( $this->composer['require-dev'], $this->composer['require'] );
 		$module_dir     = $input->getArgument( 'module_name' ) ?: null;
-		$modules        = $this->checkParametersPackages( $module_dir );
+		$menu_options   = array(
+			'select' => 'Select a single module',
+			'all'    => 'All modules'
+		);
+
+		if ( $module_dir === null ) {
+			$option  = $this->showMenu( "Update packages versions", $menu_options );
+			$modules = $this->getModulesByOption( $option );
+		} else {
+			$modules[] = $module_dir;
+		}
 
 
 		foreach ( $modules as $module_name => $module_url ) {
@@ -51,8 +61,9 @@ class Update extends PhpBinShellCommand {
 		$result = [];
 		foreach ( $obj as $package => $version ) {
 			$result[ $package ] = key_exists( $package, $this->versions ) ? $this->versions[ $package ] : $obj[ $package ];
-			if(key_exists($package, $this->versions))
+			if ( key_exists( $package, $this->versions ) ) {
 				printf( ( $this->versions[ $package ] === $obj[ $package ] ? '=' : '+' ) . "%s@%s \n", $package, $result[ $package ] );
+			}
 		}
 
 		return $result;

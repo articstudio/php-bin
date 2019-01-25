@@ -11,25 +11,6 @@ namespace Articstudio\PhpBin\Commands\Composer\Concerns;
 
 trait HasComposerBehaviour {
 
-	protected function checkParametersPackages($module_dir) {
-		$modules = [];
-		if ( $module_dir === null ) {
-			$option = $this->showPackagesMenu();
-			if ( $option === null ) {
-				return 1;
-			}
-			if ( $option === 'select' ) {
-				$modules[ $this->showNewPackageQuestions() ] = '';
-			}
-			if ( $option === 'all' ) {
-				$modules = $this->getSubtrees();
-			}
-		}else {
-			$modules[ $module_dir ] = '';
-		}
-		return $modules;
-	}
-
 	protected function getComposerJson( $dirname ) {
 		$command = 'find ' . $dirname . ' -type f -name "composer.json"';
 		list( $exit_code, $output, $exit_code_txt, $error ) = $this->callShell( $command, false );
@@ -40,14 +21,17 @@ trait HasComposerBehaviour {
 		return ( $exit_code === 0 ) ? $return : [];
 	}
 
-	protected function showPackagesMenu() {
-		$menu_options = [
-			'select' => 'Get a single module',
-			'all'    => 'Get all modules'
-		];
-		$menu         = $this->menu( 'Modules', $menu_options );
+	protected function getModulesByOption( $option ) {
+		$modules = [];
+		if ( $option === 'select' ) {
+			$modules = $this->showPackagesChoices( "Select a module to normalize composer: ", array_keys( $this->getSubtrees() ) );
+		} else if ( $option === 'all' ) {
+			$modules = array_keys( $this->getSubtrees() );
+		} else if ( $option === 'root' ) {
+			$modules[] = $this->getComposerPath();
+		}
 
-		return $menu->open() ?? null;
+		return $modules;
 	}
 
 }

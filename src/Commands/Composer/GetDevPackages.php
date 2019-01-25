@@ -10,7 +10,6 @@ namespace Articstudio\PhpBin\Commands\Composer;
 
 use Articstudio\PhpBin\Commands\AbstractCommand as PhpBinCommand;
 
-use Articstudio\PhpBin\PhpBinException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -36,14 +35,24 @@ class GetDevPackages extends PhpBinCommand {
 	}
 
 	protected function execute( InputInterface $input, OutputInterface $output ) {
-		$this->composer         = $this->getComposerData();
-		$module_dir             = $input->getArgument( 'module_name' ) ?: null;
-		$modules                = $this->checkParametersPackages($module_dir);
+		$this->composer = $this->getComposerData();
+		$module_dir     = $input->getArgument( 'module_name' ) ?: null;
+		$menu_options   = array(
+			'select' => 'Select a single module',
+			'all'    => 'All modules'
+		);
+
+		if ( $module_dir === null ) {
+			$option  = $this->showMenu( "Update packages versions", $menu_options );
+			$modules = $this->getModulesByOption( $option );
+		} else {
+			$modules[] = $module_dir;
+		}
+
 
 		$requires_dev = array(
 			'require-dev' => array()
 		);
-
 		foreach ( $modules as $module_name => $module_url ) {
 			$this->composer = array_merge( $this->composer, $requires_dev );
 
