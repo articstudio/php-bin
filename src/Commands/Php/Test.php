@@ -34,7 +34,12 @@ class Test extends PhpBinCommand
         }
         foreach ($files as $file) {
             $io->title("Test suite: `{$file}`");
-            list($exitCode, $str, $str_error_message, $str_error_trace) = $this->callShell("php ./vendor/bin/phpunit --configuration {$file}", false);
+            list(
+                $exitCode,
+                $str,
+                $str_error_message,
+                $str_error_trace
+                ) = $this->callShell("php ./vendor/bin/phpunit --configuration {$file}", false);
             if ($exitCode !== 0 && ($str_error_message || $str_error_trace)) {
                 return $this->throwError($output, $str_error_message, $str_error_trace, $exitCode);
             }

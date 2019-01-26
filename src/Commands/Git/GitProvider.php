@@ -8,7 +8,7 @@ class GitProvider extends AbstractProvider
 
     /**
      * Available commands
-     * 
+     *
      * @var array
      */
     protected $commands = [
@@ -17,6 +17,6 @@ class GitProvider extends AbstractProvider
         '\Articstudio\PhpBin\Commands\Git\Subtree\Pull',
         '\Articstudio\PhpBin\Commands\Git\Subtree\Add',
         '\Articstudio\PhpBin\Commands\Git\Subtree\Remove',
-	    '\Articstudio\PhpBin\Commands\Git\Subtree\Check',
+        '\Articstudio\PhpBin\Commands\Git\Subtree\Check',
     ];
 }

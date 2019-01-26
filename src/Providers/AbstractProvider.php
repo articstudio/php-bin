@@ -12,7 +12,7 @@ abstract class AbstractProvider implements ProviderInterface
 
     /**
      * Register provider
-     * 
+     *
      * @return ProviderInterface
      */
     public function register(): ProviderInterface
@@ -25,7 +25,7 @@ abstract class AbstractProvider implements ProviderInterface
 
     /**
      * Add commands to application
-     * 
+     *
      * @param array $commands
      * @return \self
      */
