@@ -30,10 +30,7 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
-        "subtree": {
-            "Articstudio/git-test": "git@github.com:articstudio/git-test.git",
-            "Maurisss94/test-subtrees": "git@github.com:Maurisss94/test-subtrees.git"
-        }
+        "subtree": {}
     },
     "extra": {},
     "autoload": {
@@ -62,5 +59,8 @@
     "support": {
         "issues": "https://github.com/articstudio/php-bin/issues",
         "source": "https://github.com/articstudio/php-bin"
-    }
+    },
+    "bin": [
+        "bin/phpbin"
+    ]
 }
