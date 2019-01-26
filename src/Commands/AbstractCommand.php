@@ -1,5 +1,4 @@
 <?php
-
 namespace Articstudio\PhpBin\Commands;
 
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
@@ -19,7 +18,6 @@ abstract class AbstractCommand extends SymfonyCommand
     use \Articstudio\PhpBin\Concerns\HasOutput;
     use \Articstudio\PhpBin\Concerns\HasShell;
     use \Articstudio\PhpBin\Concerns\HasPhpBin;
-
 
     /**
      * Create menu
@@ -44,39 +42,51 @@ abstract class AbstractCommand extends SymfonyCommand
         return $this->choiceQuestion($message, $packages);
     }
 
-    public function question(string $txt, $default = null, ?OutputInterface $output = null, ?InputInterface $input = null)
-    {
+    public function question(
+        string $txt,
+        $default = null,
+        ?OutputInterface $output = null,
+        ?InputInterface $input = null
+    ) {
         $question_helper = $this->getHelper('question');
-        $question        = new Question($txt, $default);
+        $question = new Question($txt, $default);
 
         return $question_helper->ask(
-            ( $input ?? new ArrayInput([]) ),
-            ( $output ?? new ConsoleOutput ),
+            ( $input ?? new ArrayInput([])),
+            ( $output ?? new ConsoleOutput),
             $question
         );
     }
 
-    public function confirmation(string $txt, $default = false, ?OutputInterface $output = null, ?InputInterface $input = null)
-    {
+    public function confirmation(
+        string $txt,
+        $default = false,
+        ?OutputInterface $output = null,
+        ?InputInterface $input = null
+    ) {
         $question_helper = $this->getHelper('question');
-        $question        = new ConfirmationQuestion($txt, $default);
+        $question = new ConfirmationQuestion($txt, $default);
 
-        return ! ! $question_helper->ask(
-            ( $input ?? new ArrayInput([]) ),
-            ( $output ?? new ConsoleOutput ),
+        return !!$question_helper->ask(
+            ( $input ?? new ArrayInput([])),
+            ( $output ?? new ConsoleOutput),
             $question
         );
     }
 
-    public function choiceQuestion(string $txt, array $options, ?OutputInterface $output = null, ?InputInterface $input = null)
-    {
+    public function choiceQuestion(
+        string $txt,
+        array $options,
+        ?OutputInterface $output = null,
+        ?InputInterface $input = null
+    ) {
         $question_helper = $this->getHelper('question');
-        $question        = new ChoiceQuestion($txt, $options);
+        $question = new ChoiceQuestion($txt, $options);
         $question->setMultiselect(true);
 
         return $question_helper->ask(
-            ( $input ?? new ArrayInput([]) ),
-            ( $output ?? new ConsoleOutput ),
+            ( $input ?? new ArrayInput([])),
+            ( $output ?? new ConsoleOutput),
             $question
         );
     }
@@ -92,11 +102,11 @@ abstract class AbstractCommand extends SymfonyCommand
      */
     protected function callCommandByName(string $name, ?array $arguments, OutputInterface $output)
     {
-        if (! $this->getApplication()->has($name)) {
+        if (!$this->getApplication()->has($name)) {
             throw new PhpBinException("Command `{$name}` not found.");
         }
         $command = $this->getApplication()->get($name);
-        $input   = new ArrayInput($arguments ?? []);
+        $input = new ArrayInput($arguments ?? []);
 
         return $command->run($input, $output);
     }

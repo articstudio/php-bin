@@ -61,9 +61,10 @@ class Update extends PhpBinShellCommand
     {
         $result = [];
         foreach ($obj as $package => $version) {
-            $result[ $package ] = key_exists($package, $this->versions) ? $this->versions[ $package ] : $obj[ $package ];
+            $result[ $package ] = $this->versions[ $package ] ?: $obj[ $package ];
             if (key_exists($package, $this->versions)) {
-                printf(( $this->versions[ $package ] === $obj[ $package ] ? '=' : '+' ) . "%s@%s \n", $package, $result[ $package ]);
+                $symbol = $this->versions[ $package ] === $obj[ $package ] ? '=' : '+';
+                printf($symbol . "%s@%s \n", $package, $result[ $package ]);
             }
         }
 

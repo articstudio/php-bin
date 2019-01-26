@@ -22,11 +22,16 @@ trait HasShell
         $process = new Process($cmd);
         $process->run();
         //while ($process->isRunning()) {
-            // TODO: Show loading spinner
+        // TODO: Show loading spinner
         //}
         if ($throw && !$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
-        return [$process->getExitCode(), $process->getOutput(), $process->getExitCodeText(), $process->getErrorOutput()];
+        return [
+            $process->getExitCode(),
+            $process->getOutput(),
+            $process->getExitCodeText(),
+            $process->getErrorOutput()
+        ];
     }
 }

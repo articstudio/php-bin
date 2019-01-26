@@ -70,8 +70,10 @@ class Remove extends PhpBinCommand
 
     protected function showNewPackageQuestions(?bool $force_store = null)
     {
-
-        return $force_store === null ? $this->confirmation('Remove this package/repository of the Composer config? ') : $force_store;
+        if ($force_store === null) {
+            $force_store = $this->confirmation('Remove this package/repository of the Composer config? ');
+        }
+        return $force_store;
     }
 
     private function removeDirandRemoteSubtree(array $repositories, $package_names)
