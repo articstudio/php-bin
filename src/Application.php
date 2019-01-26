@@ -15,7 +15,7 @@ final class Application
 
     /**
      * PHPBIN version
-     * 
+     *
      * @var string
      */
     private static $version = '1.0.0';
@@ -57,14 +57,14 @@ final class Application
 
     /**
      * Settings
-     * 
+     *
      * @var array
      */
     private $settings;
-    
+
     /**
      * Available providers
-     * 
+     *
      * @var array
      */
     private $providers = [
@@ -75,7 +75,7 @@ final class Application
 
     /**
      * Available commands
-     * 
+     *
      * @var array
      */
     protected $commands = [

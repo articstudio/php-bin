@@ -19,8 +19,13 @@ trait HasOutput
      * @param int $exitCode
      * @param bool $forceExit
      */
-    public function throwError(?OutputInterface $output, string $message = 'ERROR', ?string $trace = null, int $exitCode = 1, bool $forceExit = false)
-    {
+    public function throwError(
+        ?OutputInterface $output,
+        string $message = 'ERROR',
+        ?string $trace = null,
+        int $exitCode = 1,
+        bool $forceExit = false
+    ) {
         $io = $this->getStyle($output);
         $io->error($message);
         if ($trace && !empty($trace)) {

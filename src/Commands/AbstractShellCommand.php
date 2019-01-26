@@ -33,7 +33,12 @@ class AbstractShellCommand extends AbstractCommand
     {
         $composer = Application::getInstance()->getComposer();
         $output->writeln("Executing command at `{$composer['directory']}`");
-        list($exitCode, $str, $str_error_message, $str_error_trace) = $this->callShell($this->shellCommand, $this->throwShellError);
+        list(
+            $exitCode,
+            $str,
+            $str_error_message,
+            $str_error_trace
+            ) = $this->callShell($this->shellCommand, $this->throwShellError);
         echo $str;
         if ($exitCode !== 0 && ($str_error_message || $str_error_trace)) {
             $this->throwError($output, $str_error_message, $str_error_trace, 1, true);
