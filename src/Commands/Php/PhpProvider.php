@@ -8,7 +8,7 @@ class PhpProvider extends AbstractProvider
 
     /**
      * Available commands
-     * 
+     *
      * @var array
      */
     protected $commands = [

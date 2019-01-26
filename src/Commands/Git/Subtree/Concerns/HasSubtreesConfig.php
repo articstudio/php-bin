@@ -13,8 +13,9 @@ trait HasSubtreesConfig
         return $config['subtree'] ?? [];
     }
 
-    public function checkPackageInComposer(string $package_name) {
-    	$subtrees = $this->getSubtrees();
-    	return isset($subtrees[$package_name]) ?? false;
+    public function checkPackageInComposer(string $package_name)
+    {
+        $subtrees = $this->getSubtrees();
+        return isset($subtrees[$package_name]) ?? false;
     }
 }
