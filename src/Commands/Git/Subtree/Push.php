@@ -1,5 +1,4 @@
 <?php
-
 namespace Articstudio\PhpBin\Commands\Git\Subtree;
 
 use Articstudio\PhpBin\Commands\AbstractCommand as PhpBinCommand;

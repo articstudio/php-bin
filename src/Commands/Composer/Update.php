@@ -1,9 +1,7 @@
 <?php
-
 namespace Articstudio\PhpBin\Commands\Composer;
 
 use Articstudio\PhpBin\Commands\AbstractShellCommand as PhpBinShellCommand;
-
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

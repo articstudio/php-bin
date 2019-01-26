@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mauro
- * Date: 24/01/19
- * Time: 13:22
- */
-
 namespace Articstudio\PhpBin\Commands\Composer\Concerns;
 
 trait HasComposerBehaviour

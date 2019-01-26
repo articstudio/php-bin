@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mauro
- * Date: 22/01/19
- * Time: 11:09
- */
-
 namespace Articstudio\PhpBin\Commands\Git\Subtree;
 
 use Articstudio\PhpBin\Commands\AbstractCommand as PhpBinCommand;

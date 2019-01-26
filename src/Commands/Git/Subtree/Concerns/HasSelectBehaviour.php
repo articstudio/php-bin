@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mauro
- * Date: 22/01/19
- * Time: 11:17
- */
-
 namespace Articstudio\PhpBin\Commands\Git\Subtree\Concerns;
 
 trait HasSelectBehaviour
@@ -47,3 +40,4 @@ trait HasSelectBehaviour
         echo "\n";
     }
 }
+=======

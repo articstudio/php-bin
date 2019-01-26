@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mauro
- * Date: 24/01/19
- * Time: 9:29
- */
 namespace Articstudio\PhpBin\Commands\Composer;
 
 use Articstudio\PhpBin\Commands\AbstractCommand as PhpBinCommand;

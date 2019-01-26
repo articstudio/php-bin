@@ -1,5 +1,4 @@
 <?php
-
 namespace Articstudio\PhpBin\Commands\Composer;
 
 use Articstudio\PhpBin\Commands\AbstractShellCommand as PhpBinShellCommand;
