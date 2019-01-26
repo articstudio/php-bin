@@ -11,11 +11,11 @@ commands:
       - run: mv composer.phar /usr/local/bin/composer
 
 executors:
-  "php-7.1":
+  "php-7-1":
     docker:
       - image: php:7.1
     working_directory: ~/repo_php_7_1
-  "php-7.2":
+  "php-7-2":
     docker:
       - image: php:7.2
     working_directory: ~/repo_php_7_2
@@ -41,7 +41,7 @@ aliases:
 
 jobs:
   prepare_7_1:
-    executor: "php-7.1"
+    executor: "php-7-1"
     steps:
       - checkout
       - "system-dependencies"
@@ -58,7 +58,7 @@ jobs:
             - ./*
 
   test_7_1:
-    executor: "php-7.1"
+    executor: "php-7-1"
     steps:
       - checkout
       - "system-dependencies"
@@ -67,7 +67,7 @@ jobs:
       - run: php ./bin/phpbin php:lint
 
   prepare_7_2:
-    executor: "php-7.2"
+    executor: "php-7-2"
     steps:
       - checkout
       - "system-dependencies"
@@ -84,7 +84,7 @@ jobs:
             - ./*
 
   test_7_2:
-    executor: "php-7.2"
+    executor: "php-7-2"
     steps:
       - checkout
       - "system-dependencies"
@@ -93,7 +93,7 @@ jobs:
       - run: php ./bin/phpbin php:lint
 
   code_checks:
-    executor: "php-7.2"
+    executor: "php-7-2"
     steps:
       - checkout
       - "system-dependencies"
