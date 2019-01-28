@@ -29,7 +29,8 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "subtree": {}
     },
     "extra": {},
     "autoload": {
@@ -58,5 +59,8 @@
     "support": {
         "issues": "https://github.com/articstudio/php-bin/issues",
         "source": "https://github.com/articstudio/php-bin"
-    }
+    },
+    "bin": [
+        "bin/phpbin"
+    ]
 }

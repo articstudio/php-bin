@@ -6,7 +6,7 @@ trait HasCommands
     
     /**
      * Add comand to available commands
-     * 
+     *
      * @param string $command
      * @return int
      */
@@ -18,7 +18,7 @@ trait HasCommands
     
     /**
      * Get available commands
-     * 
+     *
      * @return array
      */
     public function getCommands(): array
@@ -32,10 +32,8 @@ trait HasCommands
      */
     protected function checkCommands()
     {
-        if (!is_array($this->commands))
-        {
+        if (!is_array($this->commands)) {
             $this->commands = [];
         }
     }
-    
 }

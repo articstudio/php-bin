@@ -1,0 +1,134 @@
+version: 2.1
+
+commands:
+  "system-dependencies":
+    description: "Install required packages"
+    steps:
+      - run: apt-get -yqq update
+      - run: apt-get -yqq install git unzip zip
+      - run: curl -sS https://getcomposer.org/installer | php
+      - run: chmod +x composer.phar
+      - run: mv composer.phar /usr/local/bin/composer
+
+executors:
+  "php-7-1":
+    docker:
+      - image: php:7.1
+    working_directory: ~/repo_php_7_1
+  "php-7-2":
+    docker:
+      - image: php:7.2
+    working_directory: ~/repo_php_7_2
+
+aliases:
+  - &composer_7_1_cache_key
+    composer-7.1-{{ checksum "composer.lock" }}
+  - &wd_7_1
+    ~/repo_php_7_1
+  - &composer_7_2_cache_key
+    composer-7.2-{{ checksum "composer.lock" }}
+  - &wd_7_2
+    ~/repo_php_7_2
+  - &ignore_non_dev_branches
+    filters:
+      tags:
+        only: /.*/
+      branches:
+        ignore:
+          - gh-pages
+          - l10n_master
+          - /release\/.*/
+
+jobs:
+  prepare_7_1:
+    executor: "php-7-1"
+    steps:
+      - checkout
+      - "system-dependencies"
+      - restore_cache:
+          key: *composer_7_1_cache_key
+      - run: composer install --no-progress
+      - save_cache:
+          key: *composer_7_1_cache_key
+          paths:
+            - vendor/
+      - persist_to_workspace:
+          root: *wd_7_1
+          paths:
+            - ./*
+
+  test_7_1:
+    executor: "php-7-1"
+    steps:
+      - checkout
+      - "system-dependencies"
+      - attach_workspace:
+          at: *wd_7_1
+      - run: php ./bin/phpbin php:lint
+
+  prepare_7_2:
+    executor: "php-7-2"
+    steps:
+      - checkout
+      - "system-dependencies"
+      - restore_cache:
+          key: *composer_7_2_cache_key
+      - run: composer install --no-progress
+      - save_cache:
+          key: *composer_7_2_cache_key
+          paths:
+            - vendor/
+      - persist_to_workspace:
+          root: *wd_7_2
+          paths:
+            - ./*
+
+  test_7_2:
+    executor: "php-7-2"
+    steps:
+      - checkout
+      - "system-dependencies"
+      - attach_workspace:
+          at: *wd_7_2
+      - run: php ./bin/phpbin php:lint
+
+  code_checks:
+    executor: "php-7-2"
+    steps:
+      - checkout
+      - "system-dependencies"
+      - attach_workspace:
+          at: *wd_7_2
+      - run: php ./bin/phpbin php:psr1
+      - run: php ./bin/phpbin php:psr2
+      - run: php ./bin/phpbin php:metrics
+      - store_artifacts:
+          path: build/metrics
+          destination: metrics
+
+
+
+workflows:
+  version: 2
+  php_versions:
+    jobs:
+      - prepare_7_1:
+          <<: *ignore_non_dev_branches
+      - test_7_1:
+          requires:
+            - prepare_7_1
+          <<: *ignore_non_dev_branches
+      - prepare_7_2:
+          <<: *ignore_non_dev_branches
+      - test_7_2:
+          requires:
+            - prepare_7_2
+          <<: *ignore_non_dev_branches
+  code_quality:
+    jobs:
+      - prepare_7_2:
+          <<: *ignore_non_dev_branches
+      - code_checks:
+          requires:
+            - prepare_7_2
+          <<: *ignore_non_dev_branches
