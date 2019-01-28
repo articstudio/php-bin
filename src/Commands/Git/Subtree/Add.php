@@ -55,7 +55,7 @@ class Add extends PhpBinCommand
 
         if ($input_store) {
             $this->addSubtreeToComposer(array($input_package_name => $input_repository));
-            $this->getLocalChanges() ? $this->commitChanges("Add subtree " . $input_package_name, 'composer.json') : false;
+            $this->getLocalChanges() ? $this->commitChanges("Add subtree " . $input_package_name . '"composer.json', '-a') : false;
         }
 
         if ( ! $isMenu && ! $this->checkPackageInComposer($input_package_name)) {
