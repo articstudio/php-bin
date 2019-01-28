@@ -13,7 +13,7 @@ trait HasWriteComposer
         $composer                    = Application::getInstance()->getComposer();
         $composer_file               = $composer['file'];
         $config                      = $composer['data'];
-        $subtrees                    = $composer['data']['config']['subtree'] + $itemToAdd;
+        $subtrees                    = array_merge($composer['data']['config']['subtree'], $itemToAdd);
         $config['config']['subtree'] = $subtrees;
 
         $this->writeComposer($config, $composer_file);
