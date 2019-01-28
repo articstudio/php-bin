@@ -1,7 +1,9 @@
 <?php
+
 namespace Articstudio\PhpBin\Commands\Git\Subtree;
 
 use Articstudio\PhpBin\Commands\AbstractCommand as PhpBinCommand;
+use Articstudio\PhpBin\PhpBinException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
@@ -34,23 +36,24 @@ class Remove extends PhpBinCommand
         $package_names       = $input->getArgument('package_name') ?: array();
 
         if (empty($package_names)) {
-            $menu_options = [
-                'select' => 'Select a subtree',
-                'all'    => 'All subtrees'
-            ];
+            $menu_options = array_keys($repositories) + [
+                    'all' => 'All subtrees'
+                ];
             $option       = $this->showMenu('Remove Subtrees', $menu_options);
             if ($option === null) {
                 return 1;
             }
 
-            if ($option === 'select') {
-                $message              = 'Select one or multiple packages to would to remove:';
-                $choices_repositories = $this->showChoices($message, array_keys($repositories));
-                $repositories         = $this->getCommonPackages($repositories, $choices_repositories);
-            }
+            $package_names = is_int($option) ? array(array_keys($repositories)[$option]) : ($option === 'all' ? $repositories : array());
         }
 
-        $result = $this->removeDirandRemoteSubtree($repositories, $package_names);
+        $subtree_exists = $this->subtreeExists($package_names);
+        if ( ! empty($subtree_exists)) {
+            $package_names = array_diff($subtree_exists, $package_names);
+        }
+
+
+        $result = $this->removeDirAndRemoteSubtree($repositories, $package_names);
 
         $input_store = $this->showNewPackageQuestions();
 
@@ -66,10 +69,25 @@ class Remove extends PhpBinCommand
         if ($force_store === null) {
             $force_store = $this->confirmation('Remove this package/repository of the Composer config? ');
         }
+
         return $force_store;
     }
 
-    private function removeDirandRemoteSubtree(array $repositories, $package_names)
+    private function subtreeExists(array $package_names)
+    {
+
+        $result = array();
+        foreach ($package_names as $p_name) {
+            $cmd = 'find -type d -name " ' . $p_name . '"';
+            list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($cmd, false);
+            $exit_code === 0 ? array_push($result, $p_name) : null;
+        }
+
+        return $result;
+
+    }
+
+    private function removeDirAndRemoteSubtree(array $repositories, $package_names)
     {
 
         $result = array(
@@ -88,16 +106,16 @@ class Remove extends PhpBinCommand
                 $cmd = 'rm -r ' . $repo_package . '/';
                 $this->callShell($cmd, false);
                 $cmd = 'git commit -m "Removing ' . $repo_package . ' subtree"';
-                list( $exit_code, $output, $exit_code_txt, $error ) = $this->callShell($cmd, false);
-                $key              = $exit_code === 0 ? 'done' : 'error';
-                $result[ $key ][] = $repo_package;
+                list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($cmd, false);
+                $key            = $exit_code === 0 ? 'done' : 'error';
+                $result[$key][] = $repo_package;
                 continue;
             }
             $result['skipped'][] = $repo_package;
         }
 
         foreach ($package_names as $package_name) {
-            if (! isset($repositories[ $package_name ])) {
+            if ( ! isset($repositories[$package_name])) {
                 $result['not_found'][] = $package_name;
             }
         }
