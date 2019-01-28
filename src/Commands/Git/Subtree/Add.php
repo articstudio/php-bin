@@ -106,8 +106,6 @@ class Add extends PhpBinCommand
         if ($local_changes) {
             $ask_commit     = "Do you want to commit changes before? ";
             $commit_message = "Adding subtree ...";
-            var_dump($local_changes);
-            die;
             $to_commit      = $this->askCommit($ask_commit) ? $this->commitChanges($commit_message,
                 '-a') : false;
             if ( ! $to_commit) {

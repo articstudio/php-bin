@@ -21,8 +21,8 @@ trait HasSubtreesConfig
 
     public function getLocalChanges()
     {
-        $cmd = 'git status';
+        $cmd = 'git diff --exit-code';
         list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($cmd, false);
-        return $exit_code === 0 ? true : false;
+        return $exit_code === 0 ? false : true;
     }
 }
