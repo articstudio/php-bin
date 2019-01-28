@@ -30,9 +30,7 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
-        "subtree": {
-            "Partiklo/Auth": "git@github.com:articstudio/partiklo-auth.git"
-        }
+        "subtree": {}
     },
     "extra": {},
     "autoload": {
