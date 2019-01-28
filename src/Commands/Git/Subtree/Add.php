@@ -105,10 +105,10 @@ class Add extends PhpBinCommand
         $local_changes = $this->getLocalChanges();
         if ($local_changes) {
             $ask_commit     = "Do you want to commit changes before? ";
-            $commit_message = "Adding subtree ...";
-            $to_commit      = $this->askCommit($ask_commit) ? $this->commitChanges($commit_message,
+            $commit_message = $this->askCommit($ask_commit) ? $this->question("Commit message: ") : false;
+            $commited       = $commit_message ? $this->commitChanges($commit_message,
                 '-a') : false;
-            if ( ! $to_commit) {
+            if ( ! $commited) {
                 throw new PhpBinException(
                     'Error adding the package '
                     . $package_name
