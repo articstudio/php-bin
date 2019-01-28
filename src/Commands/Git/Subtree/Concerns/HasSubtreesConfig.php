@@ -18,4 +18,11 @@ trait HasSubtreesConfig
         $subtrees = $this->getSubtrees();
         return isset($subtrees[$package_name]) ?? false;
     }
+
+    public function getLocalChanges()
+    {
+        $cmd = 'git status';
+        list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($cmd, false);
+        return $exit_code === 0 ? true : false;
+    }
 }
