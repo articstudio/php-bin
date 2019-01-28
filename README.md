@@ -143,7 +143,16 @@ php vendor/bin/phpbin composer:normalize [module_name]
 
 Normalize structure of project composer.json, and module or modules composer.json file.
 
-## [Changelog](https://github.com/articstudio/php-bin/commits/master)
+## [Changelog](https://github.com/articstudio/php-bin/releases)
 
-**2019-1-28 / [Mauro Balestra](https://github.com/Maurisss94)**
-> - Added documentation
+**2019-1-28 / [v1.0.2](https://github.com/articstudio/php-bin/releases/tag/1.0.2)**
+- Added documentation
+
+**2019-1-26 / [v1.0.1](https://github.com/articstudio/php-bin/releases/tag/1.0.1)**
+- Add CircleCi integration
+- PSR2 code fixes
+
+**2019-1-25 / [v1.0.0](https://github.com/articstudio/php-bin/releases/tag/1.0.0)**
+- Git Subtree
+- Composer
+- PHP
