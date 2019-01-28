@@ -44,12 +44,7 @@ class Remove extends PhpBinCommand
                 return 1;
             }
 
-            $package_names = is_int($option) ? array(array_keys($repositories)[$option]) : ($option === 'all' ? $repositories : array());
-        }
-
-        $subtree_exists = $this->subtreeExists($package_names);
-        if ( ! empty($subtree_exists)) {
-            $package_names = array_diff($subtree_exists, $package_names);
+            $package_names = is_int($option) ? array(array_keys($repositories)[$option]) : ($option === 'all' ? array_keys($repositories) : array());
         }
 
 
@@ -73,18 +68,10 @@ class Remove extends PhpBinCommand
         return $force_store;
     }
 
-    private function subtreeExists(array $package_names)
+    private function subtreeExists(string $package_name)
     {
-
-        $result = array();
-        foreach ($package_names as $p_name) {
-            $cmd = 'find -type d -name " ' . $p_name . '"';
-            list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($cmd, false);
-            $exit_code === 0 ? array_push($result, $p_name) : null;
-        }
-
-        return $result;
-
+        $cmd = 'find . -type d -wholename "./' . $package_name . '"';
+        list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($cmd, false);
     }
 
     private function removeDirAndRemoteSubtree(array $repositories, $package_names)
@@ -94,7 +81,7 @@ class Remove extends PhpBinCommand
             'skipped'   => [],
             'done'      => [],
             'error'     => [],
-            'not_found' => [],
+            'not_found' => []
         );
 
         foreach ($repositories as $repo_package => $repo_url) {
