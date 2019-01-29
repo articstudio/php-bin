@@ -56,9 +56,8 @@ class Add extends PhpBinCommand
 
         if ($input_store) {
             $this->addSubtreeToComposer(array($input_package_name => $input_repository));
-            $this->getLocalChanges() === true ? $this->commitChanges("Add subtree " . $input_package_name . '" composer.json', '-a') : false;
+            $this->getLocalChanges() === true ? $this->commitChanges("Add subtree " . $input_package_name . ' composer.json', '-a') : false;
         }
-        die;
 
         if ( ! $isMenu && ! $this->checkPackageInComposer($input_package_name)) {
             throw new PhpBinException('Package ' . $input_package_name . ' configuration not found');
@@ -76,8 +75,6 @@ class Add extends PhpBinCommand
 
         list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($cmd, false);
 
-        var_dump($output);
-        var_dump($exit_code);
         if ($exit_code === 1) {
             throw new PhpBinException('Error commit ' . $message);
         }
