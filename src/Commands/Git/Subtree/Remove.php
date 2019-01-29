@@ -13,7 +13,7 @@ class Remove extends PhpBinCommand
 
     use Concerns\HasSubtreesConfig;
     use \Articstudio\PhpBin\Concerns\HasWriteComposer;
-    use Concerns\HasSelectBehaviour;
+    use Concerns\HasSubtreeBehaviour;
 
     /**
      * Command name
@@ -57,23 +57,17 @@ class Remove extends PhpBinCommand
         }
 
         $this->showResume($result);
+
+        return 1;
     }
 
     protected function showNewPackageQuestions(?bool $force_store = null)
     {
         if ($force_store === null) {
-            $force_store = $this->confirmation('Remove this package/repository of the Composer config? (y/n)');
+            $force_store = $this->confirmation('Remove this package/repository of the Composer config? (y/n) ');
         }
 
         return $force_store;
-    }
-
-    private function subtreeExists(string $package_name)
-    {
-        $cmd = 'find . -type d -wholename "./' . $package_name . '"';
-        list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($cmd, false);
-
-        return $output !== "" ? true : false;
     }
 
     private function removeDirAndRemoteSubtree(array $repositories, array $package_names)

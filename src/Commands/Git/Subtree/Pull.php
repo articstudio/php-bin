@@ -10,7 +10,7 @@ class Pull extends PhpBinCommand
 {
 
     use Concerns\HasSubtreesConfig;
-    use Concerns\HasSelectBehaviour;
+    use Concerns\HasSubtreeBehaviour;
 
     /**
      * Command name
@@ -32,26 +32,22 @@ class Pull extends PhpBinCommand
         $package_names = $input->getArgument('package_name') ?: array();
 
         if (empty($package_names)) {
-            $menu_options = [
-                'select' => 'Select a subtree',
-                'all'    => 'All subtrees'
-            ];
+            $menu_options = array_keys($repositories) + [
+                    'all' => 'All subtrees'
+                ];
             $option       = $this->showMenu('Pull subtree', $menu_options);
 
             if ($option === null || $option === false) {
                 return 1;
             }
 
-            if ($option === 'select') {
-                $message              = 'Select one or multiple packages to would to pull:';
-                $choices_repositories = $this->showChoices($message, array_keys($repositories));
-                $repositories         = $this->getCommonPackages($repositories, $choices_repositories);
-            }
+            $package_names = is_int($option) ? array(array_keys($repositories)[$option]) : ($option === 'all' ? array_keys($repositories) : array());
         }
 
         $result = $this->subtreePull($repositories, $package_names);
-
         $this->showResume($result);
+
+        return 1;
     }
 
     private function subtreePull(array $repositories, $package_names)
@@ -64,6 +60,11 @@ class Pull extends PhpBinCommand
         );
         foreach ($repositories as $repo_package => $repo_url) {
             if (empty($package_names) || in_array($repo_package, $package_names)) {
+                if ( ! $this->subtreeExists($repo_package)) {
+                    $result['not_found'][] = $repo_package;
+                    unset($repositories[$repo_package]);
+                    continue;
+                }
                 $cmd = 'git subtree pull --prefix=' . $repo_package . '/ ' . $repo_package . ' master --squash';
                 list( $exit_code, $output, $exit_code_txt, $error ) = $this->callShell($cmd, false);
                 $key              = $exit_code === 0 ? 'done' : 'error';
@@ -73,11 +74,6 @@ class Pull extends PhpBinCommand
             $result['skipped'][] = $repo_package;
         }
 
-        foreach ($package_names as $package_name) {
-            if (! isset($repositories[ $package_name ])) {
-                $result['not_found'][] = $package_name;
-            }
-        }
 
         return $result;
     }

@@ -104,7 +104,7 @@ class Add extends PhpBinCommand
 
         $local_changes = $this->getLocalChanges();
         if ($local_changes) {
-            $ask_commit     = "Do you want to commit changes before? (y/n)";
+            $ask_commit     = "Do you want to commit changes before? (y/n) ";
             $commit_message = $this->askCommit($ask_commit) ? $this->question("Commit message: ") : false;
             $commited       = $commit_message ? $this->commitChanges($commit_message,
                 '-a') : false;
