@@ -89,7 +89,7 @@ class Add extends PhpBinCommand
         $git_repository = $this->question('Please enter the URL of the git repository: ');
         $store          = $force_store;
         if ($store === null) {
-            $store = $this->confirmation('Store this package/repository to the Composer config? ');
+            $store = $this->confirmation('Store this package/repository to the Composer config? (y/n) ');
         }
 
         return [$package_name, $git_repository, $store];

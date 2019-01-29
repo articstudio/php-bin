@@ -1,4 +1,5 @@
 <?php
+
 namespace Articstudio\PhpBin\Commands\Composer;
 
 use Articstudio\PhpBin\Commands\AbstractShellCommand as PhpBinShellCommand;
@@ -33,13 +34,13 @@ class Normalize extends PhpBinShellCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->composer = $this->getComposerData();
+        $packages       = $this->getSubtrees();
         $io             = $this->getStyle($output, $input);
         $module_dir     = $input->getArgument('module_name') ?: null;
-        $menu_options   = array(
-            'select' => 'Select a single module',
-            'all'    => 'All modules',
-            'root'   => 'Composer project'
-        );
+        $menu_options = array_keys($packages) + [
+                'all'  => 'All modules',
+                'root' => 'Composer project'
+            ];
 
         if ($module_dir === null) {
             $option  = $this->showMenu("Normalize composer", $menu_options);
@@ -49,11 +50,11 @@ class Normalize extends PhpBinShellCommand
         }
 
         foreach ($modules as $module_name) {
-            $output_messages      = array_map(function ($name) {
+            $output_messages = array_map(function ($name) {
                 return $this->normalizeComposerFile($name);
             }, $this->getComposerJson($module_name));
 
-            $this->showResultMessages($output_messages, $io);
+            $this->showResultMessages($output_messages, $io, $module_name);
         }
     }
 
@@ -61,19 +62,19 @@ class Normalize extends PhpBinShellCommand
     {
         $command = 'composer normalize --no-update-lock ' . $fname;
 
-        list( $exit_code, $output, $exit_code_txt, $error ) = $this->callShell($command, false);
+        list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($command, false);
 
         if ($exit_code === 1) {
             throw new PhpBinException("Error normalize composer file of : " . $fname);
         }
 
-        return ( $exit_code === 0 ) ? $output : [];
+        return ($exit_code === 0) ? $output : [];
     }
 
-    private function showResultMessages(array $messages, SymfonyStyle $output)
+    private function showResultMessages(array $messages, SymfonyStyle $output, string $module_name)
     {
-        $output->writeln("Normalize messages: ");
-        if (!empty($messages)) {
+        $output->writeln($module_name . ", normalize messages: ");
+        if ( ! empty($messages)) {
             foreach ($messages as $message) {
                 $output->writeln("\t" . $message);
             }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Articstudio\PhpBin\Commands\Composer;
 
 use Articstudio\PhpBin\Commands\AbstractShellCommand as PhpBinShellCommand;
@@ -33,12 +34,12 @@ class Update extends PhpBinShellCommand
     {
 
         $this->composer = $this->getComposerData();
+        $packages       = $this->getSubtrees();
         $this->versions = array_merge($this->composer['require-dev'], $this->composer['require']);
         $module_dir     = $input->getArgument('module_name') ?: null;
-        $menu_options   = array(
-            'select' => 'Select a single module',
-            'all'    => 'All modules'
-        );
+        $menu_options   = array_keys($packages) + [
+                'all' => 'All modules'
+            ];
 
         if ($module_dir === null) {
             $option  = $this->showMenu("Update packages versions", $menu_options);
@@ -59,10 +60,10 @@ class Update extends PhpBinShellCommand
     {
         $result = [];
         foreach ($obj as $package => $version) {
-            $result[ $package ] = $this->versions[ $package ] ?: $obj[ $package ];
             if (key_exists($package, $this->versions)) {
-                $symbol = $this->versions[ $package ] === $obj[ $package ] ? '=' : '+';
-                printf($symbol . "%s@%s \n", $package, $result[ $package ]);
+                $result[$package] = $this->versions[$package] ?: $obj[$package];
+                $symbol = $this->versions[$package] === $obj[$package] ? '=' : '+';
+                printf($symbol . "%s@%s \n", $package, $result[$package]);
             }
         }
 

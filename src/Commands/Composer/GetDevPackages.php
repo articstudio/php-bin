@@ -1,7 +1,9 @@
 <?php
+
 namespace Articstudio\PhpBin\Commands\Composer;
 
 use Articstudio\PhpBin\Commands\AbstractCommand as PhpBinCommand;
+use Composer\Semver\Constraint\Constraint;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -31,25 +33,26 @@ class GetDevPackages extends PhpBinCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->composer = $this->getComposerData();
-        $module_dir = $input->getArgument('module_name') ?: null;
-        $menu_options = array(
-            'select' => 'Select a single module',
-            'all' => 'All modules'
-        );
+        $packages       = $this->getSubtrees();
+        $module_dir     = $input->getArgument('module_name') ?: null;
+        $menu_options   = array_keys($packages) + [
+                'all' => 'All modules'
+            ];
 
         if ($module_dir === null) {
-            $option = $this->showMenu("Update packages versions", $menu_options);
+            $option  = $this->showMenu("Update packages versions", $menu_options);
             $modules = $this->getModulesByOption($option);
         } else {
             $modules[] = $module_dir;
         }
 
-
-        $requires_dev = array(
-            'require-dev' => array()
-        );
+        if ( ! key_exists('require', $this->composer)) {
+            $this->composer['require'] = [];
+        }
+        if ( ! key_exists('require-dev', $this->composer)) {
+            $this->composer['require-dev'] = [];
+        }
         foreach ($modules as $module_name) {
-            $this->composer = array_merge($this->composer, $requires_dev);
 
             array_map(function ($name) {
                 $this->mergeDependencies($name);
@@ -62,28 +65,27 @@ class GetDevPackages extends PhpBinCommand
 
     protected function addDependencies($dependencies, $fname)
     {
-        if (!$dependencies) {
+        if ( ! $dependencies) {
             return;
         }
         foreach ($dependencies as $dependency => $version) {
-            if (!key_exists($dependency, $this->composer['require']) &&
-                !key_exists($dependency, $this->composer['require-dev'])
-            ) {
+            if ( ! key_exists($dependency, $this->composer['require']) && ! key_exists($dependency,
+                    $this->composer['require-dev'])) {
                 $this->composer['require-dev'][$dependency] = $version;
                 printf("  + %s@%s \n", $dependency, $version);
                 continue;
             }
-            if ((
-                key_exists($dependency, $this->composer['require-dev']) &&
-                $this->composer['require-dev'][$dependency] === $version
-                ) ||
-                (
-                key_exists($dependency, $this->composer['require']) &&
-                $this->composer['require'][$dependency] === $version
-                )
-            ) {
+            if ((key_exists($dependency,
+                        $this->composer['require-dev']) && $this->composer['require-dev'][$dependency] === $version)
+                ||
+                (key_exists($dependency,
+                        $this->composer['require']) && $this->composer['require'][$dependency] === $version)) {
                 printf("  = %s@%s \n", $dependency, $version);
                 continue;
+            }
+            if (key_exists($dependency,
+                    $this->composer['require-dev']) && $this->composer['require-dev'][$dependency] < $version) {
+                $this->composer['require-dev'][$dependency] = $version;
             }
             printf("  ! %s@%s \n", $dependency, $version);
         }
