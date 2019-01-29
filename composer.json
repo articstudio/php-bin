@@ -30,7 +30,9 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
-        "subtree": {}
+        "subtree": {
+            "Partiklo/Console": "https://github.com/articstudio/partiklo-console.git"
+        }
     },
     "extra": {},
     "autoload": {
