@@ -31,7 +31,8 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "subtree": {
-            "Partiklo/Auth": "https://github.com/articstudio/partiklo-auth.git"
+            "Partiklo/Auth": "https://github.com/articstudio/partiklo-auth.git",
+            "Partiklo/console": "https://github.com/articstudio/partiklo-console.git"
         }
     },
     "extra": {},

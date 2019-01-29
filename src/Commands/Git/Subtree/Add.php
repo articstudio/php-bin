@@ -126,7 +126,7 @@ class Add extends PhpBinCommand
                 . $package_name
                 . ' subtree from '
                 . $git_repository
-                . ' it already exists'
+                . '. It already exists'
             );
         }
 
