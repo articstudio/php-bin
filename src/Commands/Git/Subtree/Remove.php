@@ -62,7 +62,7 @@ class Remove extends PhpBinCommand
     protected function showNewPackageQuestions(?bool $force_store = null)
     {
         if ($force_store === null) {
-            $force_store = $this->confirmation('Remove this package/repository of the Composer config? ');
+            $force_store = $this->confirmation('Remove this package/repository of the Composer config? (y/n)');
         }
 
         return $force_store;
@@ -87,10 +87,12 @@ class Remove extends PhpBinCommand
         );
 
         foreach ($repositories as $repo_package => $repo_url) {
-            if ( ! $this->subtreeExists($repo_package)) {
-                $result['not_found'][] = $repo_package;
-                unset($repositories[$repo_package]);
-            } elseif (empty($package_names) || in_array($repo_package, $package_names)) {
+            if (empty($package_names) || in_array($repo_package, $package_names)) {
+                if ( ! $this->subtreeExists($repo_package)) {
+                    $result['not_found'][] = $repo_package;
+                    unset($repositories[$repo_package]);
+                    continue;
+                }
                 $cmd = 'git remote rm ' . $repo_package;
                 $this->callShell($cmd, false);
                 $cmd = 'git rm -r ' . $repo_package . '/';
@@ -102,9 +104,9 @@ class Remove extends PhpBinCommand
                 $key            = $exit_code === 0 ? 'done' : 'error';
                 $result[$key][] = $repo_package;
                 continue;
-            } else {
-                $result['skipped'][] = $repo_package;
             }
+            $result['skipped'][] = $repo_package;
+
         }
 
         return $result;
