@@ -41,7 +41,8 @@ class Push extends PhpBinCommand
                 return 1;
             }
 
-            $package_names = is_int($option) ? array(array_keys($repositories)[$option]) : ($option === 'all' ? array_keys($repositories) : array());
+            $package_names = is_int($option) ? array(array_keys($repositories)[$option]) :
+                ($option === 'all' ? array_keys($repositories) : array());
         }
 
         $result = $this->pushSubtree($repositories, $package_names);
@@ -61,7 +62,7 @@ class Push extends PhpBinCommand
 
         foreach ($repositories as $repo_package => $repo_url) {
             if (empty($package_names) || in_array($repo_package, $package_names)) {
-                if ( ! $this->subtreeExists($repo_package)) {
+                if (! $this->subtreeExists($repo_package)) {
                     $result['not_found'][] = $repo_package;
                     unset($repositories[$repo_package]);
                     continue;

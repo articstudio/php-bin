@@ -74,7 +74,7 @@ class Normalize extends PhpBinShellCommand
     private function showResultMessages(array $messages, SymfonyStyle $output, string $module_name)
     {
         $output->writeln($module_name . ", normalize messages: ");
-        if ( ! empty($messages)) {
+        if (! empty($messages)) {
             foreach ($messages as $message) {
                 $output->writeln("\t" . $message);
             }

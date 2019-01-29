@@ -46,14 +46,13 @@ class GetDevPackages extends PhpBinCommand
             $modules[] = $module_dir;
         }
 
-        if ( ! key_exists('require', $this->composer)) {
+        if (! key_exists('require', $this->composer)) {
             $this->composer['require'] = [];
         }
-        if ( ! key_exists('require-dev', $this->composer)) {
+        if (! key_exists('require-dev', $this->composer)) {
             $this->composer['require-dev'] = [];
         }
         foreach ($modules as $module_name) {
-
             array_map(function ($name) {
                 $this->mergeDependencies($name);
             }, $this->getComposerJson($module_name));
@@ -65,26 +64,34 @@ class GetDevPackages extends PhpBinCommand
 
     protected function addDependencies($dependencies, $fname)
     {
-        if ( ! $dependencies) {
+        if (! $dependencies) {
             return;
         }
         foreach ($dependencies as $dependency => $version) {
-            if ( ! key_exists($dependency, $this->composer['require']) && ! key_exists($dependency,
-                    $this->composer['require-dev'])) {
+            if (! key_exists($dependency, $this->composer['require']) && ! key_exists(
+                $dependency,
+                $this->composer['require-dev']
+            )) {
                 $this->composer['require-dev'][$dependency] = $version;
                 printf("  + %s@%s \n", $dependency, $version);
                 continue;
             }
-            if ((key_exists($dependency,
-                        $this->composer['require-dev']) && $this->composer['require-dev'][$dependency] === $version)
+            if ((key_exists(
+                $dependency,
+                $this->composer['require-dev']
+            ) && $this->composer['require-dev'][$dependency] === $version)
                 ||
-                (key_exists($dependency,
-                        $this->composer['require']) && $this->composer['require'][$dependency] === $version)) {
+                (key_exists(
+                    $dependency,
+                    $this->composer['require']
+                ) && $this->composer['require'][$dependency] === $version)) {
                 printf("  = %s@%s \n", $dependency, $version);
                 continue;
             }
-            if (key_exists($dependency,
-                    $this->composer['require-dev']) && $this->composer['require-dev'][$dependency] < $version) {
+            if (key_exists(
+                $dependency,
+                $this->composer['require-dev']
+            ) && $this->composer['require-dev'][$dependency] < $version) {
                 $this->composer['require-dev'][$dependency] = $version;
             }
             printf("  ! %s@%s \n", $dependency, $version);

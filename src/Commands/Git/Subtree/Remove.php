@@ -43,7 +43,8 @@ class Remove extends PhpBinCommand
                 return 1;
             }
 
-            $package_names = is_int($option) ? array(array_keys($repositories)[$option]) : ($option === 'all' ? array_keys($repositories) : array());
+            $package_names = is_int($option) ? array(array_keys($repositories)[$option]) :
+                ($option === 'all' ? array_keys($repositories) : array());
         }
 
 
@@ -53,7 +54,6 @@ class Remove extends PhpBinCommand
 
         if ($input_store) {
             $this->removeSubtreeToComposer($package_names);
-
         }
 
         $this->showResume($result);
@@ -82,7 +82,7 @@ class Remove extends PhpBinCommand
 
         foreach ($repositories as $repo_package => $repo_url) {
             if (empty($package_names) || in_array($repo_package, $package_names)) {
-                if ( ! $this->subtreeExists($repo_package)) {
+                if (! $this->subtreeExists($repo_package)) {
                     $result['not_found'][] = $repo_package;
                     unset($repositories[$repo_package]);
                     continue;
@@ -100,7 +100,6 @@ class Remove extends PhpBinCommand
                 continue;
             }
             $result['skipped'][] = $repo_package;
-
         }
 
         return $result;

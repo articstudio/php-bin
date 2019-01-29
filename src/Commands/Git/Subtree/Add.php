@@ -56,10 +56,11 @@ class Add extends PhpBinCommand
 
         if ($input_store) {
             $this->addSubtreeToComposer(array($input_package_name => $input_repository));
-            $this->getLocalChanges() === true ? $this->commitChanges("Add subtree " . $input_package_name . ' composer.json', '-a') : false;
+            $this->getLocalChanges() === true ?
+                $this->commitChanges("Add subtree " .$input_package_name. ' composer.json', '-a') : false;
         }
 
-        if ( ! $isMenu && ! $this->checkPackageInComposer($input_package_name)) {
+        if (! $isMenu && ! $this->checkPackageInComposer($input_package_name)) {
             throw new PhpBinException('Package ' . $input_package_name . ' configuration not found');
         }
 
@@ -107,9 +108,11 @@ class Add extends PhpBinCommand
         if ($local_changes) {
             $ask_commit     = "Do you want to commit changes before? (y/n) ";
             $commit_message = $this->askCommit($ask_commit) ? $this->question("Commit message: ") : false;
-            $commited       = $commit_message ? $this->commitChanges($commit_message,
-                '-a') : false;
-            if ( ! $commited) {
+            $commited       = $commit_message ? $this->commitChanges(
+                $commit_message,
+                '-a'
+            ) : false;
+            if (! $commited) {
                 throw new PhpBinException(
                     'Error adding the package '
                     . $package_name
@@ -120,7 +123,7 @@ class Add extends PhpBinCommand
             }
         }
 
-        if($this->subtreeExists($package_name)) {
+        if ($this->subtreeExists($package_name)) {
             throw new PhpBinException(
                 'Error adding the package '
                 . $package_name
