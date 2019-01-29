@@ -32,7 +32,6 @@ class Remove extends PhpBinCommand
 
         $repositories        = $this->getSubtrees();
         $input_store         = null;
-        $remove_package_name = null;
         $package_names       = $input->getArgument('package_name') ?: array();
 
         if (empty($package_names)) {
@@ -53,7 +52,8 @@ class Remove extends PhpBinCommand
         $input_store = $this->showNewPackageQuestions();
 
         if ($input_store) {
-            $this->removeSubtreeToComposer($remove_package_name);
+            foreach ($repositories as $repository_name)
+                $this->removeSubtreeToComposer($repository_name);
         }
 
         $this->showResume($result);
