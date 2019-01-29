@@ -72,9 +72,11 @@ class Remove extends PhpBinCommand
     {
         $cmd = 'find . -type d -wholename "./' . $package_name . '"';
         list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($cmd, false);
+
+        return $output !== "" ? true : false;
     }
 
-    private function removeDirAndRemoteSubtree(array $repositories, $package_names)
+    private function removeDirAndRemoteSubtree(array $repositories, array $package_names)
     {
 
         $result = array(
@@ -85,7 +87,10 @@ class Remove extends PhpBinCommand
         );
 
         foreach ($repositories as $repo_package => $repo_url) {
-            if (empty($package_names) || in_array($repo_package, $package_names)) {
+            if ( ! $this->subtreeExists($repo_package)) {
+                $result['not_found'][] = $repo_package;
+                unset($repositories[$repo_package]);
+            } elseif (empty($package_names) || in_array($repo_package, $package_names)) {
                 $cmd = 'git remote rm ' . $repo_package;
                 $this->callShell($cmd, false);
                 $cmd = 'git rm -r ' . $repo_package . '/';
@@ -97,13 +102,8 @@ class Remove extends PhpBinCommand
                 $key            = $exit_code === 0 ? 'done' : 'error';
                 $result[$key][] = $repo_package;
                 continue;
-            }
-            $result['skipped'][] = $repo_package;
-        }
-
-        foreach ($package_names as $package_name) {
-            if ( ! isset($repositories[$package_name])) {
-                $result['not_found'][] = $package_name;
+            } else {
+                $result['skipped'][] = $repo_package;
             }
         }
 
