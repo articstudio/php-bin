@@ -1,4 +1,5 @@
 <?php
+
 namespace Articstudio\PhpBin\Concerns;
 
 use Articstudio\PhpBin\Application;
@@ -10,25 +11,35 @@ trait HasWriteComposer
 
     public function addSubtreeToComposer(array $itemToAdd)
     {
-        $composer                    = Application::getInstance()->getComposer();
-        $composer_file               = $composer['file'];
-        $config                      = $composer['data'];
-        if(!key_exists('subtree', $config['config']))
+        $composer      = Application::getInstance()->getComposer();
+        $composer_file = $composer['file'];
+        $config        = $composer['data'];
+        if ( ! key_exists('subtree', $config['config'])) {
             $config['config']['subtree'] = [];
+        }
         $subtrees                    = array_merge($config['config']['subtree'], $itemToAdd);
         $config['config']['subtree'] = $subtrees;
 
         $this->writeComposer($config, $composer_file);
     }
 
-    public function removeSubtreeToComposer(string $itemToRemove)
+    public function removeSubtreeToComposer(array $itemsToRemove)
     {
-        $composer      = Application::getInstance()->getComposer();
-        $composer_file = $composer['file'];
-        $config        = $composer['data'];
-        unset($composer['data']['config']['subtree'][ $itemToRemove ]);
-        $subtrees                    = $composer['data']['config']['subtree'];
-        $config['config']['subtree'] = $subtrees;
+        $composer         = Application::getInstance()->getComposer();
+        $composer_file    = $composer['file'];
+        $config           = $composer['data'];
+        if ( ! key_exists('subtree', $config['config'])) {
+            $config['config']['subtree'] = [];
+        }
+        $current_subtrees = $config['config']['subtree'];
+
+        foreach ($current_subtrees as $current_subtree => $current_subtree_url) {
+            if (in_array($current_subtree, $itemsToRemove)) {
+                unset($current_subtrees[$current_subtree]);
+            }
+        }
+
+        $config['config']['subtree'] = $current_subtrees;
 
         $this->writeComposer($config, $composer_file);
     }
@@ -40,15 +51,15 @@ trait HasWriteComposer
 
         $composer = json_decode(file_get_contents($composer_file), true);
 
-        $env = ( $env && ( $env === "d" || $env === "D" ) ) ? 'require-dev' : 'require';
+        $env = ($env && ($env === "d" || $env === "D")) ? 'require-dev' : 'require';
 
-        $packages         = $composer[ $env ] + $itemToAdd;
-        $composer[ $env ] = $packages;
+        $packages       = $composer[$env] + $itemToAdd;
+        $composer[$env] = $packages;
 
-        $env = ( $env !== 'require-dev' ) ? 'require-dev' : 'require';
+        $env = ($env !== 'require-dev') ? 'require-dev' : 'require';
 
-        if (key_exists($env, $composer) && key_exists($input_package_name, $composer[ $env ])) {
-            unset($composer[ $env ][ $input_package_name ]);
+        if (key_exists($env, $composer) && key_exists($input_package_name, $composer[$env])) {
+            unset($composer[$env][$input_package_name]);
         }
         $this->writeComposer($composer, $composer_file);
     }

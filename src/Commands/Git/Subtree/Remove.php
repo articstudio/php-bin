@@ -30,9 +30,9 @@ class Remove extends PhpBinCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
-        $repositories        = $this->getSubtrees();
-        $input_store         = null;
-        $package_names       = $input->getArgument('package_name') ?: array();
+        $repositories  = $this->getSubtrees();
+        $input_store   = null;
+        $package_names = $input->getArgument('package_name') ?: array();
 
         if (empty($package_names)) {
             $menu_options = array_keys($repositories) + [
@@ -52,9 +52,8 @@ class Remove extends PhpBinCommand
         $input_store = $this->showNewPackageQuestions();
 
         if ($input_store) {
-            var_dump($package_names);
-            foreach ($package_names as $package_name)
-                $this->removeSubtreeToComposer($package_name);
+            $this->removeSubtreeToComposer($package_names);
+
         }
 
         $this->showResume($result);
