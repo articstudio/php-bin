@@ -13,6 +13,7 @@ class Add extends PhpBinCommand
 
     use \Articstudio\PhpBin\Concerns\HasWriteComposer;
     use Concerns\HasSubtreesConfig;
+    use Concerns\HasSubtreeBehaviour;
 
     /**
      * Command name
@@ -117,6 +118,16 @@ class Add extends PhpBinCommand
                     . ' because have local changes to commit.'
                 );
             }
+        }
+
+        if($this->subtreeExists($package_name)) {
+            throw new PhpBinException(
+                'Error adding the package '
+                . $package_name
+                . ' subtree from '
+                . $git_repository
+                . ' it already exists'
+            );
         }
 
         $cmd_remote_add  = 'git remote add ' . $package_name . ' ' . $git_repository;
