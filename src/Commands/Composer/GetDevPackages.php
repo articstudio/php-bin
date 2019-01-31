@@ -2,13 +2,12 @@
 
 namespace Articstudio\PhpBin\Commands\Composer;
 
-use Articstudio\PhpBin\Commands\AbstractCommand as PhpBinCommand;
-use Composer\Semver\Constraint\Constraint;
+use Articstudio\PhpBin\Commands\AbstractCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GetDevPackages extends PhpBinCommand
+class GetDevPackages extends AbstractCommand
 {
 
     use \Articstudio\PhpBin\Concerns\HasWriteComposer;
@@ -18,12 +17,15 @@ class GetDevPackages extends PhpBinCommand
 
     protected $composer;
 
+    protected $io;
+
     /**
      * Command name
      *
      * @var string
      */
     protected static $defaultName = 'composer:dev-packages';
+
 
     protected function configure()
     {
@@ -32,26 +34,20 @@ class GetDevPackages extends PhpBinCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->io   = $this->getStyle($output, $input);
+        $module_dir = $input->getArgument('module_name') ?: null;
+        $options    = $this->getSubtrees() + array('all' => 'All submodules');
+        $option     = ($module_dir === null) ? $this->selectPackageMenu("Update packages versions", $options) : null;
+
+        if ($option === 'back') {
+            return $this->callCommandByName('composer:menu', [], $output);
+        }
+
+        $modules = ($module_dir === null) ? $this->getModulesByOption($option) : [$module_dir];
+
         $this->composer = $this->getComposerData();
-        $packages       = $this->getSubtrees();
-        $module_dir     = $input->getArgument('module_name') ?: null;
-        $menu_options   = array_keys($packages) + [
-                'all' => 'All modules'
-            ];
+        $this->initComposerRequires();
 
-        if ($module_dir === null) {
-            $option  = $this->showMenu("Update packages versions", $menu_options);
-            $modules = $this->getModulesByOption($option);
-        } else {
-            $modules[] = $module_dir;
-        }
-
-        if (! key_exists('require', $this->composer)) {
-            $this->composer['require'] = [];
-        }
-        if (! key_exists('require-dev', $this->composer)) {
-            $this->composer['require-dev'] = [];
-        }
         foreach ($modules as $module_name) {
             array_map(function ($name) {
                 $this->mergeDependencies($name);
@@ -62,45 +58,60 @@ class GetDevPackages extends PhpBinCommand
         $this->writeComposer($this->composer, $this->getComposerFile());
     }
 
+
+    protected function initComposerRequires()
+    {
+        if ( ! key_exists('require', $this->composer)) {
+            $this->composer['require'] = [];
+        }
+        if ( ! key_exists('require-dev', $this->composer)) {
+            $this->composer['require-dev'] = [];
+        }
+    }
+
     protected function addDependencies($dependencies, $fname)
     {
-        if (! $dependencies) {
+        if ( ! $dependencies) {
             return;
         }
         foreach ($dependencies as $dependency => $version) {
-            if (! key_exists($dependency, $this->composer['require']) && ! key_exists(
-                $dependency,
-                $this->composer['require-dev']
-            )) {
+            if ( ! key_exists($dependency, $this->composer['require']) && ! key_exists(
+                    $dependency,
+                    $this->composer['require-dev']
+                )) {
                 $this->composer['require-dev'][$dependency] = $version;
-                printf("  + %s@%s \n", $dependency, $version);
+                $this->io->success("  + " . $dependency . "@" . $version . "");
+                //printf("  + %s@%s \n", $dependency, $version);
                 continue;
             }
             if ((key_exists(
-                $dependency,
-                $this->composer['require-dev']
-            ) && $this->composer['require-dev'][$dependency] === $version)
+                     $dependency,
+                     $this->composer['require-dev']
+                 ) && $this->composer['require-dev'][$dependency] === $version)
                 ||
                 (key_exists(
-                    $dependency,
-                    $this->composer['require']
-                ) && $this->composer['require'][$dependency] === $version)) {
-                printf("  = %s@%s \n", $dependency, $version);
+                     $dependency,
+                     $this->composer['require']
+                 ) && $this->composer['require'][$dependency] === $version)) {
+                //printf("  = %s@%s \n", $dependency, $version);
+                $this->io->note("  = " . $dependency . "@" . $version . "");
                 continue;
             }
             if (key_exists(
-                $dependency,
-                $this->composer['require-dev']
-            ) && $this->composer['require-dev'][$dependency] < $version) {
+                    $dependency,
+                    $this->composer['require-dev']
+                ) && $this->composer['require-dev'][$dependency] < $version) {
                 $this->composer['require-dev'][$dependency] = $version;
             }
-            printf("  ! %s@%s \n", $dependency, $version);
+            //printf("  ! %s@%s \n", $dependency, $version);
+            $this->io->warning("  ! " . $dependency . "@" . $version . "");
         }
     }
 
     private function mergeDependencies($fname)
     {
-        printf("%s: \n", $fname);
+        //printf("%s: \n", $fname);
+        $this->io->text($fname);
         $data = json_decode(file_get_contents($fname), true);
         if (key_exists('require', $data)) {
             $this->addDependencies($data['require'], $fname);
@@ -110,10 +121,4 @@ class GetDevPackages extends PhpBinCommand
         }
     }
 
-    protected function showNewPackageQuestions()
-    {
-        return $this->question(
-            'Please enter the name of the module where you want to get the require/require-dev packages: '
-        );
-    }
 }
