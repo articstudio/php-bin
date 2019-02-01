@@ -37,8 +37,9 @@ class GetDevPackages extends AbstractCommand
         $this->io   = $this->getStyle($output, $input);
         $module_dir = $input->getArgument('module_name') ?: null;
         $options    = array_keys($this->getSubtrees()) + array('all' => 'All submodules');
-        $option     = ($module_dir === null) ? $this->selectPackageMenu("Update packages versions", $options) : null;
+        $option     = ($module_dir === null) ? $this->selectPackageMenu("Load packages to project", $options) : null;
 
+        $this->io->title('Loaded packages');
         if ($option === 'back') {
             return $this->callCommandByName('composer:menu', [], $output);
         }
@@ -56,6 +57,8 @@ class GetDevPackages extends AbstractCommand
 
 
         $this->writeComposer($this->composer, $this->getComposerFile());
+
+        return $this->exit($output, 0);
     }
 
 

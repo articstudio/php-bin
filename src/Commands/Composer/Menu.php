@@ -22,7 +22,7 @@ class Menu extends PhpBinMenuCommand
         'composer:install' => 'Install package',
         'composer:update-versions' => 'Update versions',
         'composer:normalize' => 'Normalize',
-        'composer:dev-packages' => 'Dev packages',
+        'composer:dev-packages' => 'Load packages',
     ];
     
     /**
