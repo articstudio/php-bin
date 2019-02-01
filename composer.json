@@ -25,13 +25,16 @@
         "symfony/console": "^4.2",
         "symfony/process": "^4.2"
     },
-    "require-dev": {},
+    "require-dev": {
+        "test": "4.99"
+    },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
         "subtree": {
-            "Articstudio/git-test": "https://github.com/articstudio/git-test.git"
+            "Articstudio/git-test": "https://github.com/articstudio/git-test.git",
+            "Partiklo/Database-migrations": "https://github.com/articstudio/partiklo-database-migrations.git"
         }
     },
     "extra": {},
