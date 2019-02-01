@@ -80,8 +80,7 @@ class GetDevPackages extends AbstractCommand
                     $this->composer['require-dev']
                 )) {
                 $this->composer['require-dev'][$dependency] = $version;
-                $this->io->success("+ " . $dependency . "@" . $version . "");
-                //printf("  + %s@%s \n", $dependency, $version);
+                $this->io->writeln("<info> + " . $dependency . "@" . $version . "</info>");
                 continue;
             }
             if ((key_exists(
@@ -93,8 +92,7 @@ class GetDevPackages extends AbstractCommand
                      $dependency,
                      $this->composer['require']
                  ) && $this->composer['require'][$dependency] === $version)) {
-                //printf("  = %s@%s \n", $dependency, $version);
-                $this->io->note("= " . $dependency . "@" . $version . "");
+                $this->io->writeln(" = " . $dependency . "@" . $version . "");
                 continue;
             }
             if (key_exists(
@@ -103,15 +101,20 @@ class GetDevPackages extends AbstractCommand
                 ) && $this->composer['require-dev'][$dependency] < $version) {
                 $this->composer['require-dev'][$dependency] = $version;
             }
-            //printf("  ! %s@%s \n", $dependency, $version);
-            $this->io->warning("! " . $dependency . "@" . $version . "");
+            if (key_exists(
+                    $dependency,
+                    $this->composer['require']
+                ) && $this->composer['require'][$dependency] < $version) {
+                $this->composer['require'][$dependency] = $version;
+            }
+            $this->io->writeln('<comment>'. " ! ".$dependency . "@" . $version. '</comment>');
         }
+
     }
 
     private function mergeDependencies($fname)
     {
-        //printf("%s: \n", $fname);
-        $this->io->text($fname);
+        $this->io->section($fname);
         $data = json_decode(file_get_contents($fname), true);
         if (key_exists('require', $data)) {
             $this->addDependencies($data['require'], $fname);
