@@ -1,19 +1,16 @@
 <?php
+
 namespace Articstudio\PhpBin\Commands\Git\Subtree\Concerns;
 
-trait HasSelectBehaviour
+trait HasSubtreeBehaviour
 {
 
-    public function getCommonPackages($repositories, $choices_repositories)
+    protected function subtreeExists(string $package_name)
     {
-        $res = array();
-        foreach ($repositories as $repository => $repository_url) {
-            if (in_array($repository, $choices_repositories)) {
-                $res[ $repository ] = $repository_url;
-            }
-        }
+        $cmd = 'find . -type d -wholename "./' . $package_name . '"';
+        list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($cmd, false);
 
-        return $res;
+        return $output !== "" ? true : false;
     }
 
     public function showResume(array $result)
