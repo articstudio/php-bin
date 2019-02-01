@@ -36,7 +36,7 @@ class GetDevPackages extends AbstractCommand
     {
         $this->io   = $this->getStyle($output, $input);
         $module_dir = $input->getArgument('module_name') ?: null;
-        $options    = array_keys($this->getSubtrees()) + array('all' => 'All submodules');
+        $options    = array_keys($this->getSubtrees()) + array('all' => 'All modules');
         $option     = ($module_dir === null) ? $this->selectPackageMenu("Load packages to project", $options) : null;
 
         $this->io->title('Loaded packages');
@@ -110,7 +110,7 @@ class GetDevPackages extends AbstractCommand
                 ) && $this->composer['require'][$dependency] < $version) {
                 $this->composer['require'][$dependency] = $version;
             }
-            $this->io->writeln('<comment>'. " ! ".$dependency . "@" . $version. '</comment>');
+            $this->io->writeln('<comment>' . " ! " . $dependency . "@" . $version . '</comment>');
         }
 
     }
