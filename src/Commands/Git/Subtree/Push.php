@@ -52,7 +52,7 @@ class Push extends AbstractCommand
         $result = $this->pushSubtree($repositories, $package_names);
         $this->showResume($result);
 
-        return 1;
+        return $this->exit($output, 0);
     }
 
     private function pushSubtree(array $repositories, $package_names)

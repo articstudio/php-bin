@@ -64,7 +64,7 @@ class Pull extends AbstractCommand
         $result = $this->subtreePull($repositories, $package_names);
         $this->showResume($result);
 
-        return 1;
+        return $this->exit($output, 0);
     }
 
     private function subtreePull(array $repositories, $package_names)
