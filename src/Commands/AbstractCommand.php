@@ -91,6 +91,15 @@ abstract class AbstractCommand extends SymfonyCommand
         );
     }
 
+    public function selectPackageMenu(string $title, array $menu_options)
+    {
+        $menu = $this->menu($title, $menu_options);
+        $menu->addLineBreak();
+        $menu->addOption('back', 'Back');
+
+        return $menu->open();
+    }
+
     /**
      * Call command by name
      *

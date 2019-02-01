@@ -16,6 +16,7 @@ class Check extends PhpBinCommand
     {
 
         $io = $this->getStyle($output, $input);
+        $io->title('Diff subtrees');
         $cmd_subtrees_git = "git log"
             ." | grep git-subtree-dir"
             ." | tr -d ' '"
@@ -26,19 +27,20 @@ class Check extends PhpBinCommand
         $subtrees_composer = $this->getSubtrees();
         list( $exit_code, $subtrees_git, $exit_code_txt, $error ) = $this->callShell($cmd_subtrees_git, true);
 
-        $io->writeln("Composer subtrees: ");
+        $io->section("Composer subtrees: ");
         if (isset($subtrees_composer)) {
             foreach ($subtrees_composer as $name => $url) {
-                $io->writeln("\t" . $name . ' => ' . $url);
+                $io->writeln($name);
             }
         }
 
-        $io->writeln("");
+        $io->newLine();
 
-        $io->writeln("Git subtrees: ");
+        $io->section("Git subtrees: ");
         if (isset($subtrees_git)) {
-            $io->writeln("\t" . $subtrees_git);
+            $io->writeln($subtrees_git);
         }
-        $io->writeln("");
+
+        return $this->exit($output, 0);
     }
 }

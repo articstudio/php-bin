@@ -1,4 +1,5 @@
 <?php
+
 namespace Articstudio\PhpBin\Commands\Composer\Concerns;
 
 trait HasComposerBehaviour
@@ -7,23 +8,23 @@ trait HasComposerBehaviour
     protected function getComposerJson($dirname)
     {
         $command = 'find ' . $dirname . ' -type f -name "composer.json"';
-        list( $exit_code, $output, $exit_code_txt, $error ) = $this->callShell($command, false);
+        list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($command, false);
         $return = array_filter(explode("\n", $output), function ($value) {
             return $value !== '';
         });
 
-        return ( $exit_code === 0 ) ? $return : [];
+        return ($exit_code === 0) ? $return : [];
     }
 
     protected function getModulesByOption($option)
     {
         $modules = [];
-        if ($option === 'select') {
-            $modules = $this->showChoices("Select a module to normalize composer: ", array_keys($this->getSubtrees()));
-        } elseif ($option === 'all') {
+        if ($option === 'all') {
             $modules = array_keys($this->getSubtrees());
         } elseif ($option === 'root') {
             $modules[] = $this->getComposerFile();
+        } elseif (is_int($option)) {
+            $modules[] = array_keys($this->getSubtrees())[$option];
         }
 
         return $modules;
