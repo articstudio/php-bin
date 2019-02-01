@@ -36,7 +36,7 @@ class GetDevPackages extends AbstractCommand
     {
         $this->io   = $this->getStyle($output, $input);
         $module_dir = $input->getArgument('module_name') ?: null;
-        $options    = $this->getSubtrees() + array('all' => 'All submodules');
+        $options    = array_keys($this->getSubtrees()) + array('all' => 'All submodules');
         $option     = ($module_dir === null) ? $this->selectPackageMenu("Update packages versions", $options) : null;
 
         if ($option === 'back') {
@@ -80,7 +80,7 @@ class GetDevPackages extends AbstractCommand
                     $this->composer['require-dev']
                 )) {
                 $this->composer['require-dev'][$dependency] = $version;
-                $this->io->success("  + " . $dependency . "@" . $version . "");
+                $this->io->success("+ " . $dependency . "@" . $version . "");
                 //printf("  + %s@%s \n", $dependency, $version);
                 continue;
             }
@@ -94,7 +94,7 @@ class GetDevPackages extends AbstractCommand
                      $this->composer['require']
                  ) && $this->composer['require'][$dependency] === $version)) {
                 //printf("  = %s@%s \n", $dependency, $version);
-                $this->io->note("  = " . $dependency . "@" . $version . "");
+                $this->io->note("= " . $dependency . "@" . $version . "");
                 continue;
             }
             if (key_exists(
@@ -104,7 +104,7 @@ class GetDevPackages extends AbstractCommand
                 $this->composer['require-dev'][$dependency] = $version;
             }
             //printf("  ! %s@%s \n", $dependency, $version);
-            $this->io->warning("  ! " . $dependency . "@" . $version . "");
+            $this->io->warning("! " . $dependency . "@" . $version . "");
         }
     }
 
