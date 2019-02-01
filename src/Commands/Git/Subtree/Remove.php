@@ -58,7 +58,7 @@ class Remove extends PhpBinCommand
 
         $this->showResume($result);
 
-        return 1;
+        return $this->exit($output, 0);
     }
 
     protected function showNewPackageQuestions(?bool $force_store = null)

@@ -26,7 +26,8 @@
         "symfony/process": "^4.2"
     },
     "require-dev": {
-        "test": "4.99"
+        "illuminate/database": "5.7.*",
+        "psr/log": "^1.1"
     },
     "config": {
         "optimize-autoloader": true,

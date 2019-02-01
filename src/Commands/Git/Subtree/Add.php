@@ -2,19 +2,21 @@
 
 namespace Articstudio\PhpBin\Commands\Git\Subtree;
 
-use Articstudio\PhpBin\Commands\AbstractCommand as PhpBinCommand;
+use Articstudio\PhpBin\Commands\AbstractCommand;
 use Articstudio\PhpBin\PhpBinException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Add extends PhpBinCommand
+class Add extends AbstractCommand
 {
 
     use \Articstudio\PhpBin\Concerns\HasWriteComposer;
     use Concerns\HasSubtreesConfig;
     use Concerns\HasSubtreeBehaviour;
 
+
+    protected $io;
     /**
      * Command name
      *
@@ -30,7 +32,7 @@ class Add extends PhpBinCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $packages           = $this->getSubtrees();
-        $io                 = $this->getStyle($output, $input);
+        $this->io           = $this->getStyle($output, $input);
         $input_package_name = $input->getArgument('package_name') ?: null;
         $input_repository   = null;
         $input_store        = null;
@@ -39,13 +41,17 @@ class Add extends PhpBinCommand
             $menu_options       = array_keys($packages) + [
                     'new' => 'New package'
                 ];
-            $user_choice        = $this->showMenu("Subtree packages", $menu_options);
+            $user_choice        = $this->selectPackageMenu("Subtree packages", $menu_options);
             $input_package_name = is_int($user_choice) ? array_keys($packages)[$user_choice] : $user_choice;
             $isMenu             = true;
         }
 
-        if ($input_package_name === null || $input_package_name === false) {
-            return 1;
+        if ($input_package_name === 'back') {
+            return $this->callCommandByName('git', [], $output);
+        }
+
+        if ($input_package_name === null) {
+            return $this->exit($output, 1);
         }
 
         $input_repository = $packages[$input_package_name] ?? null;
@@ -56,18 +62,16 @@ class Add extends PhpBinCommand
 
         if ($input_store) {
             $this->addSubtreeToComposer(array($input_package_name => $input_repository));
-            $this->getLocalChanges() === true ?
-                $this->commitChanges("Add subtree " .$input_package_name. ' composer.json', '-a') : false;
         }
 
-        if (! $isMenu && ! $this->checkPackageInComposer($input_package_name)) {
+        if ( ! $isMenu && ! $this->checkPackageInComposer($input_package_name)) {
             throw new PhpBinException('Package ' . $input_package_name . ' configuration not found');
         }
 
         $txt = $this->addGitSubtree($input_package_name, $input_repository);
-        $io->writeln($txt);
+        $this->io->writeln($txt);
 
-        return 1;
+        return $this->exit($output, 0);
     }
 
     protected function commitChanges(string $message, string $files)
@@ -86,11 +90,11 @@ class Add extends PhpBinCommand
 
     protected function showNewPackageQuestions(?bool $force_store = null)
     {
-        $package_name   = $this->question('Please enter the name of the package: ');
-        $git_repository = $this->question('Please enter the URL of the git repository: ');
+        $package_name   = $this->io->ask('Please enter the name of the package: ');
+        $git_repository = $this->io->ask('Please enter the URL of the git repository: ');
         $store          = $force_store;
         if ($store === null) {
-            $store = $this->confirmation('Store this package/repository to the Composer config? (y/n) ');
+            $store = $this->io->confirm('Store this package/repository to the Composer config? ');
         }
 
         return [$package_name, $git_repository, $store];
@@ -106,13 +110,13 @@ class Add extends PhpBinCommand
 
         $local_changes = $this->getLocalChanges();
         if ($local_changes) {
-            $ask_commit     = "Do you want to commit changes before? (y/n) ";
-            $commit_message = $this->askCommit($ask_commit) ? $this->question("Commit message: ") : false;
+            $ask_commit     = "You need to commit changes before add a subtree. ";
+            $commit_message = $this->io->ask($ask_commit . " \n Commit message: ", "wip");
             $commited       = $commit_message ? $this->commitChanges(
                 $commit_message,
                 '-a'
             ) : false;
-            if (! $commited) {
+            if ( ! $commited) {
                 throw new PhpBinException(
                     'Error adding the package '
                     . $package_name
