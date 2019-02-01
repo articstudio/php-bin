@@ -40,8 +40,10 @@ class Update extends AbstractCommand
         $this->versions = array_merge($this->composer['require-dev'], $this->composer['require']);
         $module_dir     = $input->getArgument('module_name') ?: null;
         $options        = array_keys($this->getSubtrees()) + array('all' => 'All modules');
-        $option         = ($module_dir === null) ? $this->selectPackageMenu("Update packages versions",
-            $options) : null;
+        $option         = ($module_dir === null) ? $this->selectPackageMenu(
+            "Update packages versions",
+            $options
+        ) : null;
 
         $this->io->title('Version conflicts solved');
         if ($option === 'back') {
@@ -95,5 +97,4 @@ class Update extends AbstractCommand
 
         $this->writeComposer($this->composer, $fname);
     }
-
 }

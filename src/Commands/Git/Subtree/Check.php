@@ -30,7 +30,7 @@ class Check extends PhpBinCommand
         $io->section("Composer subtrees: ");
         if (isset($subtrees_composer)) {
             foreach ($subtrees_composer as $name => $url) {
-                $io->writeln( $name );
+                $io->writeln($name);
             }
         }
 

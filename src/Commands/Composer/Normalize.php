@@ -42,8 +42,10 @@ class Normalize extends AbstractCommand
                 'all'  => 'All modules'
             );
 
-        $option = ($module_dir === null) ? $this->selectPackageMenu("Normalize composer",
-            $options) : null;
+        $option = ($module_dir === null) ? $this->selectPackageMenu(
+            "Normalize composer",
+            $options
+        ) : null;
 
         $this->io->title('Composer normalized');
         if ($option === 'back') {
@@ -79,7 +81,7 @@ class Normalize extends AbstractCommand
     private function showResultMessages(array $messages, string $module_name)
     {
         $this->io->section($module_name . ", normalize messages: ");
-        if ( ! empty($messages)) {
+        if (! empty($messages)) {
             foreach ($messages as $message) {
                 $this->io->writeln("\t" . $message);
             }

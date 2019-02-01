@@ -64,55 +64,54 @@ class GetDevPackages extends AbstractCommand
 
     protected function initComposerRequires()
     {
-        if ( ! key_exists('require', $this->composer)) {
+        if (! key_exists('require', $this->composer)) {
             $this->composer['require'] = [];
         }
-        if ( ! key_exists('require-dev', $this->composer)) {
+        if (! key_exists('require-dev', $this->composer)) {
             $this->composer['require-dev'] = [];
         }
     }
 
     protected function addDependencies($dependencies, $fname)
     {
-        if ( ! $dependencies) {
+        if (! $dependencies) {
             return;
         }
         foreach ($dependencies as $dependency => $version) {
-            if ( ! key_exists($dependency, $this->composer['require']) && ! key_exists(
-                    $dependency,
-                    $this->composer['require-dev']
-                )) {
+            if (! key_exists($dependency, $this->composer['require']) && ! key_exists(
+                $dependency,
+                $this->composer['require-dev']
+            )) {
                 $this->composer['require-dev'][$dependency] = $version;
                 $this->io->writeln("<info> + " . $dependency . "@" . $version . "</info>");
                 continue;
             }
             if ((key_exists(
-                     $dependency,
-                     $this->composer['require-dev']
-                 ) && $this->composer['require-dev'][$dependency] === $version)
+                $dependency,
+                $this->composer['require-dev']
+            ) && $this->composer['require-dev'][$dependency] === $version)
                 ||
                 (key_exists(
-                     $dependency,
-                     $this->composer['require']
-                 ) && $this->composer['require'][$dependency] === $version)) {
+                    $dependency,
+                    $this->composer['require']
+                ) && $this->composer['require'][$dependency] === $version)) {
                 $this->io->writeln(" = " . $dependency . "@" . $version . "");
                 continue;
             }
             if (key_exists(
-                    $dependency,
-                    $this->composer['require-dev']
-                ) && $this->composer['require-dev'][$dependency] < $version) {
+                $dependency,
+                $this->composer['require-dev']
+            ) && $this->composer['require-dev'][$dependency] < $version) {
                 $this->composer['require-dev'][$dependency] = $version;
             }
             if (key_exists(
-                    $dependency,
-                    $this->composer['require']
-                ) && $this->composer['require'][$dependency] < $version) {
+                $dependency,
+                $this->composer['require']
+            ) && $this->composer['require'][$dependency] < $version) {
                 $this->composer['require'][$dependency] = $version;
             }
             $this->io->writeln('<comment>' . " ! " . $dependency . "@" . $version . '</comment>');
         }
-
     }
 
     private function mergeDependencies($fname)
@@ -126,5 +125,4 @@ class GetDevPackages extends AbstractCommand
             $this->addDependencies($data['require-dev'], $fname);
         }
     }
-
 }

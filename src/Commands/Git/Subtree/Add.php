@@ -64,7 +64,7 @@ class Add extends AbstractCommand
             $this->addSubtreeToComposer(array($input_package_name => $input_repository));
         }
 
-        if ( ! $isMenu && ! $this->checkPackageInComposer($input_package_name)) {
+        if (! $isMenu && ! $this->checkPackageInComposer($input_package_name)) {
             throw new PhpBinException('Package ' . $input_package_name . ' configuration not found');
         }
 
@@ -98,7 +98,7 @@ class Add extends AbstractCommand
                 $commit_message,
                 '-a'
             ) : false;
-            if ( ! $commited) {
+            if (! $commited) {
                 throw new PhpBinException(
                     'Error adding the package '
                     . $package_name

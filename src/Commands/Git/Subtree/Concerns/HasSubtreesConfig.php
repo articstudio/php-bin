@@ -44,5 +44,3 @@ trait HasSubtreesConfig
         return $output !== '' ? $output : $error_msg;
     }
 }
-
-

@@ -23,7 +23,7 @@ trait HasComposerBehaviour
             $modules = array_keys($this->getSubtrees());
         } elseif ($option === 'root') {
             $modules[] = $this->getComposerFile();
-        } else if(is_int($option)){
+        } elseif (is_int($option)) {
             $modules[] = array_keys($this->getSubtrees())[$option];
         }
 

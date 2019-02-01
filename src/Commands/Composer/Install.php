@@ -52,7 +52,7 @@ class Install extends PhpBinCommand
 
         $composer_module_file = $composer_dir . '/' . $input_module_name . '/composer.json';
 
-        if ( ! file_exists($composer_module_file)) {
+        if (! file_exists($composer_module_file)) {
             throw new PhpBinException('composer.json file not found: ' . $composer_module_file);
         }
 
@@ -82,7 +82,7 @@ class Install extends PhpBinCommand
     private function requireDevPackage($version, $input_package_name)
     {
 
-        if ( ! $version) {
+        if (! $version) {
             try {
                 $command = 'composer require --dev ' . $input_package_name;
                 list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($command, false);
@@ -97,7 +97,7 @@ class Install extends PhpBinCommand
             }
         }
 
-        if ( ! $version) {
+        if (! $version) {
             try {
                 throw new PhpBinException("Package not found: " . $input_package_name);
             } catch (PhpBinException $exception) {

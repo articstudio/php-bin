@@ -33,10 +33,7 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
-        "subtree": {
-            "Articstudio/git-test": "https://github.com/articstudio/git-test.git",
-            "Partiklo/Database-migrations": "https://github.com/articstudio/partiklo-database-migrations.git"
-        }
+        "subtree": {}
     },
     "extra": {},
     "autoload": {
