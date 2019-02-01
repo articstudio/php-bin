@@ -2,13 +2,12 @@
 
 namespace Articstudio\PhpBin\Commands\Git\Subtree;
 
-use Articstudio\PhpBin\Commands\AbstractCommand as PhpBinCommand;
-use Articstudio\PhpBin\PhpBinException;
+use Articstudio\PhpBin\Commands\AbstractCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 
-class Remove extends PhpBinCommand
+class Remove extends AbstractCommand
 {
 
     use Concerns\HasSubtreesConfig;
@@ -38,9 +37,14 @@ class Remove extends PhpBinCommand
             $menu_options = array_keys($repositories) + [
                     'all' => 'All subtrees'
                 ];
-            $option       = $this->showMenu('Remove Subtrees', $menu_options);
+            $option       = $this->selectPackageMenu('Remove Subtrees', $menu_options);
+
+            if ($option === 'back') {
+                return $this->callCommandByName('git', [], $output);
+            }
+
             if ($option === null) {
-                return 1;
+                return $this->exit($output, 1);
             }
 
             $package_names = is_int($option) ? array(array_keys($repositories)[$option]) :
@@ -82,7 +86,7 @@ class Remove extends PhpBinCommand
 
         foreach ($repositories as $repo_package => $repo_url) {
             if (empty($package_names) || in_array($repo_package, $package_names)) {
-                if (! $this->subtreeExists($repo_package)) {
+                if ( ! $this->subtreeExists($repo_package)) {
                     $result['not_found'][] = $repo_package;
                     unset($repositories[$repo_package]);
                     continue;

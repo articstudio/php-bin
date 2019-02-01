@@ -74,19 +74,6 @@ class Add extends AbstractCommand
         return $this->exit($output, 0);
     }
 
-    protected function commitChanges(string $message, string $files)
-    {
-        $cmd = 'git commit -m "' . $message . '" ' . $files;
-
-        list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($cmd, false);
-
-        if ($exit_code === 1) {
-            throw new PhpBinException('Error commit ' . $message);
-        }
-        $error_msg = $exit_code_txt . "\n" . $error;
-
-        return $output !== '' ? $output : $error_msg;
-    }
 
     protected function showNewPackageQuestions(?bool $force_store = null)
     {
@@ -98,11 +85,6 @@ class Add extends AbstractCommand
         }
 
         return [$package_name, $git_repository, $store];
-    }
-
-    protected function askCommit(string $message)
-    {
-        return $this->confirmation($message);
     }
 
     protected function addGitSubtree($package_name, $git_repository)

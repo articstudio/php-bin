@@ -2,12 +2,12 @@
 
 namespace Articstudio\PhpBin\Commands\Git\Subtree;
 
-use Articstudio\PhpBin\Commands\AbstractCommand as PhpBinCommand;
+use Articstudio\PhpBin\Commands\AbstractCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 
-class Push extends PhpBinCommand
+class Push extends AbstractCommand
 {
 
     use Concerns\HasSubtreesConfig;
@@ -35,7 +35,11 @@ class Push extends PhpBinCommand
             $menu_options = array_keys($repositories) + [
                     'all' => 'All subtrees'
                 ];
-            $option       = $this->showMenu('Push subtrees', $menu_options);
+            $option       = $this->selectPackageMenu('Push subtrees', $menu_options);
+
+            if ($option === 'back') {
+                return $this->callCommandByName('git', [], $output);
+            }
 
             if ($option === null) {
                 return 1;
