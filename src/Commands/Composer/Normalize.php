@@ -2,15 +2,14 @@
 
 namespace Articstudio\PhpBin\Commands\Composer;
 
-use Articstudio\PhpBin\Commands\AbstractShellCommand as PhpBinShellCommand;
-
+use Articstudio\PhpBin\Commands\AbstractCommand;
 use Articstudio\PhpBin\PhpBinException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class Normalize extends PhpBinShellCommand
+class Normalize extends AbstractCommand
 {
     use \Articstudio\PhpBin\Concerns\HasWriteComposer;
     use Concerns\HasComposerConfig;
@@ -18,6 +17,8 @@ class Normalize extends PhpBinShellCommand
     use \Articstudio\PhpBin\Commands\Git\Subtree\Concerns\HasSubtreesConfig;
 
     protected $composer;
+
+    protected $io;
 
     /**
      * Command name
@@ -33,29 +34,33 @@ class Normalize extends PhpBinShellCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->io       = $this->getStyle($output, $input);
         $this->composer = $this->getComposerData();
-        $packages       = $this->getSubtrees();
-        $io             = $this->getStyle($output, $input);
         $module_dir     = $input->getArgument('module_name') ?: null;
-        $menu_options = array_keys($packages) + [
-                'all'  => 'All modules',
-                'root' => 'Composer project'
-            ];
+        $options        = array_keys($this->getSubtrees()) + array(
+                'root' => 'Composer project',
+                'all'  => 'All modules'
+            );
 
-        if ($module_dir === null) {
-            $option  = $this->showMenu("Normalize composer", $menu_options);
-            $modules = $this->getModulesByOption($option);
-        } else {
-            $modules[] = $module_dir;
+        $option = ($module_dir === null) ? $this->selectPackageMenu("Normalize composer",
+            $options) : null;
+
+        $this->io->title('Composer normalized');
+        if ($option === 'back') {
+            return $this->callCommandByName('composer:menu', [], $output);
         }
+
+        $modules = ($module_dir === null) ? $this->getModulesByOption($option) : [$module_dir];
 
         foreach ($modules as $module_name) {
             $output_messages = array_map(function ($name) {
                 return $this->normalizeComposerFile($name);
             }, $this->getComposerJson($module_name));
 
-            $this->showResultMessages($output_messages, $io, $module_name);
+            $this->showResultMessages($output_messages, $module_name);
         }
+
+        return $this->exit($output, 0);
     }
 
     private function normalizeComposerFile($fname)
@@ -65,21 +70,21 @@ class Normalize extends PhpBinShellCommand
         list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($command, false);
 
         if ($exit_code === 1) {
-            throw new PhpBinException("Error normalize composer file of : " . $fname);
+            throw new PhpBinException("Error normalize composer file of : " . $fname . ' '. $error);
         }
 
         return ($exit_code === 0) ? $output : [];
     }
 
-    private function showResultMessages(array $messages, SymfonyStyle $output, string $module_name)
+    private function showResultMessages(array $messages, string $module_name)
     {
-        $output->writeln($module_name . ", normalize messages: ");
-        if (! empty($messages)) {
+        $this->io->section($module_name . ", normalize messages: ");
+        if ( ! empty($messages)) {
             foreach ($messages as $message) {
-                $output->writeln("\t" . $message);
+                $this->io->writeln("\t" . $message);
             }
         } else {
-            $output->writeln("Not composer.json found");
+            $this->io->writeln("Not composer.json found");
         }
     }
 }
