@@ -2,12 +2,12 @@
 
 namespace Articstudio\PhpBin\Commands\Composer;
 
-use Articstudio\PhpBin\Commands\AbstractShellCommand as PhpBinShellCommand;
+use Articstudio\PhpBin\Commands\AbstractCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Update extends PhpBinShellCommand
+class Update extends AbstractCommand
 {
 
     use \Articstudio\PhpBin\Concerns\HasWriteComposer;
@@ -16,7 +16,10 @@ class Update extends PhpBinShellCommand
     use \Articstudio\PhpBin\Commands\Git\Subtree\Concerns\HasSubtreesConfig;
 
     protected $composer;
+
     protected $versions;
+
+    protected $io;
 
     /**
      * Command name
@@ -32,21 +35,20 @@ class Update extends PhpBinShellCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
+        $this->io       = $this->getStyle($output, $input);
         $this->composer = $this->getComposerData();
-        $packages       = $this->getSubtrees();
         $this->versions = array_merge($this->composer['require-dev'], $this->composer['require']);
         $module_dir     = $input->getArgument('module_name') ?: null;
-        $menu_options   = array_keys($packages) + [
-                'all' => 'All modules'
-            ];
+        $options        = array_keys($this->getSubtrees()) + array('all' => 'All modules');
+        $option         = ($module_dir === null) ? $this->selectPackageMenu("Update packages versions",
+            $options) : null;
 
-        if ($module_dir === null) {
-            $option  = $this->showMenu("Update packages versions", $menu_options);
-            $modules = $this->getModulesByOption($option);
-        } else {
-            $modules[] = $module_dir;
+        $this->io->title('Version conflicts solved');
+        if ($option === 'back') {
+            return $this->callCommandByName('composer:menu', [], $output);
         }
+
+        $modules = ($module_dir === null) ? $this->getModulesByOption($option) : [$module_dir];
 
 
         foreach ($modules as $module_name) {
@@ -54,6 +56,8 @@ class Update extends PhpBinShellCommand
                 $this->overrideAllDependenciesVersions($name);
             }, $this->getComposerJson($module_name));
         }
+
+        return $this->exit($output, 0);
     }
 
     private function replaceDependenciesVersions($obj)
@@ -62,8 +66,9 @@ class Update extends PhpBinShellCommand
         foreach ($obj as $package => $version) {
             if (key_exists($package, $this->versions)) {
                 $result[$package] = $this->versions[$package] ?: $obj[$package];
-                $symbol = $this->versions[$package] === $obj[$package] ? '=' : '+';
-                printf($symbol . "%s@%s \n", $package, $result[$package]);
+                $symbol           = $this->versions[$package] === $obj[$package] ? '=' : '+';
+                $symbol === '+' ? $this->io->writeln("<info> + " . $package . "@" . $result[$package] . "</info>")
+                    : $this->io->writeln(" = " . $package . "@" . $result[$package]);
             }
         }
 
@@ -72,7 +77,7 @@ class Update extends PhpBinShellCommand
 
     private function overrideAllDependenciesVersions($fname)
     {
-        printf("%s: \n", $fname);
+        $this->io->section($fname);
 
         $this->composer = json_decode(file_get_contents($fname), true);
 
@@ -81,17 +86,14 @@ class Update extends PhpBinShellCommand
         );
         $this->composer = array_merge($this->composer, $requires_dev);
 
-        printf(">> require-dev \n");
+        $this->io->writeln("---- REQUIRE DEV ----");
         $this->composer['require-dev'] = $this->replaceDependenciesVersions($this->composer['require-dev']);
-        printf(">> require \n");
+        $this->io->newLine();
+        $this->io->writeln("---- REQUIRE ----");
         $this->composer['require'] = $this->replaceDependenciesVersions($this->composer['require']);
 
 
         $this->writeComposer($this->composer, $fname);
     }
 
-    protected function showNewPackageQuestions()
-    {
-        return $this->question('Please enter the name of the module where you want to solve the versions problems: ');
-    }
 }
