@@ -1,0 +1,46 @@
+{
+    "name": "partiklo/database-migrations",
+    "description": "Partiklo Database Migrations.",
+    "keywords": [
+        "partiklo",
+        "database",
+        "migrations",
+        "database-migrations"
+    ],
+    "type": "library",
+    "homepage": "https://github.com/articstudio/partio-database-migrations",
+    "support": {
+        "issues": "https://github.com/articstudio/partiklo-database-migrations/issues",
+        "source": "https://github.com/articstudio/partiklo-database-migrations"
+    },
+    "authors": [
+        {
+            "name": "Artic studio",
+            "email": "developers@articstudio.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://composer.articstudio.com"
+        },
+        {
+            "type": "composer",
+            "url": "https://packagist.org"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.3",
+        "illuminate/database": "5.7.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Partiklo\\DatabaseMigrations\\": ""
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "require-dev": []
+}
