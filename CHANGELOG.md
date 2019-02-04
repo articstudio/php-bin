@@ -1,28 +1,28 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-##[1.0.3] - 2019-02-01
+## [1.0.3] - 2019-02-01
 
-###Fixed
+### Fixed
 
 - General bugs
 
-##[1.0.2] - 2019-01-28
+## [ 1.0.2] - 2019-01-28
 
 ###Added
 
 - Documentation
 
-##[1.0.1] - 2019-01-26
-###Added
+## [1.0.1] - 2019-01-26
+### Added
 - CircleCi integration
 
-###Changed
+### Changed
 - PSR2 code fixes
 
-##[1.0.0] - 2019-01-25
+## [1.0.0] - 2019-01-25
 
-###Added
+### Added
 - Git Subtree
 - Composer
 - PHP
