@@ -54,7 +54,8 @@ class Check extends PhpBinCommand
         return $this->exit($output, 0);
     }
 
-    private function writeSubtreeInfo(array $subtree) {
+    private function writeSubtreeInfo(array $subtree)
+    {
         if (isset($subtree)) {
             foreach ($subtree as $name) {
                 $this->io->writeln($name);

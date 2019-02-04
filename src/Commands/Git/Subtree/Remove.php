@@ -89,7 +89,7 @@ class Remove extends AbstractCommand
 
         foreach ($repositories as $repo_package => $repo_url) {
             if (empty($package_names) || in_array($repo_package, $package_names)) {
-                if ( ! $this->subtreeExists($repo_package)) {
+                if (! $this->subtreeExists($repo_package)) {
                     $result['not_found'][] = $repo_package;
                     unset($repositories[$repo_package]);
                     continue;
