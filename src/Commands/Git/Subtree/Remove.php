@@ -14,6 +14,8 @@ class Remove extends AbstractCommand
     use \Articstudio\PhpBin\Concerns\HasWriteComposer;
     use Concerns\HasSubtreeBehaviour;
 
+    protected $io;
+
     /**
      * Command name
      *
@@ -29,6 +31,7 @@ class Remove extends AbstractCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
+        $this->io      = $this->getStyle($output, $input);
         $repositories  = $this->getSubtrees();
         $input_store   = null;
         $package_names = $input->getArgument('package_name') ?: array();
@@ -60,7 +63,7 @@ class Remove extends AbstractCommand
             $this->removeSubtreeToComposer($package_names);
         }
 
-        $this->showResume($result);
+        $this->showResume($result, $this->io);
 
         return $this->exit($output, 0);
     }
@@ -86,7 +89,7 @@ class Remove extends AbstractCommand
 
         foreach ($repositories as $repo_package => $repo_url) {
             if (empty($package_names) || in_array($repo_package, $package_names)) {
-                if (! $this->subtreeExists($repo_package)) {
+                if ( ! $this->subtreeExists($repo_package)) {
                     $result['not_found'][] = $repo_package;
                     unset($repositories[$repo_package]);
                     continue;

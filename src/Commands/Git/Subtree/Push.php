@@ -13,6 +13,8 @@ class Push extends AbstractCommand
     use Concerns\HasSubtreesConfig;
     use Concerns\HasSubtreeBehaviour;
 
+    protected $io;
+
     /**
      * Command name
      *
@@ -28,6 +30,7 @@ class Push extends AbstractCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $repositories = $this->getSubtrees();
+        $this->io     = $this->getStyle($output, $input);
 
         $package_names = $input->getArgument('package_name') ?: array();
 
@@ -50,7 +53,7 @@ class Push extends AbstractCommand
         }
 
         $result = $this->pushSubtree($repositories, $package_names);
-        $this->showResume($result);
+        $this->showResume($result, $this->io);
 
         return $this->exit($output, 0);
     }
@@ -66,7 +69,7 @@ class Push extends AbstractCommand
 
         foreach ($repositories as $repo_package => $repo_url) {
             if (empty($package_names) || in_array($repo_package, $package_names)) {
-                if (! $this->subtreeExists($repo_package)) {
+                if ( ! $this->subtreeExists($repo_package)) {
                     $result['not_found'][] = $repo_package;
                     unset($repositories[$repo_package]);
                     continue;
