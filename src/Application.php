@@ -18,7 +18,7 @@ final class Application
      *
      * @var string
      */
-    private static $version = '1.0.0';
+    private static $version = '1.0.4';
 
     /**
      * Singleton self instance
