@@ -34,9 +34,9 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "subtree": {
-            "Articstudio/git-test" : "https://github.com/articstudio/git-test.git",
-            "Articstudio/prova" : "https://github.com/articstudio/git-test.git",
-            "Articstudio/test" : "https://github.com/articstudio/git-test.git"
+            "Articstudio/prova": "https://github.com/articstudio/git-test.git",
+            "Articstudio/test": "https://github.com/articstudio/git-test.git",
+            "Partiklo/console": "https://github.com/articstudio/partiklo-console.git"
         }
     },
     "extra": {},

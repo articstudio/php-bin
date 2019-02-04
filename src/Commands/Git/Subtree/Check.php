@@ -49,7 +49,7 @@ class Check extends PhpBinCommand
         $this->io->newLine();
 
         $this->io->section("Only subtrees: ");
-        $this->writeSubtreeInfo(array_diff($composer_and_subtree, $subtrees_git));
+        $this->writeSubtreeInfo(array_diff($subtrees_git, $composer_and_subtree));
 
         return $this->exit($output, 0);
     }
