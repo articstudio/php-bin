@@ -10,13 +10,18 @@ class Check extends PhpBinCommand
 
     use Concerns\HasSubtreesConfig;
 
+    protected $io;
+
     protected static $defaultName = 'git:subtree:check';
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
-        $io = $this->getStyle($output, $input);
-        $io->title('Diff subtrees');
+        $this->io = $this->getStyle($output, $input);
+        $this->io->title('Diff subtrees');
+
+        $this->io->section("Composer + subtree: ");
+
         $cmd_subtrees_git = "git log"
             ." | grep git-subtree-dir"
             ." | tr -d ' '"
@@ -24,23 +29,37 @@ class Check extends PhpBinCommand
             ." | sort"
             ." | uniq"
             ." | xargs -I {} bash -c 'if [ -d $(git rev-parse --show-toplevel)/{} ] ; then echo {}; fi'";
-        $subtrees_composer = $this->getSubtrees();
+
+        $subtrees_composer = array_keys($this->getSubtrees());
         list( $exit_code, $subtrees_git, $exit_code_txt, $error ) = $this->callShell($cmd_subtrees_git, true);
 
-        $io->section("Composer subtrees: ");
-        if (isset($subtrees_composer)) {
-            foreach ($subtrees_composer as $name => $url) {
-                $io->writeln($name);
-            }
-        }
+        $subtrees_git = array_filter(explode("\n", $subtrees_git), function ($value) {
+            return $value !== '';
+        });
 
-        $io->newLine();
+        $composer_and_subtree = array_intersect($subtrees_composer, $subtrees_git);
 
-        $io->section("Git subtrees: ");
-        if (isset($subtrees_git)) {
-            $io->writeln($subtrees_git);
-        }
+        $this->writeSubtreeInfo($composer_and_subtree);
+
+        $this->io->newLine();
+
+        $this->io->section("Only composer: ");
+        $this->writeSubtreeInfo(array_diff($subtrees_composer, $subtrees_git));
+
+        $this->io->newLine();
+
+        $this->io->section("Only subtrees: ");
+        $this->writeSubtreeInfo(array_diff($subtrees_git, $composer_and_subtree));
 
         return $this->exit($output, 0);
+    }
+
+    private function writeSubtreeInfo(array $subtree)
+    {
+        if (isset($subtree)) {
+            foreach ($subtree as $name) {
+                $this->io->writeln($name);
+            }
+        }
     }
 }

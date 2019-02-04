@@ -53,7 +53,7 @@ class Pull extends AbstractCommand
 
         $local_changes = $this->getLocalChanges();
         if ($local_changes) {
-            $ask_commit     = "You need to commit changes before add a subtree. ";
+            $ask_commit     = "You need to commit changes before pull a subtree. ";
             $commit_message = $this->io->ask($ask_commit . " \n Commit message: ", "wip");
             $commited       = $commit_message ? $this->commitChanges(
                 $commit_message,
@@ -62,7 +62,7 @@ class Pull extends AbstractCommand
         }
 
         $result = $this->subtreePull($repositories, $package_names);
-        $this->showResume($result);
+        $this->showResume($result, $this->io);
 
         return $this->exit($output, 0);
     }
