@@ -30,32 +30,33 @@ class Check extends PhpBinCommand
             ." | uniq"
             ." | xargs -I {} bash -c 'if [ -d $(git rev-parse --show-toplevel)/{} ] ; then echo {}; fi'";
 
-        $subtrees_composer = $this->getSubtrees();
+        $subtrees_composer = array_keys($this->getSubtrees());
         list( $exit_code, $subtrees_git, $exit_code_txt, $error ) = $this->callShell($cmd_subtrees_git, true);
 
         $subtrees_git = array_filter(explode("\n", $subtrees_git), function ($value) {
             return $value !== '';
         });
-        $composer_subtree = array_diff($subtrees_git, $subtrees_composer);
 
-        $this->writeSubtreeInfo($composer_subtree);
+        $composer_and_subtree = array_intersect($subtrees_composer, $subtrees_git);
+
+        $this->writeSubtreeInfo($composer_and_subtree);
 
         $this->io->newLine();
 
         $this->io->section("Only composer: ");
-        $this->writeSubtreeInfo($subtrees_composer);
+        $this->writeSubtreeInfo(array_diff($subtrees_composer, $subtrees_git));
 
         $this->io->newLine();
 
         $this->io->section("Only subtrees: ");
-        $this->writeSubtreeInfo($subtrees_git);
+        $this->writeSubtreeInfo(array_diff($composer_and_subtree, $subtrees_git));
 
         return $this->exit($output, 0);
     }
 
     private function writeSubtreeInfo(array $subtree) {
         if (isset($subtree)) {
-            foreach ($subtree as $name => $url) {
+            foreach ($subtree as $name) {
                 $this->io->writeln($name);
             }
         }
