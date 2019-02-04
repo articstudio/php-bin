@@ -34,7 +34,7 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "subtree": {
-            "Articstudio/git-test": "google.com"
+            "Articstudio/git-test" : "https://github.com/articstudio/git-test.git"
         }
     },
     "extra": {},
