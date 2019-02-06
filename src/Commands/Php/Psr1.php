@@ -13,7 +13,7 @@ class Psr1 extends PhpBinShellCommand
      */
     protected $shellCommand = 'php ./vendor/bin/phpcs '
         . '--standard=PSR1 --colors '
-        . '--ignore=*/vendor/*,*/build/*,*/resources/* ./';
+        . '--ignore=*/vendor/*,*/build/*,*/resources/*,*/test*/* ./';
 
     /**
      * Command name

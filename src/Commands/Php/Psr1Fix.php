@@ -13,7 +13,7 @@ class Psr1Fix extends PhpBinShellCommand
      */
     protected $shellCommand = 'php ./vendor/bin/phpcbf '
         . '--standard=PSR1 --colors '
-        . '--ignore=*/vendor/*,*/build/*,*/resources/* ./';
+        . '--ignore=*/vendor/*,*/build/*,*/resources/*,*/test*/* ./';
 
     /**
      * Command name
