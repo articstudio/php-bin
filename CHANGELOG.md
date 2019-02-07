@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.0.6] - 2019-02-07
+
+### Fixed
+
+- Fix PSR-2 for tests
+
 ## [1.0.5] - 2019-02-06
 
 ### Fixed
@@ -40,6 +46,7 @@ All notable changes to this project will be documented in this file.
 - PHP
 
 
+[1.0.6]: https://github.com/articstudio/php-bin/releases/tag/1.0.6
 [1.0.5]: https://github.com/articstudio/php-bin/releases/tag/1.0.5
 [1.0.4]: https://github.com/articstudio/php-bin/releases/tag/1.0.4
 [1.0.3]: https://github.com/articstudio/php-bin/releases/tag/1.0.3
