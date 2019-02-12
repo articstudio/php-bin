@@ -67,7 +67,7 @@ class Normalize extends AbstractCommand
 
     private function normalizeComposerFile($fname)
     {
-        $command = 'composer normalize --no-update-lock ' . $fname;
+        $command = 'composer normalize --no-update-lock --working-dir=' . dirname($fname);
 
         list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($command, false);
 
