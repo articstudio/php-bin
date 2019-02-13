@@ -18,14 +18,10 @@
     },
     "autoload": {
         "psr-4": {
-            "Articstudio\\GitTest\\": "src/"
+            "Articstudio\\GitTest\\": ""
         }
     },
     "repositories": [
-        {
-            "type": "composer",
-            "url": "https://composer.articstudio.com"
-        },
         {
             "type": "composer",
             "url": "https://packagist.org"
