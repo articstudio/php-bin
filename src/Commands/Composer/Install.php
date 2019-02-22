@@ -85,7 +85,7 @@ class Install extends PhpBinCommand
         if (! $version) {
             try {
                 $command = 'composer require --dev ' . $input_package_name;
-                list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($command, false);
+                list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($command, false, 240);
                 if ($exit_code === 1) {
                     throw new PhpBinException("Error installing package: " . $input_package_name . " " . $error);
                 }
