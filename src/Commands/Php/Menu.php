@@ -5,7 +5,7 @@ use Articstudio\PhpBin\Commands\AbstractMenuCommand as PhpBinMenuCommand;
 
 class Menu extends PhpBinMenuCommand
 {
-    
+
     /**
      * Menu title
      *
@@ -21,13 +21,15 @@ class Menu extends PhpBinMenuCommand
     protected $menuOptions = [
         'php:lint' => 'Lint',
         'php:metrics' => 'Metrics',
+        'php:style' => 'Style',
+        'php:style:fix' => 'Fix Style',
         'php:psr1' => 'PSR1 Style',
         'php:psr1:fix' => 'Fix PSR1 Style',
         'php:psr2' => 'PSR2 Style',
         'php:psr2:fix' => 'Fix PSR2 Style',
         'php:test' => 'Testing',
     ];
-    
+
     /**
      * Back command name
      *
@@ -41,7 +43,7 @@ class Menu extends PhpBinMenuCommand
      * @var string
      */
     protected static $defaultName = 'php';
-    
+
     /**
      * Configure command
      */
