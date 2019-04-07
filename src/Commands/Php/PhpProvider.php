@@ -15,6 +15,8 @@ class PhpProvider extends AbstractProvider
         '\Articstudio\PhpBin\Commands\Php\Menu',
         '\Articstudio\PhpBin\Commands\Php\Lint',
         '\Articstudio\PhpBin\Commands\Php\Metrics',
+        '\Articstudio\PhpBin\Commands\Php\Style',
+        '\Articstudio\PhpBin\Commands\Php\StyleFix',
         '\Articstudio\PhpBin\Commands\Php\Psr1',
         '\Articstudio\PhpBin\Commands\Php\Psr1Fix',
         '\Articstudio\PhpBin\Commands\Php\Psr2',

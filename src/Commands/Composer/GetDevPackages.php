@@ -70,6 +70,9 @@ class GetDevPackages extends AbstractCommand
         if (! key_exists('require-dev', $this->composer)) {
             $this->composer['require-dev'] = [];
         }
+        if (! key_exists('replace', $this->composer)) {
+            $this->composer['replace'] = [];
+        }
     }
 
     protected function addDependencies($dependencies, $fname)
@@ -78,6 +81,12 @@ class GetDevPackages extends AbstractCommand
             return;
         }
         foreach ($dependencies as $dependency => $version) {
+            if (key_exists($dependency, $this->composer['replace'])
+                && $this->composer['replace'][$dependency] === 'self.version') {
+                $this->io->writeln(" i " . $dependency . "@" . $version . "");
+                continue;
+            }
+
             if (! key_exists($dependency, $this->composer['require']) && ! key_exists(
                 $dependency,
                 $this->composer['require-dev']

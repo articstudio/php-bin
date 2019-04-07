@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2019-04-07
+
+### Added
+- Add PHP style from config file
+### Fixed
+- Fix & update composer.json
+- Fix dev packages replace self.version
+
 ## [1.0.7] - 2019-02-22
 
 ### Fixed
@@ -52,6 +60,7 @@ All notable changes to this project will be documented in this file.
 - PHP
 
 
+[1.1.0]: https://github.com/articstudio/php-bin/releases/tag/1.1.0
 [1.0.7]: https://github.com/articstudio/php-bin/releases/tag/1.0.7
 [1.0.6]: https://github.com/articstudio/php-bin/releases/tag/1.0.6
 [1.0.5]: https://github.com/articstudio/php-bin/releases/tag/1.0.5
