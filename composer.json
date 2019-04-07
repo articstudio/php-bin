@@ -3,8 +3,8 @@
     "type": "library",
     "description": "",
     "keywords": [
-        "partio",
-        "lingvo"
+        "php",
+        "bin"
     ],
     "homepage": "https://github.com/articstudio/php-bin",
     "authors": [
@@ -25,10 +25,7 @@
         "symfony/console": "^4.2",
         "symfony/process": "^4.2"
     },
-    "require-dev": {
-        "illuminate/database": "5.7.*",
-        "psr/log": "^1.1"
-    },
+    "require-dev": {},
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
@@ -65,5 +62,6 @@
     },
     "bin": [
         "bin/phpbin"
-    ]
+    ],
+    "replace": {}
 }
