@@ -1,9 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Articstudio\PhpBin\Commands\Git;
 
-use Articstudio\PhpBin\Providers\AbstractProvider;
+use Articstudio\PhpBin\Providers\Provider;
 
-class GitProvider extends AbstractProvider
+class GitProvider extends Provider
 {
 
     /**

@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Articstudio\PhpBin\Commands\Composer;
 
-use Articstudio\PhpBin\Commands\AbstractCommand;
+use Articstudio\PhpBin\Commands\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Update extends AbstractCommand
+class Update extends Command
 {
 
     use \Articstudio\PhpBin\Concerns\HasWriteComposer;
@@ -39,8 +41,8 @@ class Update extends AbstractCommand
         $this->composer = $this->getComposerData();
         $this->versions = array_merge($this->composer['require-dev'], $this->composer['require']);
         $module_dir     = $input->getArgument('module_name') ?: null;
-        $options        = array_keys($this->getSubtrees()) + array('all' => 'All modules');
-        $option         = ($module_dir === null) ? $this->selectPackageMenu(
+        $options        = array_keys($this->getSubtrees()) + ['all' => 'All modules'];
+        $option         = $module_dir === null ? $this->selectPackageMenu(
             "Update packages versions",
             $options
         ) : null;
@@ -50,8 +52,7 @@ class Update extends AbstractCommand
             return $this->callCommandByName('composer:menu', [], $output);
         }
 
-        $modules = ($module_dir === null) ? $this->getModulesByOption($option) : [$module_dir];
-
+        $modules = $module_dir === null ? $this->getModulesByOption($option) : [$module_dir];
 
         foreach ($modules as $module_name) {
             array_map(function ($name) {
@@ -65,7 +66,7 @@ class Update extends AbstractCommand
     private function replaceDependenciesVersions($obj)
     {
         $result = [];
-        foreach ($obj as $package => $version) {
+        foreach (array_keys($obj) as $package) {
             if (key_exists($package, $this->versions)) {
                 $result[$package] = $this->versions[$package] ?: $obj[$package];
                 $symbol           = $this->versions[$package] === $obj[$package] ? '=' : '+';
@@ -83,9 +84,9 @@ class Update extends AbstractCommand
 
         $this->composer = json_decode(file_get_contents($fname), true);
 
-        $requires_dev   = array(
-            'require-dev' => array()
-        );
+        $requires_dev   = [
+            'require-dev' => [],
+        ];
         $this->composer = array_merge($this->composer, $requires_dev);
 
         $this->io->writeln("---- REQUIRE DEV ----");
@@ -93,7 +94,6 @@ class Update extends AbstractCommand
         $this->io->newLine();
         $this->io->writeln("---- REQUIRE ----");
         $this->composer['require'] = $this->replaceDependenciesVersions($this->composer['require']);
-
 
         $this->writeComposer($this->composer, $fname);
     }

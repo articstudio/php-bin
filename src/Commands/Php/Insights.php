@@ -6,7 +6,7 @@ namespace Articstudio\PhpBin\Commands\Php;
 
 use Articstudio\PhpBin\Commands\ShellCommand as PhpBinShellCommand;
 
-class Lint extends PhpBinShellCommand
+class Insights extends PhpBinShellCommand
 {
 
     /**
@@ -14,12 +14,12 @@ class Lint extends PhpBinShellCommand
      *
      * @var string
      */
-    protected $shellCommand = 'php ./vendor/bin/parallel-lint . --exclude vendor --exclude build --colors';
+    protected $shellCommand = 'php ./vendor/bin/phpinsights';
 
     /**
      * Command name
      *
      * @var string
      */
-    protected static $defaultName = 'php:lint';
+    protected static $defaultName = 'php:insights';
 }

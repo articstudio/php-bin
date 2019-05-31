@@ -23,7 +23,9 @@
         "phpunit/phpunit": "~7.0",
         "squizlabs/php_codesniffer": "^3.3",
         "symfony/console": "^4.2",
-        "symfony/process": "^4.2"
+        "symfony/process": "^4.2",
+        "nunomaduro/phpinsights": "^1.0",
+        "consistence/coding-standard": "~3.8"
     },
     "replace": {},
     "require-dev": {},
@@ -59,7 +61,13 @@
     "bin": [
         "bin/phpbin"
     ],
-    "scripts": {},
+    "scripts": {
+        "lint": "php ./vendor/bin/parallel-lint . --exclude vendor --exclude build --colors",
+        "style": "php ./vendor/bin/phpcs --colors ./",
+        "fix-style": "php ./vendor/bin/phpcbf --colors ./",
+        "metrics": "php ./vendor/bin/phpmetrics --report-html=\"./build/metrics\" ./",
+        "insights": "php ./vendor/bin/phpinsights"
+    },
     "support": {
         "issues": "https://github.com/articstudio/php-bin/issues",
         "source": "https://github.com/articstudio/php-bin"

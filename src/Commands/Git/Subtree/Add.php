@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Articstudio\PhpBin\Commands\Git\Subtree;
 
-use Articstudio\PhpBin\Commands\AbstractCommand;
-use Articstudio\PhpBin\PhpBinException;
+use Articstudio\PhpBin\Commands\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Add extends AbstractCommand
+class Add extends Command
 {
 
     use \Articstudio\PhpBin\Concerns\HasWriteComposer;
@@ -39,8 +40,8 @@ class Add extends AbstractCommand
         $isMenu             = false;
         if ($input_package_name === null) {
             $menu_options       = array_keys($packages) + [
-                    'new' => 'New package'
-                ];
+                'new' => 'New package',
+            ];
             $user_choice        = $this->selectPackageMenu("Subtree packages", $menu_options);
             $input_package_name = is_int($user_choice) ? array_keys($packages)[$user_choice] : $user_choice;
             $isMenu             = true;
@@ -57,15 +58,15 @@ class Add extends AbstractCommand
         $input_repository = $packages[$input_package_name] ?? null;
 
         if ($input_package_name === 'new') {
-            list($input_package_name, $input_repository, $input_store) = $this->showNewPackageQuestions();
+            [$input_package_name, $input_repository, $input_store] = $this->showNewPackageQuestions();
         }
 
         if ($input_store) {
-            $this->addSubtreeToComposer(array($input_package_name => $input_repository));
+            $this->addSubtreeToComposer([$input_package_name => $input_repository]);
         }
 
         if (! $isMenu && ! $this->checkPackageInComposer($input_package_name)) {
-            throw new PhpBinException('Package ' . $input_package_name . ' configuration not found');
+            throw new \Articstudio\PhpBin\PhpBinException('Package ' . $input_package_name . ' configuration not found');
         }
 
         $txt = $this->addGitSubtree($input_package_name, $input_repository);
@@ -99,7 +100,7 @@ class Add extends AbstractCommand
                 '-a'
             ) : false;
             if (! $commited) {
-                throw new PhpBinException(
+                throw new \Articstudio\PhpBin\PhpBinException(
                     'Error adding the package '
                     . $package_name
                     . ' subtree from '
@@ -110,7 +111,7 @@ class Add extends AbstractCommand
         }
 
         if ($this->subtreeExists($package_name)) {
-            throw new PhpBinException(
+            throw new \Articstudio\PhpBin\PhpBinException(
                 'Error adding the package '
                 . $package_name
                 . ' subtree from '
@@ -123,10 +124,10 @@ class Add extends AbstractCommand
         $cmd_add_subtree = 'git subtree add --prefix=' . $package_name . '/ ' . $git_repository . ' master';
 
         $this->callShell($cmd_remote_add, false);
-        list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($cmd_add_subtree, false);
+        [$exit_code, $output, $exit_code_txt, $error] = $this->callShell($cmd_add_subtree, false);
 
         if ($exit_code === 1) {
-            throw new PhpBinException(
+            throw new \Articstudio\PhpBin\PhpBinException(
                 'Error adding the package '
                 . $package_name
                 . ' subtree from '

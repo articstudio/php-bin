@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Articstudio\PhpBin\Commands\Composer\Concerns;
 
 use Articstudio\PhpBin\Application;

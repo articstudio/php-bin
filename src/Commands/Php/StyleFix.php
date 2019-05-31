@@ -1,7 +1,10 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Articstudio\PhpBin\Commands\Php;
 
-use Articstudio\PhpBin\Commands\AbstractShellCommand as PhpBinShellCommand;
+use Articstudio\PhpBin\Commands\ShellCommand as PhpBinShellCommand;
 
 class StyleFix extends PhpBinShellCommand
 {
@@ -11,7 +14,7 @@ class StyleFix extends PhpBinShellCommand
      *
      * @var string
      */
-    protected $shellCommand = 'php ./vendor/bin/phpcbf --colors ./';
+    protected $shellCommand = 'php ./vendor/bin/phpcbf ./';
 
     /**
      * Command name

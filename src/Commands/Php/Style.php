@@ -1,7 +1,10 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Articstudio\PhpBin\Commands\Php;
 
-use Articstudio\PhpBin\Commands\AbstractShellCommand as PhpBinShellCommand;
+use Articstudio\PhpBin\Commands\ShellCommand as PhpBinShellCommand;
 
 class Style extends PhpBinShellCommand
 {
@@ -11,7 +14,7 @@ class Style extends PhpBinShellCommand
      *
      * @var string
      */
-    protected $shellCommand = 'php ./vendor/bin/phpcs --colors ./';
+    protected $shellCommand = 'php ./vendor/bin/phpcs ./';
 
     /**
      * Command name

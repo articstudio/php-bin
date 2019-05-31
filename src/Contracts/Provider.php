@@ -1,7 +1,10 @@
 <?php
-namespace Articstudio\PhpBin\Providers;
 
-interface ProviderInterface
+declare(strict_types=1);
+
+namespace Articstudio\PhpBin\Contracts;
+
+interface Provider
 {
 
     /**

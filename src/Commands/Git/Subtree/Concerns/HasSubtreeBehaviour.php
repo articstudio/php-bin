@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Articstudio\PhpBin\Commands\Git\Subtree\Concerns;
 
 trait HasSubtreeBehaviour
@@ -8,7 +10,7 @@ trait HasSubtreeBehaviour
     protected function subtreeExists(string $package_name)
     {
         $cmd = 'find . -type d -wholename "./' . $package_name . '"';
-        list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($cmd, false);
+        [, $output, , ] = $this->callShell($cmd, false);
 
         return $output !== "" ? true : false;
     }
