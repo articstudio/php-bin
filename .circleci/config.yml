@@ -85,9 +85,9 @@ workflows:
           <<: *ignore_non_dev_branches
   code_quality:
     jobs:
-      - prepare_7_1:
+      - prepare_7_3:
           <<: *ignore_non_dev_branches
       - code_checks:
           requires:
-            - prepare_7_1
+            - prepare_7_3
           <<: *ignore_non_dev_branches
