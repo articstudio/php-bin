@@ -1,7 +1,9 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Articstudio\PhpBin\Ui;
 
-use Articstudio\PhpBin\Ui\Menu;
 use PhpSchool\CliMenu\MenuItem\SelectableItem;
 
 class MenuOption extends SelectableItem
@@ -58,10 +60,20 @@ class MenuOption extends SelectableItem
         return $this->value;
     }
 
+    /**
+     * Get the builder
+     *
+     * @return \Articstudio\PhpBin\Ui\Menu
+     */
+    public function getBuilder()
+    {
+        return $this->builder;
+    }
+
     public static function getDefaultCallback(Menu $builder)
     {
-        return function () use ($builder) {
-            $builder->setResult(
+        return static function () use ($builder) {
+            $builder->injectResult(
                 $builder->getMenu()->getSelectedItem()->getValue()
             );
             $builder->getMenu()->close();

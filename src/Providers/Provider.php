@@ -1,10 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Articstudio\PhpBin\Providers;
 
-use Articstudio\PhpBin\Providers\ProviderInterface;
-use Articstudio\PhpBin\Application;
+use Articstudio\PhpBin\Contracts\Provider as ProviderContract;
 
-abstract class AbstractProvider implements ProviderInterface
+abstract class Provider implements ProviderContract
 {
 
     use \Articstudio\PhpBin\Concerns\HasCommands;
@@ -15,7 +17,7 @@ abstract class AbstractProvider implements ProviderInterface
      *
      * @return ProviderInterface
      */
-    public function register(): ProviderInterface
+    public function register(): ProviderContract
     {
         $this->addCommandsToApplication(
             $this->getCommands()
@@ -27,6 +29,7 @@ abstract class AbstractProvider implements ProviderInterface
      * Add commands to application
      *
      * @param array $commands
+     *
      * @return \self
      */
     private function addCommandsToApplication(array $commands): self

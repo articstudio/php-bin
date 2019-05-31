@@ -1,13 +1,24 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Articstudio\PhpBin\Concerns;
 
 trait HasCommands
 {
-    
+
     /**
-     * Add comand to available commands
+     * Available commands
+     *
+     * @var array
+     */
+    protected $commands = [];
+
+    /**
+     * Add command to available commands
      *
      * @param string $command
+     *
      * @return int
      */
     public function addComand(string $command): int
@@ -15,7 +26,7 @@ trait HasCommands
         $this->checkCommands();
         return array_push($this->commands, $command);
     }
-    
+
     /**
      * Get available commands
      *
@@ -26,13 +37,13 @@ trait HasCommands
         $this->checkCommands();
         return $this->commands;
     }
-    
+
     /**
      * Check available commands attribute
      */
     protected function checkCommands()
     {
-        if (!is_array($this->commands)) {
+        if (! is_array($this->commands)) {
             $this->commands = [];
         }
     }

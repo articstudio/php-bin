@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Articstudio\PhpBin\Commands\Composer\Concerns;
 
 trait HasComposerBehaviour
@@ -8,12 +10,12 @@ trait HasComposerBehaviour
     protected function getComposerJson($dirname)
     {
         $command = 'find ' . $dirname . ' -type f -name "composer.json"';
-        list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($command, false);
-        $return = array_filter(explode("\n", $output), function ($value) {
+        [$exit_code, $output, , ] = $this->callShell($command, false);
+        $return = array_filter(explode("\n", $output), static function ($value) {
             return $value !== '';
         });
 
-        return ($exit_code === 0) ? $return : [];
+        return $exit_code === 0 ? $return : [];
     }
 
     protected function getModulesByOption($option)

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Articstudio\PhpBin\Concerns;
 
 use Articstudio\PhpBin\Application;
@@ -14,11 +17,13 @@ trait HasPhpBin
     protected $phpbin;
 
     /**
-     * Set the PHPBin Application instance
+     * Inject the PHPBin Application instance
+     *
      * @param Application $phpbin
+     *
      * @return void
      */
-    public function setPhpBin(Application $phpbin): void
+    public function injectPhpBin(Application $phpbin): void
     {
         $this->phpbin = $phpbin;
     }

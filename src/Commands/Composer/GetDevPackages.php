@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Articstudio\PhpBin\Commands\Composer;
 
-use Articstudio\PhpBin\Commands\AbstractCommand;
+use Articstudio\PhpBin\Commands\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GetDevPackages extends AbstractCommand
+class GetDevPackages extends Command
 {
 
     use \Articstudio\PhpBin\Concerns\HasWriteComposer;
@@ -36,15 +38,15 @@ class GetDevPackages extends AbstractCommand
     {
         $this->io   = $this->getStyle($output, $input);
         $module_dir = $input->getArgument('module_name') ?: null;
-        $options    = array_keys($this->getSubtrees()) + array('all' => 'All modules');
-        $option     = ($module_dir === null) ? $this->selectPackageMenu("Load packages to project", $options) : null;
+        $options    = array_keys($this->getSubtrees()) + ['all' => 'All modules'];
+        $option     = $module_dir === null ? $this->selectPackageMenu("Load packages to project", $options) : null;
 
         $this->io->title('Loaded packages');
         if ($option === 'back') {
             return $this->callCommandByName('composer:menu', [], $output);
         }
 
-        $modules = ($module_dir === null) ? $this->getModulesByOption($option) : [$module_dir];
+        $modules = $module_dir === null ? $this->getModulesByOption($option) : [$module_dir];
 
         $this->composer = $this->getComposerData();
         $this->initComposerRequires();
@@ -54,7 +56,6 @@ class GetDevPackages extends AbstractCommand
                 $this->mergeDependencies($name);
             }, $this->getComposerJson($module_name));
         }
-
 
         $this->writeComposer($this->composer, $this->getComposerFile());
 

@@ -1,9 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Articstudio\PhpBin\Commands\Composer;
 
-use Articstudio\PhpBin\Providers\AbstractProvider;
+use Articstudio\PhpBin\Providers\Provider;
 
-class ComposerProvider extends AbstractProvider
+class ComposerProvider extends Provider
 {
 
     /**

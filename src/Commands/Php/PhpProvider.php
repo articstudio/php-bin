@@ -1,9 +1,12 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Articstudio\PhpBin\Commands\Php;
 
-use Articstudio\PhpBin\Providers\AbstractProvider;
+use Articstudio\PhpBin\Providers\Provider;
 
-class PhpProvider extends AbstractProvider
+class PhpProvider extends Provider
 {
 
     /**
@@ -17,10 +20,7 @@ class PhpProvider extends AbstractProvider
         '\Articstudio\PhpBin\Commands\Php\Metrics',
         '\Articstudio\PhpBin\Commands\Php\Style',
         '\Articstudio\PhpBin\Commands\Php\StyleFix',
-        '\Articstudio\PhpBin\Commands\Php\Psr1',
-        '\Articstudio\PhpBin\Commands\Php\Psr1Fix',
-        '\Articstudio\PhpBin\Commands\Php\Psr2',
-        '\Articstudio\PhpBin\Commands\Php\Psr2Fix',
+        '\Articstudio\PhpBin\Commands\Php\Insights',
         '\Articstudio\PhpBin\Commands\Php\Test',
     ];
 }

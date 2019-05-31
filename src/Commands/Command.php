@@ -1,18 +1,20 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Articstudio\PhpBin\Commands;
 
-use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Articstudio\PhpBin\Ui\Menu;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Articstudio\PhpBin\PhpBinException;
-use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Question\Question;
 
-abstract class AbstractCommand extends SymfonyCommand
+abstract class Command extends SymfonyCommand
 {
 
     use \Articstudio\PhpBin\Concerns\HasOutput;
@@ -52,8 +54,8 @@ abstract class AbstractCommand extends SymfonyCommand
         $question = new Question($txt, $default);
 
         return $question_helper->ask(
-            ( $input ?? new ArrayInput([])),
-            ( $output ?? new ConsoleOutput),
+            ($input ?? new ArrayInput([])),
+            ($output ?? new ConsoleOutput()),
             $question
         );
     }
@@ -67,9 +69,9 @@ abstract class AbstractCommand extends SymfonyCommand
         $question_helper = $this->getHelper('question');
         $question = new ConfirmationQuestion($txt, $default);
 
-        return !!$question_helper->ask(
-            ( $input ?? new ArrayInput([])),
-            ( $output ?? new ConsoleOutput),
+        return ! ! $question_helper->ask(
+            ($input ?? new ArrayInput([])),
+            ($output ?? new ConsoleOutput()),
             $question
         );
     }
@@ -85,8 +87,8 @@ abstract class AbstractCommand extends SymfonyCommand
         $question->setMultiselect(true);
 
         return $question_helper->ask(
-            ( $input ?? new ArrayInput([])),
-            ( $output ?? new ConsoleOutput),
+            ($input ?? new ArrayInput([])),
+            ($output ?? new ConsoleOutput()),
             $question
         );
     }
@@ -111,8 +113,8 @@ abstract class AbstractCommand extends SymfonyCommand
      */
     protected function callCommandByName(string $name, ?array $arguments, OutputInterface $output)
     {
-        if (!$this->getApplication()->has($name)) {
-            throw new PhpBinException("Command `{$name}` not found.");
+        if (! $this->getApplication()->has($name)) {
+            throw new \Articstudio\PhpBin\PhpBinException("Command `{$name}` not found.");
         }
         $command = $this->getApplication()->get($name);
         $input = new ArrayInput($arguments ?? []);

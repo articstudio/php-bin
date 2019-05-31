@@ -1,12 +1,14 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Articstudio\PhpBin\Commands;
 
-use Articstudio\PhpBin\Commands\AbstractCommand;
+use Articstudio\PhpBin\Application;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Articstudio\PhpBin\Application;
 
-class AbstractShellCommand extends AbstractCommand
+class ShellCommand extends Command
 {
 
     /**
@@ -33,12 +35,12 @@ class AbstractShellCommand extends AbstractCommand
     {
         $composer = Application::getInstance()->getComposer();
         $output->writeln("Executing command at `{$composer['directory']}`");
-        list(
+        [
             $exitCode,
             $str,
             $str_error_message,
-            $str_error_trace
-            ) = $this->callShell($this->shellCommand, $this->throwShellError);
+            $str_error_trace,
+        ] = $this->callShell($this->shellCommand, $this->throwShellError);
         echo $str;
         if ($exitCode !== 0 && ($str_error_message || $str_error_trace)) {
             $this->throwError($output, $str_error_message, $str_error_trace, 1, true);
