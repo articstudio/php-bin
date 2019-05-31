@@ -11,28 +11,12 @@ commands:
       - run: mv composer.phar /usr/local/bin/composer
 
 executors:
-  "php-7-1":
-    docker:
-      - image: php:7.1
-    working_directory: ~/repo_php_7_1
-  "php-7-2":
-    docker:
-      - image: php:7.2
-    working_directory: ~/repo_php_7_2
   "php-7-3":
     docker:
       - image: php:7.3
     working_directory: ~/repo_php_7_3
 
 aliases:
-  - &composer_7_1_cache_key
-    composer-7.1-{{ checksum "composer.lock" }}
-  - &wd_7_1
-    ~/repo_php_7_1
-  - &composer_7_2_cache_key
-    composer-7.2-{{ checksum "composer.lock" }}
-  - &wd_7_2
-    ~/repo_php_7_2
   - &composer_7_3_cache_key
     composer-7.3-{{ checksum "composer.lock" }}
   - &wd_7_3
@@ -48,58 +32,6 @@ aliases:
           - /release\/.*/
 
 jobs:
-  prepare_7_1:
-    executor: "php-7-1"
-    steps:
-      - checkout
-      - "system-dependencies"
-      - restore_cache:
-          key: *composer_7_1_cache_key
-      - run: composer install --no-progress
-      - save_cache:
-          key: *composer_7_1_cache_key
-          paths:
-            - vendor/
-      - persist_to_workspace:
-          root: *wd_7_1
-          paths:
-            - ./*
-
-  test_7_1:
-    executor: "php-7-1"
-    steps:
-      - checkout
-      - "system-dependencies"
-      - attach_workspace:
-          at: *wd_7_1
-      - run: php ./bin/phpbin php:lint
-
-  prepare_7_2:
-    executor: "php-7-2"
-    steps:
-      - checkout
-      - "system-dependencies"
-      - restore_cache:
-          key: *composer_7_2_cache_key
-      - run: composer install --no-progress
-      - save_cache:
-          key: *composer_7_2_cache_key
-          paths:
-            - vendor/
-      - persist_to_workspace:
-          root: *wd_7_2
-          paths:
-            - ./*
-
-  test_7_2:
-    executor: "php-7-2"
-    steps:
-      - checkout
-      - "system-dependencies"
-      - attach_workspace:
-          at: *wd_7_2
-      - run: php ./bin/phpbin php:lint
-
   prepare_7_3:
     executor: "php-7-3"
     steps:
@@ -127,12 +59,12 @@ jobs:
       - run: php ./bin/phpbin php:lint
 
   code_checks:
-    executor: "php-7-1"
+    executor: "php-7-3"
     steps:
       - checkout
       - "system-dependencies"
       - attach_workspace:
-          at: *wd_7_1
+          at: *wd_7_3
       - run: php ./bin/phpbin php:style
       - run: php ./bin/phpbin php:metrics
       - store_artifacts:
@@ -145,18 +77,6 @@ workflows:
   version: 2
   php_versions:
     jobs:
-      - prepare_7_1:
-          <<: *ignore_non_dev_branches
-      - test_7_1:
-          requires:
-            - prepare_7_1
-          <<: *ignore_non_dev_branches
-      - prepare_7_2:
-          <<: *ignore_non_dev_branches
-      - test_7_2:
-          requires:
-            - prepare_7_2
-          <<: *ignore_non_dev_branches
       - prepare_7_3:
           <<: *ignore_non_dev_branches
       - test_7_3:
