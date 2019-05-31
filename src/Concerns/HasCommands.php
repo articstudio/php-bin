@@ -15,7 +15,7 @@ trait HasCommands
     protected $commands = [];
 
     /**
-     * Add comand to available commands
+     * Add command to available commands
      *
      * @param string $command
      *

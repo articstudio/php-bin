@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Articstudio\PhpBin\Concerns;
 
+use Articstudio\PhpBin\Commands\Command as PhpBinCommand;
+use Articstudio\PhpBin\Contracts\Provider as ProviderContract;
+
 trait CanRegisterCommandsAndProviders {
 
     /**
