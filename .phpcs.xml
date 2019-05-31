@@ -1,24 +1,41 @@
 <ruleset name="PHP_CodeSniffer" xsi:noNamespaceSchemaLocation="phpcs.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <description>The coding standard for PHP_CodeSniffer itself.</description>
 
+    <!-- Files -->
     <file>bin</file>
     <file>src</file>
 
+    <!-- Excludes -->
     <exclude-pattern>.circleci/</exclude-pattern>
     <exclude-pattern>build/</exclude-pattern>
     <exclude-pattern>test/</exclude-pattern>
     <exclude-pattern>vendor/</exclude-pattern>
 
+    <!-- Arguments -->
     <arg name="basepath" value="."/>
+    <arg name="tab-width" value="4"/>
     <arg name="colors"/>
     <arg name="parallel" value="75"/>
     <arg value="p"/>
     <ini name="memory_limit" value="128M"/>
+    
+    <!-- Configs -->
+    <!-- <config name="installed_paths" value="vendor/slevomat/coding-standard"/> -->
 
+    <!-- Internal -->
     <rule ref="Internal.Tokenizer.Exception">
         <type>error</type>
     </rule>
 
-    <rule ref="PSR2"/>
+    <!-- PSR -->
     <rule ref="PSR1"/>
+    <rule ref="PSR2"/>
+    
+    <!-- Style -->
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <rule ref="Generic.Files.ByteOrderMark"/>
+    <rule ref="Generic.Files.LineEndings"/>
+    <rule ref="Generic.Files.LineLength"/>
+
+    
 </ruleset>

@@ -37,10 +37,10 @@ class Normalize extends AbstractCommand
         $this->io       = $this->getStyle($output, $input);
         $this->composer = $this->getComposerData();
         $module_dir     = $input->getArgument('module_name') ?: null;
-        $options        = array_keys($this->getSubtrees()) + array(
+        $options        = array_keys($this->getSubtrees()) + [
                 'root' => 'Composer project',
                 'all'  => 'All modules'
-            );
+            ];
 
         $option = ($module_dir === null) ? $this->selectPackageMenu(
             "Normalize composer",

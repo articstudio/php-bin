@@ -59,7 +59,7 @@ class Install extends PhpBinCommand
         $version = $this->searchPackageVersion($input_package_name, $composer);
         $version = $this->requireDevPackage($version, $input_package_name);
 
-        $this->addPackageToComposerRequire(array($input_package_name => $version), $composer_module_file, $env);
+        $this->addPackageToComposerRequire([$input_package_name => $version], $composer_module_file, $env);
 
 
         $this->io->success("Package " . $input_module_name . " succesfully installed");

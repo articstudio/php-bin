@@ -67,7 +67,7 @@ trait HasWriteComposer
     private function writeComposer(array $config, string $composer_file)
     {
         $clean_config = array_map(function ($value) {
-            return $value === array() ? new \stdClass() : $value;
+            return $value === [] ? new \stdClass() : $value;
         }, $config);
 
         if (key_exists('subtree', $clean_config['config']) && empty($clean_config['config']['subtree'])) {

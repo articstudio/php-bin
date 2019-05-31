@@ -31,7 +31,7 @@ class Pull extends AbstractCommand
 
         $repositories  = $this->getSubtrees();
         $this->io      = $this->getStyle($output, $input);
-        $package_names = $input->getArgument('package_name') ?: array();
+        $package_names = $input->getArgument('package_name') ?: [];
 
         if (empty($package_names)) {
             $menu_options = array_keys($repositories) + [
@@ -47,8 +47,8 @@ class Pull extends AbstractCommand
                 return 1;
             }
 
-            $package_names = is_int($option) ? array(array_keys($repositories)[$option]) :
-                ($option === 'all' ? array_keys($repositories) : array());
+            $package_names = is_int($option) ? [array_keys($repositories)[$option]] :
+                ($option === 'all' ? array_keys($repositories) : []);
         }
 
         $local_changes = $this->getLocalChanges();
@@ -69,12 +69,12 @@ class Pull extends AbstractCommand
 
     private function subtreePull(array $repositories, $package_names)
     {
-        $result = array(
+        $result = [
             'skipped'   => [],
             'done'      => [],
             'error'     => [],
             'not_found' => [],
-        );
+        ];
         foreach ($repositories as $repo_package => $repo_url) {
             if (empty($package_names) || in_array($repo_package, $package_names)) {
                 if (! $this->subtreeExists($repo_package)) {

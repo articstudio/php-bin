@@ -61,7 +61,7 @@ class Add extends AbstractCommand
         }
 
         if ($input_store) {
-            $this->addSubtreeToComposer(array($input_package_name => $input_repository));
+            $this->addSubtreeToComposer([$input_package_name => $input_repository]);
         }
 
         if (! $isMenu && ! $this->checkPackageInComposer($input_package_name)) {

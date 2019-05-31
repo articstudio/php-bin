@@ -36,7 +36,7 @@ class GetDevPackages extends AbstractCommand
     {
         $this->io   = $this->getStyle($output, $input);
         $module_dir = $input->getArgument('module_name') ?: null;
-        $options    = array_keys($this->getSubtrees()) + array('all' => 'All modules');
+        $options    = array_keys($this->getSubtrees()) + ['all' => 'All modules'];
         $option     = ($module_dir === null) ? $this->selectPackageMenu("Load packages to project", $options) : null;
 
         $this->io->title('Loaded packages');

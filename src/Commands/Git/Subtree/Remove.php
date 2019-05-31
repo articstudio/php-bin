@@ -34,7 +34,7 @@ class Remove extends AbstractCommand
         $this->io      = $this->getStyle($output, $input);
         $repositories  = $this->getSubtrees();
         $input_store   = null;
-        $package_names = $input->getArgument('package_name') ?: array();
+        $package_names = $input->getArgument('package_name') ?: [];
 
         if (empty($package_names)) {
             $menu_options = array_keys($repositories) + [
@@ -50,8 +50,8 @@ class Remove extends AbstractCommand
                 return $this->exit($output, 1);
             }
 
-            $package_names = is_int($option) ? array(array_keys($repositories)[$option]) :
-                ($option === 'all' ? array_keys($repositories) : array());
+            $package_names = is_int($option) ? [array_keys($repositories)[$option]] :
+                ($option === 'all' ? array_keys($repositories) : []);
         }
 
 
@@ -80,12 +80,12 @@ class Remove extends AbstractCommand
     private function removeDirAndRemoteSubtree(array $repositories, array $package_names)
     {
 
-        $result = array(
+        $result = [
             'skipped'   => [],
             'done'      => [],
             'error'     => [],
             'not_found' => []
-        );
+        ];
 
         foreach ($repositories as $repo_package => $repo_url) {
             if (empty($package_names) || in_array($repo_package, $package_names)) {

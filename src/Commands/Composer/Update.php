@@ -39,7 +39,7 @@ class Update extends AbstractCommand
         $this->composer = $this->getComposerData();
         $this->versions = array_merge($this->composer['require-dev'], $this->composer['require']);
         $module_dir     = $input->getArgument('module_name') ?: null;
-        $options        = array_keys($this->getSubtrees()) + array('all' => 'All modules');
+        $options        = array_keys($this->getSubtrees()) + ['all' => 'All modules'];
         $option         = ($module_dir === null) ? $this->selectPackageMenu(
             "Update packages versions",
             $options
@@ -83,9 +83,9 @@ class Update extends AbstractCommand
 
         $this->composer = json_decode(file_get_contents($fname), true);
 
-        $requires_dev   = array(
-            'require-dev' => array()
-        );
+        $requires_dev   = [
+            'require-dev' => []
+        ];
         $this->composer = array_merge($this->composer, $requires_dev);
 
         $this->io->writeln("---- REQUIRE DEV ----");
