@@ -14,7 +14,7 @@
         }
     ],
     "require": {
-        "php": ">=7.1.3",
+        "php": ">=7.3",
         "jakub-onderka/php-console-highlighter": "^0.4.0",
         "jakub-onderka/php-parallel-lint": "^1.0",
         "localheinz/composer-normalize": "^1.0",
@@ -25,6 +25,7 @@
         "symfony/console": "^4.2",
         "symfony/process": "^4.2"
     },
+    "replace": {},
     "require-dev": {},
     "config": {
         "optimize-autoloader": true,
@@ -55,13 +56,12 @@
     ],
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "bin": [
+        "bin/phpbin"
+    ],
     "scripts": {},
     "support": {
         "issues": "https://github.com/articstudio/php-bin/issues",
         "source": "https://github.com/articstudio/php-bin"
-    },
-    "bin": [
-        "bin/phpbin"
-    ],
-    "replace": {}
+    }
 }
