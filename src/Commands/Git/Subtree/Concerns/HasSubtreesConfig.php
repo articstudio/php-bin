@@ -25,7 +25,7 @@ trait HasSubtreesConfig
     public function getLocalChanges()
     {
         $cmd = 'git diff --exit-code';
-        list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($cmd, false);
+        [$exit_code, $output, $exit_code_txt, $error] = $this->callShell($cmd, false);
 
         return $exit_code === 0 ? false : true;
     }
@@ -34,10 +34,10 @@ trait HasSubtreesConfig
     {
         $cmd = 'git commit -m "' . $message . '" ' . $files;
 
-        list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($cmd, false);
+        [$exit_code, $output, $exit_code_txt, $error] = $this->callShell($cmd, false);
 
         if ($exit_code === 1) {
-            throw new PhpBinException('Error commit ' . $message);
+            throw new \Articstudio\PhpBin\Commands\Git\Subtree\Concerns\PhpBinException('Error commit ' . $message);
         }
         $error_msg = $exit_code_txt . "\n" . $error;
 

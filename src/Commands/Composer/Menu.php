@@ -1,11 +1,12 @@
 <?php
+
 namespace Articstudio\PhpBin\Commands\Composer;
 
 use Articstudio\PhpBin\Commands\AbstractMenuCommand as PhpBinMenuCommand;
 
 class Menu extends PhpBinMenuCommand
 {
-    
+
     /**
      * Menu title
      *
@@ -24,7 +25,7 @@ class Menu extends PhpBinMenuCommand
         'composer:normalize' => 'Normalize',
         'composer:dev-packages' => 'Load packages',
     ];
-    
+
     /**
      * Back command name
      *
@@ -38,14 +39,14 @@ class Menu extends PhpBinMenuCommand
      * @var string
      */
     protected static $defaultName = 'composer';
-    
+
     /**
      * Configure command
      */
     protected function configure()
     {
         $this->setAliases([
-            'composer:menu'
+            'composer:menu',
         ]);
     }
 }

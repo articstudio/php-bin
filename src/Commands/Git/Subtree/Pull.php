@@ -3,9 +3,9 @@
 namespace Articstudio\PhpBin\Commands\Git\Subtree;
 
 use Articstudio\PhpBin\Commands\AbstractCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 
 class Pull extends AbstractCommand
 {
@@ -33,10 +33,10 @@ class Pull extends AbstractCommand
         $this->io      = $this->getStyle($output, $input);
         $package_names = $input->getArgument('package_name') ?: [];
 
-        if (empty($package_names)) {
+        if (count($package_names) < 1) {
             $menu_options = array_keys($repositories) + [
-                    'all' => 'All subtrees'
-                ];
+                'all' => 'All subtrees',
+            ];
             $option       = $this->selectPackageMenu('Pull subtree', $menu_options);
 
             if ($option === 'back') {
@@ -76,21 +76,20 @@ class Pull extends AbstractCommand
             'not_found' => [],
         ];
         foreach ($repositories as $repo_package => $repo_url) {
-            if (empty($package_names) || in_array($repo_package, $package_names)) {
+            if (count($package_names) < 1 || in_array($repo_package, $package_names)) {
                 if (! $this->subtreeExists($repo_package)) {
                     $result['not_found'][] = $repo_package;
                     unset($repositories[$repo_package]);
                     continue;
                 }
                 $cmd = 'git subtree pull --prefix=' . $repo_package . '/ ' . $repo_package . ' master --squash';
-                list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($cmd, false);
+                [$exit_code, $output, $exit_code_txt, $error] = $this->callShell($cmd, false);
                 $key            = $exit_code === 0 ? 'done' : 'error';
                 $result[$key][] = $repo_package;
                 continue;
             }
             $result['skipped'][] = $repo_package;
         }
-
 
         return $result;
     }

@@ -1,11 +1,12 @@
 <?php
+
 namespace Articstudio\PhpBin\Concerns;
 
 use Articstudio\PhpBin\Application;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 trait HasOutput
@@ -28,7 +29,7 @@ trait HasOutput
     ) {
         $io = $this->getStyle($output);
         $io->error($message);
-        if ($trace && !empty($trace)) {
+        if ($trace) {
             $io->text($trace);
         }
         return $this->exit($output, $exitCode, $forceExit);
@@ -45,7 +46,7 @@ trait HasOutput
     {
         return new SymfonyStyle(
             ($input ?? new ArrayInput([])),
-            ($output ?? new ConsoleOutput)
+            ($output ?? new ConsoleOutput())
         );
     }
 
@@ -59,7 +60,7 @@ trait HasOutput
      */
     public function exit(?OutputInterface $output, int $exitCode = 0, bool $force = false): int
     {
-        $output = $output ?? new ConsoleOutput;
+        $output = $output ?? new ConsoleOutput();
         $version = Application::getInstance()->getVersion();
         $output->writeln(PHP_EOL . "Exit PHPBIN v{$version}");
         if ($force) {

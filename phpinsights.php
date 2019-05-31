@@ -1,5 +1,8 @@
 <?php declare(strict_types = 1);
+
 use SlevomatCodingStandard\Sniffs\Commenting\DocCommentSpacingSniff;
+use SlevomatCodingStandard\Sniffs\ControlStructures\DisallowShortTernaryOperatorSniff;
+use SlevomatCodingStandard\Sniffs\Functions\UnusedParameterSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\DeclareStrictTypesSniff;
 
 return [
@@ -43,7 +46,8 @@ return [
     ],
 
     'remove' => [
-        //  ExampleInsight::class,
+        DisallowShortTernaryOperatorSniff::class,
+        UnusedParameterSniff::class,
     ],
 
     'config' => [

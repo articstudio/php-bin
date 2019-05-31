@@ -1,11 +1,12 @@
 <?php
+
 namespace Articstudio\PhpBin\Commands\Git;
 
 use Articstudio\PhpBin\Commands\AbstractMenuCommand as PhpBinMenuCommand;
 
 class Menu extends PhpBinMenuCommand
 {
-    
+
     /**
      * Menu title
      *
@@ -25,7 +26,7 @@ class Menu extends PhpBinMenuCommand
         'git:subtree:remove' => 'Subtree Remove',
         'git:subtree:check' => 'Subtree Check',
     ];
-    
+
     /**
      * Back command name
      *
@@ -39,14 +40,14 @@ class Menu extends PhpBinMenuCommand
      * @var string
      */
     protected static $defaultName = 'git';
-    
+
     /**
      * Configure command
      */
     protected function configure()
     {
         $this->setAliases([
-            'git:menu'
+            'git:menu',
         ]);
     }
 }

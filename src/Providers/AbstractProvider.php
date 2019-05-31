@@ -1,8 +1,6 @@
 <?php
-namespace Articstudio\PhpBin\Providers;
 
-use Articstudio\PhpBin\Providers\ProviderInterface;
-use Articstudio\PhpBin\Application;
+namespace Articstudio\PhpBin\Providers;
 
 abstract class AbstractProvider implements ProviderInterface
 {

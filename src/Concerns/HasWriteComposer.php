@@ -70,7 +70,7 @@ trait HasWriteComposer
             return $value === [] ? new \stdClass() : $value;
         }, $config);
 
-        if (key_exists('subtree', $clean_config['config']) && empty($clean_config['config']['subtree'])) {
+        if (key_exists('subtree', $clean_config['config']) && count($clean_config['config']['subtree']) < 1) {
             $clean_config['config']['subtree'] = new \stdClass();
         }
         $json    = json_encode($clean_config, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);

@@ -55,7 +55,6 @@ class GetDevPackages extends AbstractCommand
             }, $this->getComposerJson($module_name));
         }
 
-
         $this->writeComposer($this->composer, $this->getComposerFile());
 
         return $this->exit($output, 0);

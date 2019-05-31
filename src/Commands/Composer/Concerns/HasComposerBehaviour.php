@@ -8,7 +8,7 @@ trait HasComposerBehaviour
     protected function getComposerJson($dirname)
     {
         $command = 'find ' . $dirname . ' -type f -name "composer.json"';
-        list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($command, false);
+        [$exit_code, $output, $exit_code_txt, $error] = $this->callShell($command, false);
         $return = array_filter(explode("\n", $output), function ($value) {
             return $value !== '';
         });

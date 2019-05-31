@@ -1,4 +1,5 @@
 <?php
+
 namespace Articstudio\PhpBin\Commands\Git;
 
 use Articstudio\PhpBin\Providers\AbstractProvider;

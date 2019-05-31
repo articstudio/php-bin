@@ -8,7 +8,7 @@ trait HasSubtreeBehaviour
     protected function subtreeExists(string $package_name)
     {
         $cmd = 'find . -type d -wholename "./' . $package_name . '"';
-        list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($cmd, false);
+        [$exit_code, $output, $exit_code_txt, $error] = $this->callShell($cmd, false);
 
         return $output !== "" ? true : false;
     }

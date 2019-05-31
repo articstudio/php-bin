@@ -1,14 +1,14 @@
 <?php
+
 namespace Articstudio\PhpBin\Commands;
 
-use Articstudio\PhpBin\Commands\AbstractCommand;
+use Articstudio\PhpBin\Ui\Menu;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Articstudio\PhpBin\Ui\Menu;
 
 abstract class AbstractMenuCommand extends AbstractCommand
 {
-    
+
     /**
      * Menu title
      *
@@ -22,21 +22,21 @@ abstract class AbstractMenuCommand extends AbstractCommand
      * @var array
      */
     protected $menuOptions = [];
-    
+
     /**
      * Show exit option
      *
      * @var bool
      */
     protected $showExitOption = true;
-    
+
     /**
      * Back command name
      *
      * @var string
      */
     protected $backOption;
-    
+
     /**
      * Is menu title prepared
      *
@@ -54,22 +54,22 @@ abstract class AbstractMenuCommand extends AbstractCommand
     {
         $this->prepareMenuTitle();
         $name = $this->menu($this->menuTitle, $this->menuOptions)->open();
-        if (!$name) {
+        if (! $name) {
             return $this->exit($output);
         }
         return $this->callCommandByName($name, [], $output);
     }
-    
+
     private function prepareMenuTitle(): void
     {
         if ($this->menuTitlePrepared) {
             return;
         }
         $this->menuTitle = $this->menuTitle ?? '';
-        $this->menuTitle .= (empty($this->menuTitle) ? '' : ' - ') . "PHPBIN v{$this->phpbin->getVersion()}";
+        $this->menuTitle .= (! $this->menuTitle ? '' : ' - ') . "PHPBIN v{$this->phpbin->getVersion()}";
         $this->menuTitlePrepared = true;
     }
-    
+
     /**
      * Create menu (Override)
      *
@@ -80,29 +80,29 @@ abstract class AbstractMenuCommand extends AbstractCommand
     public function menu(string $title, array $options): Menu
     {
         $menu = parent::menu($title, $options);
-        
+
         if ($this->backOption || $this->showExitOption) {
             $menu->addLineBreak();
         }
-        
+
         if ($this->backOption) {
             $menu->addOption($this->backOption, 'Back');
         }
-        
-        if (!$this->showExitOption) {
+
+        if (! $this->showExitOption) {
             $menu->disableDefaultItems();
         }
-        
+
         return $menu;
     }
-    
+
     /**
      * Extend menu options
      *
      * @param array $options
      * @return void
      */
-    public function extendOptions(array $options):void
+    public function extendOptions(array $options): void
     {
         $this->menuOptions = array_merge($this->menuOptions, $options);
     }

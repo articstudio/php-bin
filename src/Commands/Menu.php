@@ -1,4 +1,5 @@
 <?php
+
 namespace Articstudio\PhpBin\Commands;
 
 use Articstudio\PhpBin\Commands\AbstractMenuCommand as PhpBinMenuCommand;
@@ -14,7 +15,7 @@ class Menu extends PhpBinMenuCommand
     protected $menuOptions = [
         'git' => 'Git',
         'php' => 'PHP',
-        'composer' => 'Composer'
+        'composer' => 'Composer',
     ];
 
     /**
@@ -23,14 +24,14 @@ class Menu extends PhpBinMenuCommand
      * @var string
      */
     protected static $defaultName = 'phpbin';
-    
+
     /**
      * Configure command
      */
     protected function configure()
     {
         $this->setAliases([
-            'menu'
+            'menu',
         ]);
     }
 }

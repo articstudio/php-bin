@@ -1,4 +1,5 @@
 <?php
+
 namespace Articstudio\PhpBin\Providers;
 
 interface ProviderInterface

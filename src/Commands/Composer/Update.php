@@ -52,7 +52,6 @@ class Update extends AbstractCommand
 
         $modules = ($module_dir === null) ? $this->getModulesByOption($option) : [$module_dir];
 
-
         foreach ($modules as $module_name) {
             array_map(function ($name) {
                 $this->overrideAllDependenciesVersions($name);
@@ -84,7 +83,7 @@ class Update extends AbstractCommand
         $this->composer = json_decode(file_get_contents($fname), true);
 
         $requires_dev   = [
-            'require-dev' => []
+            'require-dev' => [],
         ];
         $this->composer = array_merge($this->composer, $requires_dev);
 
@@ -93,7 +92,6 @@ class Update extends AbstractCommand
         $this->io->newLine();
         $this->io->writeln("---- REQUIRE ----");
         $this->composer['require'] = $this->replaceDependenciesVersions($this->composer['require']);
-
 
         $this->writeComposer($this->composer, $fname);
     }

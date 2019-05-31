@@ -1,11 +1,10 @@
 <?php
+
 namespace Articstudio\PhpBin;
 
-use Symfony\Component\Console\Application as SymfonyConsole;
 use Articstudio\PhpBin\Commands\AbstractCommand as PhpBinCommand;
 use Articstudio\PhpBin\Providers\ProviderInterface as ProviderContract;
-use Exception;
-use Articstudio\PhpBin\PhpBinException;
+use Symfony\Component\Console\Application as SymfonyConsole;
 
 final class Application
 {
@@ -78,9 +77,7 @@ final class Application
      *
      * @var array
      */
-    protected $commands = [
-        '\Articstudio\PhpBin\Commands\Example',
-    ];
+    protected $commands = [];
 
     /**
      * Default application command
@@ -112,10 +109,16 @@ final class Application
     public static function exec()
     {
         try {
-            self::getInstance()
-            ->prepare()
-            ->run();
-        } catch (Exception $e) {
+            if (self::getInstance()) {
+                throw new \Exception('Application is alredy executed.');
+            }
+            $instance = new self(
+                new SymfonyConsole('phpbin', self::$version)
+            );
+            self::$instance = $instance;
+            $instance->prepare()
+                ->run();
+        } catch (\Exception $e) {
             self::$instance->throwError(null, $e->getMessage(), $e->getTraceAsString(), 1, true);
         }
     }
@@ -123,15 +126,10 @@ final class Application
     /**
      * Singleton constructor
      *
-     * @return \self
+     * @return \self|null
      */
-    public static function getInstance(): self
+    public static function getInstance(): ?self
     {
-        if (!self::$instance) {
-            self::$instance = new self(
-                new SymfonyConsole('phpbin', static::$version)
-            );
-        }
         return self::$instance;
     }
 
@@ -143,10 +141,10 @@ final class Application
     private function prepare(): self
     {
         return $this->discoverComposer()
-                ->setSettings()
-                ->registerProviders()
-                ->registerDefaultCommand()
-                ->registerCommands();
+            ->parseSettings()
+            ->registerProviders()
+            ->registerDefaultCommand()
+            ->registerCommands();
     }
 
     /**
@@ -169,24 +167,24 @@ final class Application
         $this->composer_dir = dirname(
             dirname(PHPBIN_COMPOSER_AUTOLOAD)
         );
-        $this->composer_file = realpath($this->composer_dir . '/' . 'composer.json');
-        if (!is_readable($this->composer_file)) {
-            throw new PhpBinException("composer.json not readable at `{$this->composer_dir}`");
+        $this->composer_file = realpath($this->composer_dir . '/composer.json');
+        if (! is_readable($this->composer_file)) {
+            throw new \Articstudio\PhpBin\PhpBinException("composer.json not readable at `{$this->composer_dir}`");
         }
         $this->composer = [
             'directory' => $this->composer_dir,
             'file' => $this->composer_file,
-            'data' => json_decode(file_get_contents($this->composer_file), true)
+            'data' => json_decode(file_get_contents($this->composer_file), true),
         ];
         return $this;
     }
 
     /**
-     * Set settings
+     * Parse settings
      *
      * @return \self
      */
-    private function setSettings(): self
+    private function parseSettings(): self
     {
         $config = $this->composer['data']['config'] ?? [];
         $this->settings = $config['phpbin'] ?? [];
@@ -195,6 +193,7 @@ final class Application
 
     /**
      * Register default command
+     *
      * @return \self
      */
     private function registerDefaultCommand(): self
@@ -231,11 +230,11 @@ final class Application
      */
     private function resgiterProvider(string $class_name): ProviderContract
     {
-        if (!class_exists($class_name) || !is_subclass_of($class_name, ProviderContract::class)) {
-            throw new PhpBinException("Incompatible provider class: {$class_name}");
+        if (! class_exists($class_name) || ! is_subclass_of($class_name, ProviderContract::class)) {
+            throw new \Articstudio\PhpBin\PhpBinException("Incompatible provider class: {$class_name}");
         }
         $provider = new $class_name();
-        $provider->setPhpBin($this);
+        $provider->injectPhpBin($this);
         $provider->register();
         return $provider;
     }
@@ -265,11 +264,11 @@ final class Application
      */
     private function resgiterCommand(string $class_name): PhpBinCommand
     {
-        if (!class_exists($class_name) || !is_subclass_of($class_name, PhpBinCommand::class)) {
-            throw new PhpBinException("Incompatible command class: {$class_name}");
+        if (! class_exists($class_name) || ! is_subclass_of($class_name, PhpBinCommand::class)) {
+            throw new \Articstudio\PhpBin\PhpBinException("Incompatible command class: {$class_name}");
         }
         $command = new $class_name();
-        $command->setPhpBin($this);
+        $command->injectPhpBin($this);
         $this->console->add($command);
         return $command;
     }
@@ -281,7 +280,7 @@ final class Application
      */
     public function getVersion()
     {
-        return static::$version;
+        return self::$version;
     }
 
     /**

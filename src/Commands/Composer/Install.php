@@ -3,7 +3,6 @@
 namespace Articstudio\PhpBin\Commands\Composer;
 
 use Articstudio\PhpBin\Commands\AbstractCommand as PhpBinCommand;
-use Articstudio\PhpBin\PhpBinException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -45,7 +44,7 @@ class Install extends PhpBinCommand
 
         if ($input_package_name === null || $input_module_name === null) {
             //MENU
-            list($input_package_name, $input_module_name, $env) = $this->showNewPackageQuestions();
+            [$input_package_name, $input_module_name, $env] = $this->showNewPackageQuestions();
         } else {
             $modules[] = $input_module_name;
         }
@@ -53,14 +52,13 @@ class Install extends PhpBinCommand
         $composer_module_file = $composer_dir . '/' . $input_module_name . '/composer.json';
 
         if (! file_exists($composer_module_file)) {
-            throw new PhpBinException('composer.json file not found: ' . $composer_module_file);
+            throw new \Articstudio\PhpBin\PhpBinException('composer.json file not found: ' . $composer_module_file);
         }
 
         $version = $this->searchPackageVersion($input_package_name, $composer);
         $version = $this->requireDevPackage($version, $input_package_name);
 
         $this->addPackageToComposerRequire([$input_package_name => $version], $composer_module_file, $env);
-
 
         $this->io->success("Package " . $input_module_name . " succesfully installed");
 
@@ -85,13 +83,13 @@ class Install extends PhpBinCommand
         if (! $version) {
             try {
                 $command = 'composer require --dev ' . $input_package_name;
-                list($exit_code, $output, $exit_code_txt, $error) = $this->callShell($command, false, 240);
+                [$exit_code, $output, $exit_code_txt, $error] = $this->callShell($command, false);
                 if ($exit_code === 1) {
-                    throw new PhpBinException("Error installing package: " . $input_package_name . " " . $error);
+                    throw new \Articstudio\PhpBin\PhpBinException("Error installing package: " . $input_package_name . " " . $error);
                 }
                 $composer = json_decode(file_get_contents($this->getComposerFile()), true);
                 $version  = $this->searchPackageVersion($input_package_name, $composer);
-            } catch (PhpBinException $exception) {
+            } catch (\Articstudio\PhpBin\PhpBinException $exception) {
                 $this->io->error('Caught exception package: ', $exception->getMessage());
                 exit(1);
             }
@@ -99,8 +97,8 @@ class Install extends PhpBinCommand
 
         if (! $version) {
             try {
-                throw new PhpBinException("Package not found: " . $input_package_name);
-            } catch (PhpBinException $exception) {
+                throw new \Articstudio\PhpBin\PhpBinException("Package not found: " . $input_package_name);
+            } catch (\Articstudio\PhpBin\PhpBinException $exception) {
                 $this->io->error("Caught exception package: " . $exception->getMessage());
                 exit(1);
             }

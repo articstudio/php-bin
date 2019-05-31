@@ -1,4 +1,5 @@
 <?php
+
 namespace Articstudio\PhpBin\Commands\Composer;
 
 use Articstudio\PhpBin\Providers\AbstractProvider;

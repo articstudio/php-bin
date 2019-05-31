@@ -1,9 +1,9 @@
 <?php
+
 namespace Articstudio\PhpBin\Ui;
 
 use PhpSchool\CliMenu\Builder\CliMenuBuilder;
 use PhpSchool\CliMenu\CliMenu;
-use Articstudio\PhpBin\Ui\MenuOption;
 
 class Menu extends CliMenuBuilder
 {
@@ -102,12 +102,12 @@ class Menu extends CliMenuBuilder
     }
 
     /**
-     * Set the result
+     * Inject the result
      *
      * @param mixed $result
      * @return \self
      */
-    public function setResult($result): self
+    public function injectResult($result): self
     {
         $this->result = $result;
         return $this;
