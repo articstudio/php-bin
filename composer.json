@@ -61,7 +61,13 @@
     "bin": [
         "bin/phpbin"
     ],
-    "scripts": {},
+    "scripts": {
+        "lint": "php ./vendor/bin/parallel-lint . --exclude vendor --exclude build --colors",
+        "style": "php ./vendor/bin/phpcs --colors ./",
+        "fix-style": "php ./vendor/bin/phpcbf --colors ./",
+        "metrics": "php ./vendor/bin/phpmetrics --report-html=\"./build/metrics\" ./",
+        "insights": "php ./vendor/bin/phpinsights"
+    },
     "support": {
         "issues": "https://github.com/articstudio/php-bin/issues",
         "source": "https://github.com/articstudio/php-bin"
