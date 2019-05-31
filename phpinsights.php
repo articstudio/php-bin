@@ -12,7 +12,7 @@ use SlevomatCodingStandard\Sniffs\ControlStructures\DisallowShortTernaryOperator
 use SlevomatCodingStandard\Sniffs\Functions\UnusedParameterSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\DeclareStrictTypesSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\DisallowMixedTypeHintSniff;
-use SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff;
+//use SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff;
 
 return [
 
