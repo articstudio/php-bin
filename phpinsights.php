@@ -1,4 +1,6 @@
 <?php declare(strict_types = 1);
+use SlevomatCodingStandard\Sniffs\Commenting\DocCommentSpacingSniff;
+use SlevomatCodingStandard\Sniffs\TypeHints\DeclareStrictTypesSniff;
 
 return [
 
@@ -45,9 +47,13 @@ return [
     ],
 
     'config' => [
-        //  ExampleInsight::class => [
-        //      'key' => 'value',
-        //  ],
+        DocCommentSpacingSniff::class => [
+            'linesCountBetweenDifferentAnnotationsTypes' => 1,
+        ],
+        DeclareStrictTypesSniff::class => [
+            'newlinesCountBetweenOpenTagAndDeclare' => 2,
+            'spacesCountAroundEqualsSign' => 0,
+        ],
     ],
 
 ];
