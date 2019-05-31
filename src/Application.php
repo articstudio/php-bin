@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Articstudio\PhpBin;
 
@@ -100,7 +100,6 @@ final class Application
      */
     private function __clone()
     {
-        //
     }
 
     /**

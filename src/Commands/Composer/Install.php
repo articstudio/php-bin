@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Articstudio\PhpBin\Commands\Composer;
 
@@ -83,7 +83,7 @@ class Install extends PhpBinCommand
         if (! $version) {
             try {
                 $command = 'composer require --dev ' . $input_package_name;
-                [$exit_code, $output, $exit_code_txt, $error] = $this->callShell($command, false);
+                [$exit_code, , , $error] = $this->callShell($command, false);
                 if ($exit_code === 1) {
                     throw new \Articstudio\PhpBin\PhpBinException("Error installing package: " . $input_package_name . " " . $error);
                 }

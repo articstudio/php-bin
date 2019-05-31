@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Articstudio\PhpBin\Concerns;
 
@@ -24,9 +24,6 @@ trait HasShell
         $process = new Process($cmd);
         $process->setTimeout($timeout);
         $process->run();
-        //while ($process->isRunning()) {
-        // TODO: Show loading spinner
-        //}
         if ($throw && ! $process->isSuccessful()) {
             throw new \Symfony\Component\Process\Exception\ProcessFailedException($process);
         }

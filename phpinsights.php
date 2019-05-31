@@ -4,6 +4,7 @@ use SlevomatCodingStandard\Sniffs\Commenting\DocCommentSpacingSniff;
 use SlevomatCodingStandard\Sniffs\ControlStructures\DisallowShortTernaryOperatorSniff;
 use SlevomatCodingStandard\Sniffs\Functions\UnusedParameterSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\DeclareStrictTypesSniff;
+use SlevomatCodingStandard\Sniffs\TypeHints\DisallowMixedTypeHintSniff;
 
 return [
 
@@ -48,6 +49,7 @@ return [
     'remove' => [
         DisallowShortTernaryOperatorSniff::class,
         UnusedParameterSniff::class,
+        DisallowMixedTypeHintSniff::class,
     ],
 
     'config' => [

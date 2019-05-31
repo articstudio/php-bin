@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Articstudio\PhpBin\Commands\Git\Subtree;
 
@@ -75,7 +75,7 @@ class Push extends AbstractCommand
                     continue;
                 }
                 $cmd = 'git subtree push --prefix=' . $repo_package . '/ ' . $repo_url . ' master';
-                [$exit_code, $output, $exit_code_txt, $error] = $this->callShell($cmd, false);
+                [$exit_code, , , ] = $this->callShell($cmd, false);
                 $key            = $exit_code === 0 ? 'done' : 'error';
                 $result[$key][] = $repo_package;
                 continue;

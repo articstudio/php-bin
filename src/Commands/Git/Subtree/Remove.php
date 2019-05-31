@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Articstudio\PhpBin\Commands\Git\Subtree;
 
@@ -86,7 +86,7 @@ class Remove extends AbstractCommand
             'not_found' => [],
         ];
 
-        foreach ($repositories as $repo_package => $repo_url) {
+        foreach (array_keys($repositories) as $repo_package) {
             if (count($package_names) < 1 || in_array($repo_package, $package_names)) {
                 if (! $this->subtreeExists($repo_package)) {
                     $result['not_found'][] = $repo_package;
@@ -100,7 +100,7 @@ class Remove extends AbstractCommand
                 $cmd = 'rm -r ' . $repo_package . '/';
                 $this->callShell($cmd, false);
                 $cmd = 'git commit -m "Removing ' . $repo_package . ' subtree"';
-                [$exit_code, $output, $exit_code_txt, $error] = $this->callShell($cmd, false);
+                [$exit_code] = $this->callShell($cmd, false);
                 $key            = $exit_code === 0 ? 'done' : 'error';
                 $result[$key][] = $repo_package;
                 continue;

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Articstudio\PhpBin\Commands\Git\Subtree;
 
@@ -34,7 +34,7 @@ class Check extends PhpBinCommand
         ]);
 
         $subtrees_composer = array_keys($this->getSubtrees());
-        [ $exit_code, $subtrees_git, $exit_code_txt, $error ] = $this->callShell($cmd_subtrees_git, true);
+        [, $subtrees_git, ,  ] = $this->callShell($cmd_subtrees_git, true);
 
         $subtrees_git = array_filter(explode("\n", $subtrees_git), function ($value) {
             return $value !== '';

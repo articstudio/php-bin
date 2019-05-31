@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Articstudio\PhpBin\Commands\Git\Subtree\Concerns;
 
@@ -25,7 +25,7 @@ trait HasSubtreesConfig
     public function getLocalChanges()
     {
         $cmd = 'git diff --exit-code';
-        [$exit_code, $output, $exit_code_txt, $error] = $this->callShell($cmd, false);
+        [$exit_code, , , ] = $this->callShell($cmd, false);
 
         return $exit_code === 0 ? false : true;
     }

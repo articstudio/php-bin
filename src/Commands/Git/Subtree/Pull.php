@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Articstudio\PhpBin\Commands\Git\Subtree;
 
@@ -59,6 +59,7 @@ class Pull extends AbstractCommand
                 $commit_message,
                 '-a'
             ) : false;
+            $this->io->comment($commited ? 'Changes are comitteds.' : 'Changes connot commiteds.');
         }
 
         $result = $this->subtreePull($repositories, $package_names);
@@ -75,7 +76,7 @@ class Pull extends AbstractCommand
             'error'     => [],
             'not_found' => [],
         ];
-        foreach ($repositories as $repo_package => $repo_url) {
+        foreach (array_keys($repositories) as $repo_package) {
             if (count($package_names) < 1 || in_array($repo_package, $package_names)) {
                 if (! $this->subtreeExists($repo_package)) {
                     $result['not_found'][] = $repo_package;
@@ -83,7 +84,7 @@ class Pull extends AbstractCommand
                     continue;
                 }
                 $cmd = 'git subtree pull --prefix=' . $repo_package . '/ ' . $repo_package . ' master --squash';
-                [$exit_code, $output, $exit_code_txt, $error] = $this->callShell($cmd, false);
+                [$exit_code] = $this->callShell($cmd, false);
                 $key            = $exit_code === 0 ? 'done' : 'error';
                 $result[$key][] = $repo_package;
                 continue;

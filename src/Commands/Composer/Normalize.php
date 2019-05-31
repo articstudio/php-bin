@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Articstudio\PhpBin\Commands\Composer;
 
@@ -37,7 +37,7 @@ class Normalize extends AbstractCommand {
             'all' => 'All modules',
         ];
 
-        $option = ($module_dir === null) ? $this->selectPackageMenu(
+        $option = $module_dir === null ? $this->selectPackageMenu(
                         "Normalize composer",
                         $options
                 ) : null;
@@ -47,7 +47,7 @@ class Normalize extends AbstractCommand {
             return $this->callCommandByName('composer:menu', [], $output);
         }
 
-        $modules = ($module_dir === null) ? $this->getModulesByOption($option) : [$module_dir];
+        $modules = $module_dir === null ? $this->getModulesByOption($option) : [$module_dir];
 
         foreach ($modules as $module_name) {
             $output_messages = array_map(function ($name) {
@@ -63,13 +63,13 @@ class Normalize extends AbstractCommand {
     private function normalizeComposerFile($fname) {
         $command = 'composer normalize --no-update-lock ' . $fname;
 
-        [$exit_code, $output, $exit_code_txt, $error] = $this->callShell($command, false);
+        [$exit_code, $output, , $error] = $this->callShell($command, false);
 
         if ($exit_code === 1) {
             throw new \Articstudio\PhpBin\PhpBinException("Error normalize composer file of : " . $fname . ' ' . $error);
         }
 
-        return ($exit_code === 0) ? $output : [];
+        return $exit_code === 0 ? $output : [];
     }
 
     private function showResultMessages(array $messages, string $module_name) {

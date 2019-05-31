@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Articstudio\PhpBin\Commands\Composer;
 
@@ -40,7 +40,7 @@ class Update extends AbstractCommand
         $this->versions = array_merge($this->composer['require-dev'], $this->composer['require']);
         $module_dir     = $input->getArgument('module_name') ?: null;
         $options        = array_keys($this->getSubtrees()) + ['all' => 'All modules'];
-        $option         = ($module_dir === null) ? $this->selectPackageMenu(
+        $option         = $module_dir === null ? $this->selectPackageMenu(
             "Update packages versions",
             $options
         ) : null;
@@ -50,7 +50,7 @@ class Update extends AbstractCommand
             return $this->callCommandByName('composer:menu', [], $output);
         }
 
-        $modules = ($module_dir === null) ? $this->getModulesByOption($option) : [$module_dir];
+        $modules = $module_dir === null ? $this->getModulesByOption($option) : [$module_dir];
 
         foreach ($modules as $module_name) {
             array_map(function ($name) {
@@ -64,7 +64,7 @@ class Update extends AbstractCommand
     private function replaceDependenciesVersions($obj)
     {
         $result = [];
-        foreach ($obj as $package => $version) {
+        foreach (array_keys($obj) as $package) {
             if (key_exists($package, $this->versions)) {
                 $result[$package] = $this->versions[$package] ?: $obj[$package];
                 $symbol           = $this->versions[$package] === $obj[$package] ? '=' : '+';

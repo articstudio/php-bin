@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Articstudio\PhpBin\Commands\Composer;
 
@@ -37,14 +37,14 @@ class GetDevPackages extends AbstractCommand
         $this->io   = $this->getStyle($output, $input);
         $module_dir = $input->getArgument('module_name') ?: null;
         $options    = array_keys($this->getSubtrees()) + ['all' => 'All modules'];
-        $option     = ($module_dir === null) ? $this->selectPackageMenu("Load packages to project", $options) : null;
+        $option     = $module_dir === null ? $this->selectPackageMenu("Load packages to project", $options) : null;
 
         $this->io->title('Loaded packages');
         if ($option === 'back') {
             return $this->callCommandByName('composer:menu', [], $output);
         }
 
-        $modules = ($module_dir === null) ? $this->getModulesByOption($option) : [$module_dir];
+        $modules = $module_dir === null ? $this->getModulesByOption($option) : [$module_dir];
 
         $this->composer = $this->getComposerData();
         $this->initComposerRequires();

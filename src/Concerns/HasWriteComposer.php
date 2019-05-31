@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Articstudio\PhpBin\Concerns;
 
@@ -33,7 +33,7 @@ trait HasWriteComposer
         }
         $current_subtrees = $config['config']['subtree'];
 
-        foreach ($current_subtrees as $current_subtree => $current_subtree_url) {
+        foreach (array_keys($current_subtrees) as $current_subtree) {
             if (in_array($current_subtree, $itemsToRemove)) {
                 unset($current_subtrees[$current_subtree]);
             }
@@ -51,12 +51,12 @@ trait HasWriteComposer
 
         $composer = json_decode(file_get_contents($composer_file), true);
 
-        $env = ($env && ($env === "d" || $env === "D")) ? 'require-dev' : 'require';
+        $env = $env && ($env === "d" || $env === "D") ? 'require-dev' : 'require';
 
         $packages       = $composer[$env] + $itemToAdd;
         $composer[$env] = $packages;
 
-        $env = ($env !== 'require-dev') ? 'require-dev' : 'require';
+        $env = $env !== 'require-dev' ? 'require-dev' : 'require';
 
         if (key_exists($env, $composer) && key_exists($input_package_name, $composer[$env])) {
             unset($composer[$env][$input_package_name]);
