@@ -1,13 +1,15 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Articstudio\PhpBin\Commands\Composer;
 
-use Articstudio\PhpBin\Commands\AbstractCommand;
+use Articstudio\PhpBin\Commands\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Normalize extends AbstractCommand {
+class Normalize extends Command {
 
     use \Articstudio\PhpBin\Concerns\HasWriteComposer;
     use Concerns\HasComposerConfig;

@@ -1,8 +1,10 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Articstudio\PhpBin\Commands\Git\Subtree;
 
-use Articstudio\PhpBin\Commands\AbstractCommand as PhpBinCommand;
+use Articstudio\PhpBin\Commands\Command as PhpBinCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -36,7 +38,7 @@ class Check extends PhpBinCommand
         $subtrees_composer = array_keys($this->getSubtrees());
         [, $subtrees_git, ,  ] = $this->callShell($cmd_subtrees_git, true);
 
-        $subtrees_git = array_filter(explode("\n", $subtrees_git), function ($value) {
+        $subtrees_git = array_filter(explode("\n", $subtrees_git), static function ($value) {
             return $value !== '';
         });
 

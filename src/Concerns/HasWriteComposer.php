@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Articstudio\PhpBin\Concerns;
 
@@ -66,7 +68,7 @@ trait HasWriteComposer
 
     private function writeComposer(array $config, string $composer_file)
     {
-        $clean_config = array_map(function ($value) {
+        $clean_config = array_map(static function ($value) {
             return $value === [] ? new \stdClass() : $value;
         }, $config);
 

@@ -1,8 +1,10 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Articstudio\PhpBin\Commands\Php;
 
-use Articstudio\PhpBin\Commands\AbstractMenuCommand as PhpBinMenuCommand;
+use Articstudio\PhpBin\Commands\MenuCommand as PhpBinMenuCommand;
 
 class Menu extends PhpBinMenuCommand
 {

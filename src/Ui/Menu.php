@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Articstudio\PhpBin\Ui;
 
@@ -49,6 +51,7 @@ class Menu extends CliMenuBuilder
      * Add menu options
      *
      * @param array $options
+     *
      * @return \self
      */
     public function addOptions(array $options): self
@@ -68,6 +71,7 @@ class Menu extends CliMenuBuilder
      * @param callable|null $callback
      * @param bool $showItemExtra
      * @param bool $disabled
+     *
      * @return \self
      */
     public function addOption(
@@ -105,6 +109,7 @@ class Menu extends CliMenuBuilder
      * Inject the result
      *
      * @param mixed $result
+     *
      * @return \self
      */
     public function injectResult($result): self

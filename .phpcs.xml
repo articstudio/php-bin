@@ -36,7 +36,7 @@
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
     <rule ref="Generic.Files.ByteOrderMark"/>
     <rule ref="Generic.Files.LineEndings"/>
-    <!--<rule ref="Generic.Files.LineLength"/>-->
+    <!--<rule ref="Generic.Files.LineLength"/>--><!-- @TODO -->
     <rule ref="Generic.Formatting.SpaceAfterCast"/>
     <rule ref="Generic.Formatting.SpaceAfterNot"/>
     <rule ref="Generic.Functions.FunctionCallArgumentSpacing"/>
@@ -68,7 +68,11 @@
     <rule ref="Squiz.WhiteSpace.LanguageConstructSpacing"/>
     <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
     <rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma"/>
-    <rule ref="SlevomatCodingStandard.Commenting.DocCommentSpacing"/>
+    <rule ref="SlevomatCodingStandard.Commenting.DocCommentSpacing">
+        <properties>
+            <property name="linesCountBetweenDifferentAnnotationsTypes" value="1"/>
+        </properties>
+    </rule>
     <rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses"/>
     <rule ref="SlevomatCodingStandard.Namespaces.NamespaceSpacing"/>
     <rule ref="SlevomatCodingStandard.Namespaces.RequireOneNamespaceInFile"/>
@@ -130,7 +134,12 @@
     <rule ref="SlevomatCodingStandard.PHP.TypeCast"/>
     <rule ref="SlevomatCodingStandard.PHP.UselessParentheses"/>
     <rule ref="SlevomatCodingStandard.PHP.UselessSemicolon"/>
-    <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
+        <properties>
+            <property name="newlinesCountBetweenOpenTagAndDeclare" value="2"/>
+            <property name="spacesCountAroundEqualsSign" value="0"/>
+        </properties>
+    </rule>
     <rule ref="SlevomatCodingStandard.Variables.DuplicateAssignmentToVariable"/>
     <rule ref="SlevomatCodingStandard.Variables.UnusedVariable"/>
     <rule ref="SlevomatCodingStandard.Variables.UselessVariable"/>
@@ -147,24 +156,73 @@
     <rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints"/>
     <rule ref="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue"/>
     <rule ref="SlevomatCodingStandard.TypeHints.NullTypeHintOnLastPosition"/>
-    <rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration">
+    <!--<rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration">
         <exclude phpcbf-only="true" name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration"/>
-    </rule>
+    </rule>--><!-- @TODO -->
     <rule ref="SlevomatCodingStandard.TypeHints.UselessConstantTypeHint"/>
+    
+    <!-- Code > Functions -->
+    <!--<rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>-->
+    <rule ref="Generic.Functions.CallTimePassByReference"/>
+    <rule ref="Generic.PHP.DeprecatedFunctions"/>
+    <rule ref="Generic.PHP.ForbiddenFunctions"/>
+    <rule ref="PSR12.Functions.NullableTypeDeclaration"/>
+    <rule ref="SlevomatCodingStandard.Functions.StaticClosure"/>
+    <rule ref="SlevomatCodingStandard.Functions.UnusedInheritedVariablePassedToClosure"/>
+    
+    <!-- Code > Globally -->
+    <rule ref="Squiz.PHP.GlobalKeyword"/>
+    
+    <!-- Architecture > Classes -->
+    <rule ref="Generic.Files.OneClassPerFile"/>
+    <rule ref="PSR1.Classes.ClassDeclaration"/>
+    <rule ref="Squiz.Classes.ValidClassName"/>
+    <rule ref="SlevomatCodingStandard.Classes.SuperfluousAbstractClassNaming"/>
+    <rule ref="SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming"/>
+    
+    <!-- Architecture > Files -->
+    <!--<rule ref="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming"/>-->
+    
+    <!-- Architecture > Functions -->
+    <!-- -->
+    
+    <!-- Architecture > Globally -->
+    <!-- -->
+    
+    <!-- Architecture > Interfaces -->
+    <rule ref="Generic.Files.OneInterfacePerFile"/>
+    
+    <!-- Architecture > Namespaces -->
+    <rule ref="PSR12.Namespaces.CompoundNamespaceDepth"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.NamespaceDeclaration"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UselessAlias"/>
+    
+    <!-- Architecture > Traits -->
+    <rule ref="Generic.Files.OneTraitPerFile"/>
+    <rule ref="SlevomatCodingStandard.Classes.SuperfluousTraitNaming"/>
+    
+    <!-- Complexity -->
+    <!-- -->
 
     <!-- Object calisthenics -->
     <rule ref="vendor/object-calisthenics/phpcs-calisthenics-rules/src/ObjectCalisthenics/ruleset.xml">
-        <exclude name="ObjectCalisthenics.Metrics.MaxNestingLevel"/>
         <exclude name="ObjectCalisthenics.ControlStructures.NoElse"/>
         <exclude name="ObjectCalisthenics.CodeAnalysis.OneObjectOperatorPerLine"/>
-        <exclude name="ObjectCalisthenics.NamingConventions.ElementNameMinimalLength"/>
-        <exclude name="ObjectCalisthenics.Files.ClassTraitAndInterfaceLength"/>
-        <exclude name="ObjectCalisthenics.Files.FunctionLength"/>
-        <exclude name="ObjectCalisthenics.Metrics.PropertyPerClassLimit"/>
-        <exclude name="ObjectCalisthenics.Metrics.MethodPerClassLimit"/>
         
         <!-- Code > Classes -->
         <!--<exclude name="ObjectCalisthenics.Classes.ForbiddenPublicProperty"/>
         <exclude name="ObjectCalisthenics.NamingConventions.NoSetter"/>-->
+        
+        <!-- Code > Code -->
+        <!--<exclude name="ObjectCalisthenics.Metrics.MaxNestingLevel"/>-->
+        <exclude name="ObjectCalisthenics.NamingConventions.ElementNameMinimalLength"/><!-- @TODO -->
+        
+        <!-- Architecture > Classes -->
+        <!--<exclude name="ObjectCalisthenics.Files.ClassTraitAndInterfaceLength"/>
+        <exclude name="ObjectCalisthenics.Metrics.MethodPerClassLimit"/>
+        <exclude name="ObjectCalisthenics.Metrics.PropertyPerClassLimit"/>-->
+        
+        <!-- Architecture > Functions -->
+        <exclude name="ObjectCalisthenics.Files.FunctionLength"/><!-- @TODO -->
     </rule>
 </ruleset>

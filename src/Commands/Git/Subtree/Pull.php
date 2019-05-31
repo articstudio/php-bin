@@ -1,13 +1,15 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Articstudio\PhpBin\Commands\Git\Subtree;
 
-use Articstudio\PhpBin\Commands\AbstractCommand;
+use Articstudio\PhpBin\Commands\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Pull extends AbstractCommand
+class Pull extends Command
 {
 
     use Concerns\HasSubtreesConfig;
@@ -77,19 +79,19 @@ class Pull extends AbstractCommand
             'not_found' => [],
         ];
         foreach (array_keys($repositories) as $repo_package) {
-            if (count($package_names) < 1 || in_array($repo_package, $package_names)) {
-                if (! $this->subtreeExists($repo_package)) {
-                    $result['not_found'][] = $repo_package;
-                    unset($repositories[$repo_package]);
-                    continue;
-                }
-                $cmd = 'git subtree pull --prefix=' . $repo_package . '/ ' . $repo_package . ' master --squash';
-                [$exit_code] = $this->callShell($cmd, false);
-                $key            = $exit_code === 0 ? 'done' : 'error';
-                $result[$key][] = $repo_package;
+            if (count($package_names) > 0 && ! in_array($repo_package, $package_names)) {
+                $result['skipped'][] = $repo_package;
                 continue;
             }
-            $result['skipped'][] = $repo_package;
+            if (! $this->subtreeExists($repo_package)) {
+                $result['not_found'][] = $repo_package;
+                unset($repositories[$repo_package]);
+                continue;
+            }
+            $cmd = 'git subtree pull --prefix=' . $repo_package . '/ ' . $repo_package . ' master --squash';
+            [$exit_code] = $this->callShell($cmd, false);
+            $key            = $exit_code === 0 ? 'done' : 'error';
+            $result[$key][] = $repo_package;
         }
 
         return $result;

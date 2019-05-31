@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Articstudio\PhpBin\Commands\Composer\Concerns;
 
@@ -9,7 +11,7 @@ trait HasComposerBehaviour
     {
         $command = 'find ' . $dirname . ' -type f -name "composer.json"';
         [$exit_code, $output, , ] = $this->callShell($command, false);
-        $return = array_filter(explode("\n", $output), function ($value) {
+        $return = array_filter(explode("\n", $output), static function ($value) {
             return $value !== '';
         });
 

@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Articstudio\PhpBin\Commands;
 
@@ -6,7 +8,7 @@ use Articstudio\PhpBin\Application;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class AbstractShellCommand extends AbstractCommand
+class ShellCommand extends Command
 {
 
     /**

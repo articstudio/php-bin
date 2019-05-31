@@ -1,10 +1,12 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Articstudio\PhpBin\Commands\Php;
 
-use Articstudio\PhpBin\Providers\AbstractProvider;
+use Articstudio\PhpBin\Providers\Provider;
 
-class PhpProvider extends AbstractProvider
+class PhpProvider extends Provider
 {
 
     /**

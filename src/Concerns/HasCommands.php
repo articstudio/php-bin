@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Articstudio\PhpBin\Concerns;
 
@@ -6,9 +8,17 @@ trait HasCommands
 {
 
     /**
+     * Available commands
+     *
+     * @var array
+     */
+    protected $commands = [];
+
+    /**
      * Add comand to available commands
      *
      * @param string $command
+     *
      * @return int
      */
     public function addComand(string $command): int

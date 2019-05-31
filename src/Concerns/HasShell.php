@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Articstudio\PhpBin\Concerns;
 
@@ -14,7 +16,9 @@ trait HasShell
      * @param string $cmd
      * @param bool $throw
      * @param int $timeout
+     *
      * @return array
+     *
      * @throws ProcessFailedException
      */
     protected function callShell(string $cmd, bool $throw = true, $timeout = 300): array

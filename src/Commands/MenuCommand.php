@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Articstudio\PhpBin\Commands;
 
@@ -6,7 +8,7 @@ use Articstudio\PhpBin\Ui\Menu;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-abstract class AbstractMenuCommand extends AbstractCommand
+abstract class MenuCommand extends Command
 {
 
     /**
@@ -75,6 +77,7 @@ abstract class AbstractMenuCommand extends AbstractCommand
      *
      * @param string $title
      * @param array $options
+     *
      * @return Menu
      */
     public function menu(string $title, array $options): Menu
@@ -100,6 +103,7 @@ abstract class AbstractMenuCommand extends AbstractCommand
      * Extend menu options
      *
      * @param array $options
+     *
      * @return void
      */
     public function extendOptions(array $options): void

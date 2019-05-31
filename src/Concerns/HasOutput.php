@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Articstudio\PhpBin\Concerns;
 
@@ -40,6 +42,7 @@ trait HasOutput
      *
      * @param OutputInterface|null $output
      * @param InputInterface|null $input
+     *
      * @return SymfonyStyle
      */
     public function getStyle(?OutputInterface $output, ?InputInterface $input = null)
@@ -56,6 +59,7 @@ trait HasOutput
      * @param OutputInterface|null $output
      * @param int $exitCode
      * @param bool $force
+     *
      * @return int
      */
     public function exit(?OutputInterface $output, int $exitCode = 0, bool $force = false): int

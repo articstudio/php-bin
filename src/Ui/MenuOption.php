@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Articstudio\PhpBin\Ui;
 
@@ -70,7 +72,7 @@ class MenuOption extends SelectableItem
 
     public static function getDefaultCallback(Menu $builder)
     {
-        return function () use ($builder) {
+        return static function () use ($builder) {
             $builder->injectResult(
                 $builder->getMenu()->getSelectedItem()->getValue()
             );

@@ -1,8 +1,10 @@
-<?php declare(strict_types = 1);
+<?php
 
-namespace Articstudio\PhpBin\Providers;
+declare(strict_types=1);
 
-interface ProviderInterface
+namespace Articstudio\PhpBin\Contracts;
+
+interface Provider
 {
 
     /**

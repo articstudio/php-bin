@@ -1,10 +1,18 @@
-<?php declare(strict_types = 1);
+<?php
 
+declare(strict_types=1);
+
+use NunoMaduro\PhpInsights\Domain\Insights\ForbiddenNormalClasses;
+use NunoMaduro\PhpInsights\Domain\Insights\ForbiddenTraits;
+use ObjectCalisthenics\Sniffs\NamingConventions\ElementNameMinimalLengthSniff;
+use PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis\UnusedFunctionParameterSniff;
+use SlevomatCodingStandard\Sniffs\Classes\SuperfluousExceptionNamingSniff;
 use SlevomatCodingStandard\Sniffs\Commenting\DocCommentSpacingSniff;
 use SlevomatCodingStandard\Sniffs\ControlStructures\DisallowShortTernaryOperatorSniff;
 use SlevomatCodingStandard\Sniffs\Functions\UnusedParameterSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\DeclareStrictTypesSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\DisallowMixedTypeHintSniff;
+use SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff;
 
 return [
 
@@ -50,6 +58,12 @@ return [
         DisallowShortTernaryOperatorSniff::class,
         UnusedParameterSniff::class,
         DisallowMixedTypeHintSniff::class,
+        //TypeHintDeclarationSniff::class,
+        UnusedFunctionParameterSniff::class,
+        ElementNameMinimalLengthSniff::class,
+        ForbiddenNormalClasses::class,
+        SuperfluousExceptionNamingSniff::class,
+        ForbiddenTraits::class,
     ],
 
     'config' => [

@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace Articstudio\PhpBin\Commands;
 
@@ -12,7 +14,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 
-abstract class AbstractCommand extends SymfonyCommand
+abstract class Command extends SymfonyCommand
 {
 
     use \Articstudio\PhpBin\Concerns\HasOutput;
@@ -24,6 +26,7 @@ abstract class AbstractCommand extends SymfonyCommand
      *
      * @param string $title
      * @param array $options
+     *
      * @return Menu
      */
     public function menu(string $title, array $options): Menu
@@ -105,6 +108,7 @@ abstract class AbstractCommand extends SymfonyCommand
      * @param string $name
      * @param array $arguments
      * @param OutputInterface $output
+     *
      * @return int
      */
     protected function callCommandByName(string $name, ?array $arguments, OutputInterface $output)
