@@ -7,8 +7,8 @@ namespace Articstudio\PhpBin\Commands\Git\Subtree;
 use Articstudio\PhpBin\Commands\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class Version extends Command
 {
@@ -27,7 +27,7 @@ class Version extends Command
 
     protected function configure()
     {
-        $this->addOption('v', null, InputOption::VALUE_OPTIONAL, 'Versió:');
+        $this->addOption('tag', 't', InputOption::VALUE_REQUIRED, 'Versió:');
         $this->addArgument('package_name', InputArgument::IS_ARRAY, 'Nom del package:');
     }
 
@@ -38,7 +38,7 @@ class Version extends Command
         $this->io     = $this->getStyle($output, $input);
 
         $package_names = $input->getArgument('package_name') ?: [];
-        $version = $input->getOption('version') ?: null;
+        $version = $input->getOption('tag') ?: null;
 
         if (count($package_names) < 1) {
             $menu_options = array_keys($repositories) + [
@@ -59,7 +59,7 @@ class Version extends Command
 
             if ($option === 'all') {
                 $package_names = array_keys($repositories);
-            } else if (substr($option, 0, 6) === 'group:') {
+            } elseif (substr($option, 0, 6) === 'group:') {
                 $group_name = substr($option, 6);
                 $package_names = $versions_groups[$group_name] ?? [];
             } else {
@@ -68,8 +68,8 @@ class Version extends Command
                         : [];
             }
         }
-        
-        if (!$version) {
+
+        if (! $version) {
             $version   = $this->io->ask('Please enter the new version', $this->getPackageVersion());
         }
 
@@ -105,26 +105,26 @@ class Version extends Command
 
         return $result;
     }
-    
+
     private function versionSubtree($package_name, $repository, $version): bool
     {
         $tmp = '/tmp/phpbin-release';
         $cmds = [
-            "rm -rf {$tmp}",
-            "mkdir {$tmp}",
-            "cd {$tmp}",
-            "git clone {$repository}",
-            "git checkout master",
-            "git tag -a {$version} -m \"v{$version}\"",
-            "git push origin --tags"
+            "rm -rf {$tmp} && mkdir {$tmp}",
+            "cd {$tmp} && git clone {$repository} .",
+            "cd {$tmp} && git checkout master",
+            "cd {$tmp} && git tag -a {$version} -m \"{$version}\"",
+            "cd {$tmp} && git push origin --tags",
         ];
-        $cmd = implode (' && ', $cmds);
-        [$exit_code] = $this->callShell($cmd, false);
-        if ($exit_code !== 0) {
-            $this->callShell("rm -rf {$tmp}", false);
-            return false;
+        $exit_code = 0;
+        foreach ($cmds as $cmd) {
+            [$exit_code, $output, $error_title, $error_content] = $this->callShell($cmd, false);
+            if ($exit_code !== 0) {
+                break;
+            }
         }
-        return true;
+        $this->callShell("rm -rf {$tmp}", false);
+        return $exit_code === 0;
     }
-    
+
 }
