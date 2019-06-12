@@ -33,7 +33,10 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
-        "subtree": {}
+        "subtree": {
+            "Git/Test": "git@github.com:articstudio/git-test.git"
+        },
+        "versions": []
     },
     "extra": {},
     "autoload": {
