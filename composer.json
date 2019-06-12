@@ -36,7 +36,14 @@
         "subtree": {
             "Git/Test": "git@github.com:articstudio/git-test.git"
         },
-        "versions": []
+        "versions": {
+            "core": [
+                "Git/Test"
+            ],
+            "git": [
+                "Git/Test"
+            ]
+        }
     },
     "extra": {},
     "autoload": {

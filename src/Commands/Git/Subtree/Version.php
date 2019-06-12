@@ -8,6 +8,7 @@ use Articstudio\PhpBin\Commands\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputOption;
 
 class Version extends Command
 {
@@ -26,22 +27,27 @@ class Version extends Command
 
     protected function configure()
     {
+        $this->addOption('v', null, InputOption::VALUE_OPTIONAL, 'Versió:');
         $this->addArgument('package_name', InputArgument::IS_ARRAY, 'Nom del package:');
-        $this->addArgument('version', InputArgument::OPTIONAL, 'Versió:');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $repositories = $this->getSubtrees();
+        $versions_groups = $this->getVersionsGroups();
         $this->io     = $this->getStyle($output, $input);
 
         $package_names = $input->getArgument('package_name') ?: [];
+        $version = $input->getOption('version') ?: null;
 
         if (count($package_names) < 1) {
             $menu_options = array_keys($repositories) + [
                 'all' => 'All subtrees',
             ];
-            $option       = $this->selectPackageMenu('Push subtrees', $menu_options);
+            foreach (array_keys($versions_groups) as $group_name) {
+                $menu_options['group:'.$group_name] = 'Group: ' . $group_name;
+            }
+            $option = $this->selectPackageMenu('Version subtrees', $menu_options);
 
             if ($option === 'back') {
                 return $this->callCommandByName('git', [], $output);
@@ -51,17 +57,29 @@ class Version extends Command
                 return 1;
             }
 
-            $package_names = is_int($option) ? [array_keys($repositories)[$option]] :
-                ($option === 'all' ? array_keys($repositories) : []);
+            if ($option === 'all') {
+                $package_names = array_keys($repositories);
+            } else if (substr($option, 0, 6) === 'group:') {
+                $group_name = substr($option, 6);
+                $package_names = $versions_groups[$group_name] ?? [];
+            } else {
+                $package_names = is_int($option)
+                        ? [array_keys($repositories)[$option]]
+                        : [];
+            }
+        }
+        
+        if (!$version) {
+            $version   = $this->io->ask('Please enter the new version', $this->getPackageVersion());
         }
 
-        $result = $this->pushSubtree($repositories, $package_names);
+        $result = $this->versionSubtrees($repositories, $package_names, $version);
         $this->showResume($result, $this->io);
 
         return $this->exit($output, 0);
     }
 
-    private function pushSubtree(array $repositories, $package_names)
+    private function versionSubtrees(array $repositories, $package_names, $version)
     {
         $result = [
             'skipped'   => [],
@@ -71,7 +89,7 @@ class Version extends Command
         ];
 
         foreach ($repositories as $repo_package => $repo_url) {
-            if (count($package_names) > 0 && ! in_array($repo_package, $package_names)) {
+            if (count($package_names) < 1 || ! in_array($repo_package, $package_names)) {
                 $result['skipped'][] = $repo_package;
                 continue;
             }
@@ -80,12 +98,31 @@ class Version extends Command
                 unset($repositories[$repo_package]);
                 continue;
             }
-            $cmd = 'git subtree push --prefix=' . $repo_package . '/ ' . $repo_url . ' master';
-            [$exit_code, , , ] = $this->callShell($cmd, false);
-            $key            = $exit_code === 0 ? 'done' : 'error';
+            $key = $this->versionSubtree($repo_package, $repo_url, $version)
+                    ? 'done' : 'error';
             $result[$key][] = $repo_package;
         }
 
         return $result;
     }
+    
+    private function versionSubtree($package_name, $repository, $version): bool
+    {
+        $tmp = '/tmp/phpbin-release';
+        $cmds = [
+            "rm -rf {$tmp} && mkdir {$tmp} && cd {$tmp}",
+            "git clone {$repository} && git checkout master",
+            "git tag -a {$version} -m \"v{$version}\" && git push origin --tags"
+        ];
+        $exit_code = 0;
+        foreach ($cmds as $cmd) {
+            [$exit_code] = $this->callShell($cmd, false);
+            if ($exit_code !== 0) {
+                $this->callShell("rm -rf {$tmp}", false);
+                break;
+            }
+        }
+        return $exit_code === 0;
+    }
+    
 }
