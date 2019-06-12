@@ -1,0 +1,36 @@
+{
+    "name": "articstudio/git-test",
+    "homepage": "https://github.com/articstudio/git-test",
+    "authors": [
+        {
+            "name": "Artic studio",
+            "email": "developers@articstudio.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.3"
+    },
+    "require-dev": {},
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "Articstudio\\GitTest\\": ""
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packagist.org"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "support": {
+        "issues": "https://github.com/articstudio/git-test/issues",
+        "source": "https://github.com/articstudio/git-test"
+    }
+}
