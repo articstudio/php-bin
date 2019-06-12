@@ -21,5 +21,6 @@ class GitProvider extends Provider
         '\Articstudio\PhpBin\Commands\Git\Subtree\Add',
         '\Articstudio\PhpBin\Commands\Git\Subtree\Remove',
         '\Articstudio\PhpBin\Commands\Git\Subtree\Check',
+        '\Articstudio\PhpBin\Commands\Git\Subtree\Version',
     ];
 }

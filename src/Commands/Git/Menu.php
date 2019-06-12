@@ -27,6 +27,7 @@ class Menu extends PhpBinMenuCommand
         'git:subtree:pull' => 'Subtree Pull',
         'git:subtree:remove' => 'Subtree Remove',
         'git:subtree:check' => 'Subtree Check',
+        'git:subtree:version' => 'Subtree Versions',
     ];
 
     /**

@@ -17,6 +17,20 @@ trait HasSubtreesConfig
         return $config['subtree'] ?? [];
     }
 
+    public function getVersionsGroups(): array
+    {
+        $composer = Application::getInstance()->getComposer();
+        $config   = $composer['data']['config'] ?? [];
+
+        return $config['versions'] ?? [];
+    }
+
+    public function getPackageVersion(): ?string
+    {
+        $composer = Application::getInstance()->getComposer();
+        return $composer['data']['version'] ?? null;
+    }
+
     public function checkPackageInComposer(string $package_name)
     {
         $subtrees = $this->getSubtrees();
