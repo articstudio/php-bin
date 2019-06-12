@@ -110,19 +110,21 @@ class Version extends Command
     {
         $tmp = '/tmp/phpbin-release';
         $cmds = [
-            "rm -rf {$tmp} && mkdir {$tmp} && cd {$tmp}",
-            "git clone {$repository} && git checkout master",
-            "git tag -a {$version} -m \"v{$version}\" && git push origin --tags"
+            "rm -rf {$tmp}",
+            "mkdir {$tmp}",
+            "cd {$tmp}",
+            "git clone {$repository}",
+            "git checkout master",
+            "git tag -a {$version} -m \"v{$version}\"",
+            "git push origin --tags"
         ];
-        $exit_code = 0;
-        foreach ($cmds as $cmd) {
-            [$exit_code] = $this->callShell($cmd, false);
-            if ($exit_code !== 0) {
-                $this->callShell("rm -rf {$tmp}", false);
-                break;
-            }
+        $cmd = implode (' && ', $cmds);
+        [$exit_code] = $this->callShell($cmd, false);
+        if ($exit_code !== 0) {
+            $this->callShell("rm -rf {$tmp}", false);
+            return false;
         }
-        return $exit_code === 0;
+        return true;
     }
     
 }
