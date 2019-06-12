@@ -118,7 +118,7 @@ class Version extends Command
         ];
         $exit_code = 0;
         foreach ($cmds as $cmd) {
-            [$exit_code, $output, $error_title, $error_content] = $this->callShell($cmd, false);
+            [$exit_code] = $this->callShell($cmd, false);
             if ($exit_code !== 0) {
                 break;
             }
