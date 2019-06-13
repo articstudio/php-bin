@@ -59,13 +59,13 @@ class Version extends Command
 
             if ($option === 'all') {
                 $package_names = array_keys($repositories);
+            } elseif (is_int($option)) {
+                $package_names = i[array_keys($repositories)[$option]];
             } elseif (substr($option, 0, 6) === 'group:') {
                 $group_name = substr($option, 6);
                 $package_names = $versions_groups[$group_name] ?? [];
             } else {
-                $package_names = is_int($option)
-                        ? [array_keys($repositories)[$option]]
-                        : [];
+                $package_names = [];
             }
         }
 
