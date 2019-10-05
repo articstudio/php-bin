@@ -1,6 +1,7 @@
 {
     "name": "articstudio/php-bin",
     "type": "library",
+    "license": "MIT",
     "description": "",
     "keywords": [
         "php",
@@ -20,12 +21,11 @@
         "localheinz/composer-normalize": "^1.0",
         "php-school/cli-menu": "^3.0",
         "phpmetrics/phpmetrics": "^2.3",
-        "phpunit/phpunit": "~7.0",
-        "squizlabs/php_codesniffer": "^3.3",
+        "phpunit/phpunit": "~8.0",
+        "squizlabs/php_codesniffer": "^3.5",
         "symfony/console": "^4.2",
         "symfony/process": "^4.2",
-        "nunomaduro/phpinsights": "^1.0",
-        "consistence/coding-standard": "~3.8"
+        "nunomaduro/phpinsights": "^1.0"
     },
     "replace": {},
     "require-dev": {},
