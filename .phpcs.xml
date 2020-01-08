@@ -32,7 +32,7 @@
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
     <rule ref="Generic.Files.ByteOrderMark"/>
     <rule ref="Generic.Files.LineEndings"/>
-    <rule ref="Generic.Files.LineLength"/>
+    <!--<rule ref="Generic.Files.LineLength"/>--><!-- @TODO -->
     <rule ref="Generic.Formatting.SpaceAfterCast"/>
     <rule ref="Generic.Formatting.SpaceAfterNot"/>
     <rule ref="Generic.Functions.FunctionCallArgumentSpacing"/>
