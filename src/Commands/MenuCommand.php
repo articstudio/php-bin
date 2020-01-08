@@ -51,12 +51,14 @@ abstract class MenuCommand extends Command
      *
      * @param InputInterface $input
      * @param OutputInterface $output
+     *
+     * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->prepareMenuTitle();
         $name = $this->menu($this->menuTitle, $this->menuOptions)->open();
-        if (! $name) {
+        if (! boolval($name)) {
             return $this->exit($output);
         }
         return $this->callCommandByName($name, [], $output);
@@ -68,7 +70,7 @@ abstract class MenuCommand extends Command
             return;
         }
         $this->menuTitle = $this->menuTitle ?? '';
-        $this->menuTitle .= (! $this->menuTitle ? '' : ' - ') . "PHPBIN v{$this->phpbin->getVersion()}";
+        $this->menuTitle .= (! boolval($this->menuTitle) ? '' : ' - ') . "PHPBIN v{$this->phpbin->getVersion()}";
         $this->menuTitlePrepared = true;
     }
 
@@ -84,11 +86,11 @@ abstract class MenuCommand extends Command
     {
         $menu = parent::menu($title, $options);
 
-        if ($this->backOption || $this->showExitOption) {
+        if ((bool) $this->backOption || $this->showExitOption) {
             $menu->addLineBreak();
         }
 
-        if ($this->backOption) {
+        if ((bool) $this->backOption) {
             $menu->addOption($this->backOption, 'Back');
         }
 

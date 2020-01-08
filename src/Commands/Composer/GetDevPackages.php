@@ -37,7 +37,7 @@ class GetDevPackages extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->io   = $this->getStyle($output, $input);
-        $module_dir = $input->getArgument('module_name') ?: null;
+        $module_dir = $input->getArgument('module_name') ?? null;
         $options    = array_keys($this->getSubtrees()) + ['all' => 'All modules'];
         $option     = $module_dir === null ? $this->selectPackageMenu("Load packages to project", $options) : null;
 
@@ -52,7 +52,7 @@ class GetDevPackages extends Command
         $this->initComposerRequires();
 
         foreach ($modules as $module_name) {
-            array_map(function ($name) {
+            array_map(function ($name): void {
                 $this->mergeDependencies($name);
             }, $this->getComposerJson($module_name));
         }

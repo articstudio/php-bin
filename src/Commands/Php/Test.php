@@ -24,8 +24,10 @@ class Test extends PhpBinCommand
      *
      * @param InputInterface $input
      * @param OutputInterface $output
+     *
+     * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $composer = Application::getInstance()->getComposer();
         $io = $this->getStyle($output, $input);

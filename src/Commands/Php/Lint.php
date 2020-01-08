@@ -14,7 +14,7 @@ class Lint extends PhpBinShellCommand
      *
      * @var string
      */
-    protected $shellCommand = 'php ./vendor/bin/parallel-lint . --exclude vendor --exclude build --colors';
+    protected $shellCommand = 'php ./vendor/bin/phpstan analyse --ansi';
 
     /**
      * Command name

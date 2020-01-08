@@ -19,14 +19,12 @@ trait HasShell
      *
      * @return array
      *
-     * @throws ProcessFailedException
+     * @throws \Symfony\Component\Process\Exception\ProcessFailedException
      */
     protected function callShell(string $cmd, bool $throw = true, $timeout = 300): array
     {
         $composer = Application::getInstance()->getComposer();
-        $cmd = "cd {$composer['directory']} && " . $cmd;
-        $process = new Process($cmd);
-        $process->setTimeout($timeout);
+        $process = Process::fromShellCommandline($cmd, $composer['directory'], null, null, $timeout);
         $process->run();
         if ($throw && ! $process->isSuccessful()) {
             throw new \Symfony\Component\Process\Exception\ProcessFailedException($process);

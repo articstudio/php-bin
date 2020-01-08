@@ -33,7 +33,7 @@ class Normalize extends Command {
     protected function execute(InputInterface $input, OutputInterface $output) {
         $this->io = $this->getStyle($output, $input);
         $this->composer = $this->getComposerData();
-        $module_dir = $input->getArgument('module_name') ?: null;
+        $module_dir = $input->getArgument('module_name') ?? null;
         $options = array_keys($this->getSubtrees()) + [
             'root' => 'Composer project',
             'all' => 'All modules',

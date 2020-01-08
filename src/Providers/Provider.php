@@ -15,7 +15,7 @@ abstract class Provider implements ProviderContract
     /**
      * Register provider
      *
-     * @return ProviderInterface
+     * @return ProviderContract
      */
     public function register(): ProviderContract
     {
@@ -30,11 +30,11 @@ abstract class Provider implements ProviderContract
      *
      * @param array $commands
      *
-     * @return \self
+     * @return self
      */
     private function addCommandsToApplication(array $commands): self
     {
-        array_map(function ($class_name) {
+        array_map(function ($class_name): void {
             $this->phpbin->addComand($class_name);
         }, $commands);
         return $this;

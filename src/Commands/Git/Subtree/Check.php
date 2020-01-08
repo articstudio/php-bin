@@ -38,7 +38,7 @@ class Check extends PhpBinCommand
         $subtrees_composer = array_keys($this->getSubtrees());
         [, $subtrees_git, ,  ] = $this->callShell($cmd_subtrees_git, true);
 
-        $subtrees_git = array_filter(explode("\n", $subtrees_git), static function ($value) {
+        $subtrees_git = array_filter(explode("\n", $subtrees_git), static function ($value): bool {
             return $value !== '';
         });
 
@@ -59,12 +59,10 @@ class Check extends PhpBinCommand
         return $this->exit($output, 0);
     }
 
-    private function writeSubtreeInfo(array $subtree)
+    private function writeSubtreeInfo(array $subtree): void
     {
-        if (isset($subtree)) {
-            foreach ($subtree as $name) {
-                $this->io->writeln($name);
-            }
+        foreach ($subtree as $name) {
+            $this->io->writeln($name);
         }
     }
 }

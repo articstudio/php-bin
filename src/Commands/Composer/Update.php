@@ -40,7 +40,7 @@ class Update extends Command
         $this->io       = $this->getStyle($output, $input);
         $this->composer = $this->getComposerData();
         $this->versions = array_merge($this->composer['require-dev'], $this->composer['require']);
-        $module_dir     = $input->getArgument('module_name') ?: null;
+        $module_dir     = $input->getArgument('module_name') ?? null;
         $options        = array_keys($this->getSubtrees()) + ['all' => 'All modules'];
         $option         = $module_dir === null ? $this->selectPackageMenu(
             "Update packages versions",
@@ -55,7 +55,7 @@ class Update extends Command
         $modules = $module_dir === null ? $this->getModulesByOption($option) : [$module_dir];
 
         foreach ($modules as $module_name) {
-            array_map(function ($name) {
+            array_map(function ($name): void {
                 $this->overrideAllDependenciesVersions($name);
             }, $this->getComposerJson($module_name));
         }
@@ -68,7 +68,7 @@ class Update extends Command
         $result = [];
         foreach (array_keys($obj) as $package) {
             if (key_exists($package, $this->versions)) {
-                $result[$package] = $this->versions[$package] ?: $obj[$package];
+                $result[$package] = $this->versions[$package] ?? $obj[$package];
                 $symbol           = $this->versions[$package] === $obj[$package] ? '=' : '+';
                 $symbol === '+' ? $this->io->writeln("<info> + " . $package . "@" . $result[$package] . "</info>")
                     : $this->io->writeln(" = " . $package . "@" . $result[$package]);

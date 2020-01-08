@@ -34,7 +34,7 @@ class Push extends Command
         $repositories = $this->getSubtrees();
         $this->io     = $this->getStyle($output, $input);
 
-        $package_names = $input->getArgument('package_name') ?: [];
+        $package_names = $input->getArgument('package_name') ?? [];
 
         if (count($package_names) < 1) {
             $menu_options = array_keys($repositories) + [
@@ -70,7 +70,7 @@ class Push extends Command
         ];
 
         foreach ($repositories as $repo_package => $repo_url) {
-            if (count($package_names) > 0 && ! in_array($repo_package, $package_names)) {
+            if (count($package_names) > 0 && ! in_array($repo_package, $package_names, true)) {
                 $result['skipped'][] = $repo_package;
                 continue;
             }

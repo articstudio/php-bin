@@ -18,7 +18,7 @@ trait HasOutput
      * Throw error to console
      *
      * @param string $message
-     * @param array|null $trace
+     * @param string|null $trace
      * @param int $exitCode
      * @param bool $forceExit
      */
@@ -31,7 +31,7 @@ trait HasOutput
     ) {
         $io = $this->getStyle($output);
         $io->error($message);
-        if ($trace) {
+        if ((bool) $trace) {
             $io->text($trace);
         }
         return $this->exit($output, $exitCode, $forceExit);

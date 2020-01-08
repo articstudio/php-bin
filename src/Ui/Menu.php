@@ -32,6 +32,13 @@ class Menu extends CliMenuBuilder
     protected $client;
 
     /**
+     * Menu option result
+     *
+     * @var mixed
+     */
+    protected $result;
+
+    /**
      * Menu constructor
      *
      * @param string $title
@@ -40,11 +47,11 @@ class Menu extends CliMenuBuilder
     public function __construct($title, array $options)
     {
         parent::__construct();
-        $this->addLineBreak(static::$lineBreak)
+        $this->addOptions($options)
+            ->addLineBreak(static::$lineBreak)
             ->setTitleSeparator(static::$titleSeparator)
             ->setMarginAuto()
-            ->setTitle($title)
-            ->addOptions($options);
+            ->setTitle($title);
     }
 
     /**
@@ -52,12 +59,12 @@ class Menu extends CliMenuBuilder
      *
      * @param array $options
      *
-     * @return \self
+     * @return self
      */
     public function addOptions(array $options): self
     {
 
-        array_walk($options, function (string $label, $value) {
+        array_walk($options, function (string $label, $value): void {
             $this->addOption($value, $label);
         });
         return $this;
@@ -66,13 +73,13 @@ class Menu extends CliMenuBuilder
     /**
      * Add option
      *
-     * @param type $value
+     * @param mixed $value
      * @param string $label
      * @param callable|null $callback
      * @param bool $showItemExtra
      * @param bool $disabled
      *
-     * @return \self
+     * @return self
      */
     public function addOption(
         $value,
@@ -81,7 +88,7 @@ class Menu extends CliMenuBuilder
         bool $showItemExtra = false,
         bool $disabled = false
     ): self {
-        return $this->addMenuItem(
+        $this->addMenuItem(
             new MenuOption(
                 $this,
                 $value,
@@ -91,6 +98,7 @@ class Menu extends CliMenuBuilder
                 $disabled
             )
         );
+        return $this;
     }
 
     /**
@@ -110,7 +118,7 @@ class Menu extends CliMenuBuilder
      *
      * @param mixed $result
      *
-     * @return \self
+     * @return self
      */
     public function injectResult($result): self
     {

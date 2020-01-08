@@ -1,0 +1,15 @@
+includes:
+#    - vendor/ergebnis/phpstan-rules/rules.neon
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - vendor/thecodingmachine/phpstan-strict-rules/phpstan-strict-rules.neon
+
+parameters:
+    level: 5
+    paths:
+        - bin
+        - src
+        - test
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        - '#Constant PHPBIN_COMPOSER_AUTOLOAD not found.#'
+        - '#In method "Articstudio\\PhpBin\\Application::exec", caught "Exception" must be rethrown.#'
