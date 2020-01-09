@@ -15,12 +15,20 @@ executors:
     docker:
       - image: php:7.3
     working_directory: ~/repo_php_7_3
+  "php-7-4":
+    docker:
+      - image: php:7.4
+    working_directory: ~/repo_php_7_4
 
 aliases:
   - &composer_7_3_cache_key
     composer-7.3-{{ checksum "composer.lock" }}
   - &wd_7_3
     ~/repo_php_7_3
+  - &composer_7_4_cache_key
+    composer-7.4-{{ checksum "composer.lock" }}
+  - &wd_7_4
+    ~/repo_php_7_4
   - &ignore_non_dev_branches
     filters:
       tags:
@@ -57,14 +65,40 @@ jobs:
       - attach_workspace:
           at: *wd_7_3
       - run: php ./bin/phpbin php:lint
+      
+  prepare_7_4:
+    executor: "php-7-4"
+    steps:
+      - checkout
+      - "system-dependencies"
+      - restore_cache:
+          key: *composer_7_4_cache_key
+      - run: composer install --no-progress
+      - save_cache:
+          key: *composer_7_4_cache_key
+          paths:
+            - vendor/
+      - persist_to_workspace:
+          root: *wd_7_4
+          paths:
+            - ./*
 
-  code_checks:
-    executor: "php-7-3"
+  test_7_4:
+    executor: "php-7-4"
     steps:
       - checkout
       - "system-dependencies"
       - attach_workspace:
-          at: *wd_7_3
+          at: *wd_7_4
+      - run: php ./bin/phpbin php:lint
+
+  code_checks:
+    executor: "php-7-4"
+    steps:
+      - checkout
+      - "system-dependencies"
+      - attach_workspace:
+          at: *wd_7_4
       - run: php ./bin/phpbin php:style
       - run: php ./bin/phpbin php:metrics
       - store_artifacts:
@@ -83,11 +117,17 @@ workflows:
           requires:
             - prepare_7_3
           <<: *ignore_non_dev_branches
+      - prepare_7_4:
+          <<: *ignore_non_dev_branches
+      - test_7_4:
+          requires:
+            - prepare_7_4
+          <<: *ignore_non_dev_branches
   code_quality:
     jobs:
-      - prepare_7_3:
+      - prepare_7_4:
           <<: *ignore_non_dev_branches
       - code_checks:
           requires:
-            - prepare_7_3
+            - prepare_7_4
           <<: *ignore_non_dev_branches
