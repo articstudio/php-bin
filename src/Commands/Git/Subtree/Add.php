@@ -34,7 +34,7 @@ class Add extends Command
     {
         $packages           = $this->getSubtrees();
         $this->io           = $this->getStyle($output, $input);
-        $input_package_name = $input->getArgument('package_name') ?: null;
+        $input_package_name = $input->getArgument('package_name') ?? null;
         $input_repository   = null;
         $input_store        = null;
         $isMenu             = false;

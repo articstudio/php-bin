@@ -24,7 +24,7 @@ final class Application
     /**
      * Singleton self instance
      *
-     * @var \self
+     * @var self
      */
     private static $instance;
 
@@ -53,12 +53,16 @@ final class Application
 
     /**
      * Execution
+     *
+     * @return void
+     *
+     * @throws \Exception
      */
-    public static function exec()
+    public static function exec(): void
     {
         try {
-            if (self::getInstance()) {
-                throw new \Exception('Application is alredy executed.');
+            if ((bool) self::getInstance()) {
+                throw new \RuntimeException('Application is alredy executed.');
             }
             $instance = new self(
                 new SymfonyConsole('phpbin', self::$version)
@@ -74,7 +78,7 @@ final class Application
     /**
      * Singleton constructor
      *
-     * @return \self|null
+     * @return self|null
      */
     public static function getInstance(): ?self
     {
@@ -84,7 +88,7 @@ final class Application
     /**
      * Prepare console application
      *
-     * @return \self
+     * @return self
      */
     private function prepare(): self
     {
@@ -110,7 +114,7 @@ final class Application
      *
      * @return string
      */
-    public function getVersion()
+    public function getVersion(): string
     {
         return self::$version;
     }

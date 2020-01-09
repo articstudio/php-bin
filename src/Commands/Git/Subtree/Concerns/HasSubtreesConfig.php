@@ -53,7 +53,7 @@ trait HasSubtreesConfig
         [$exit_code, $output, $exit_code_txt, $error] = $this->callShell($cmd, false);
 
         if ($exit_code === 1) {
-            throw new \Articstudio\PhpBin\Commands\Git\Subtree\Concerns\PhpBinException('Error commit ' . $message);
+            throw new \Articstudio\PhpBin\PhpBinException('Error commit ' . $message);
         }
         $error_msg = $exit_code_txt . "\n" . $error;
 

@@ -30,7 +30,7 @@ trait CanRegisterCommandsAndProviders {
     /**
      * Register available commands
      *
-     * @return \self
+     * @return self
      */
     protected function registerCommands(): self
     {
@@ -38,7 +38,7 @@ trait CanRegisterCommandsAndProviders {
             $this->getCommands(),
             ($this->composer_settings['commands'] ?? [])
         );
-        array_map(function ($class_name) {
+        array_map(function ($class_name): void {
             $this->resgiterCommand($class_name);
         }, $commands);
         return $this;
@@ -65,7 +65,7 @@ trait CanRegisterCommandsAndProviders {
     /**
      * Register default command
      *
-     * @return \self
+     * @return self
      */
     private function registerDefaultCommand(): self
     {
@@ -79,7 +79,7 @@ trait CanRegisterCommandsAndProviders {
     /**
      * Register available providers
      *
-     * @return \self
+     * @return self
      */
     private function registerProviders(): self
     {
@@ -87,7 +87,7 @@ trait CanRegisterCommandsAndProviders {
             $this->providers,
             ($this->composer_settings['providers'] ?? [])
         );
-        array_map(function ($class_name) {
+        array_map(function ($class_name): void {
             $this->resgiterProvider($class_name);
         }, $commands);
         return $this;

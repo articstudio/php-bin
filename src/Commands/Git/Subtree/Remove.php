@@ -33,7 +33,7 @@ class Remove extends Command {
         $this->io = $this->getStyle($output, $input);
         $repositories = $this->getSubtrees();
         $input_store = null;
-        $package_names = $input->getArgument('package_name') ?: [];
+        $package_names = $input->getArgument('package_name') ?? [];
 
         if (count($package_names) < 1) {
             $menu_options = array_keys($repositories) + [
@@ -84,7 +84,7 @@ class Remove extends Command {
         ];
 
         foreach (array_keys($repositories) as $repo_package) {
-            if (count($package_names) > 0 && ! in_array($repo_package, $package_names)) {
+            if (count($package_names) > 0 && ! in_array($repo_package, $package_names, true)) {
                 $result['skipped'][] = $repo_package;
                 continue;
             }

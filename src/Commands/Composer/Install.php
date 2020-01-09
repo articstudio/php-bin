@@ -35,9 +35,9 @@ class Install extends PhpBinCommand {
         $modules = [];
         $this->io = $this->getStyle($output, $input);
         $composer = $this->getComposerData();
-        $input_package_name = $input->getArgument('package_name') ?: null;
-        $input_module_name = $input->getArgument('module_name') ?: null;
-        $env = $input->getArgument('envoirment') ?: null;
+        $input_package_name = $input->getArgument('package_name') ?? null;
+        $input_module_name = $input->getArgument('module_name') ?? null;
+        $env = $input->getArgument('envoirment') ?? null;
         $composer_dir = $this->getComposerPath();
 
         if ($input_package_name === null || $input_module_name === null) {
@@ -75,7 +75,7 @@ class Install extends PhpBinCommand {
     }
 
     private function requireDevPackage($version, $input_package_name) {
-        $version = $version ?: $this->callRequireDevPackage($version, $input_package_name);
+        $version = $version ?? $this->callRequireDevPackage($version, $input_package_name);
 
         if (! $version) {
             try {

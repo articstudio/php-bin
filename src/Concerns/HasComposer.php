@@ -37,7 +37,7 @@ trait HasComposer {
     /**
      * Discover composer.json
      *
-     * @return \self
+     * @return self
      */
     protected function discoverComposer(): self
     {
@@ -59,7 +59,7 @@ trait HasComposer {
     /**
      * Parse settings
      *
-     * @return \self
+     * @return self
      */
     protected function parseComposerSettings(): self
     {

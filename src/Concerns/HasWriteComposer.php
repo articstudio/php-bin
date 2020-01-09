@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Articstudio\PhpBin\Concerns;
 
 use Articstudio\PhpBin\Application;
-use Localheinz\Json\Printer\Printer;
+use Ergebnis\Json\Printer\Printer;
 
 trait HasWriteComposer
 {
@@ -36,7 +36,7 @@ trait HasWriteComposer
         $current_subtrees = $config['config']['subtree'];
 
         foreach (array_keys($current_subtrees) as $current_subtree) {
-            if (in_array($current_subtree, $itemsToRemove)) {
+            if (in_array($current_subtree, $itemsToRemove, true)) {
                 unset($current_subtrees[$current_subtree]);
             }
         }

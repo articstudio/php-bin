@@ -72,11 +72,12 @@ class MenuOption extends SelectableItem
 
     public static function getDefaultCallback(Menu $builder)
     {
-        return static function () use ($builder) {
-            $builder->injectResult(
-                $builder->getMenu()->getSelectedItem()->getValue()
-            );
-            $builder->getMenu()->close();
+        return static function () use ($builder): void {
+            $option = $builder->getMenu()->getSelectedItem();
+            $result = $option instanceof self
+                    ? $option->getValue()
+                    : $option->getText();
+            $builder->injectResult($result)->getMenu()->close();
         };
     }
 }

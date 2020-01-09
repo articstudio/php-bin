@@ -37,8 +37,8 @@ class Version extends Command
         $versions_groups = $this->getVersionsGroups();
         $this->io     = $this->getStyle($output, $input);
 
-        $package_names = $input->getArgument('package_name') ?: [];
-        $version = $input->getOption('tag') ?: null;
+        $package_names = $input->getArgument('package_name') ?? [];
+        $version = $input->getOption('tag') ?? null;
 
         if (count($package_names) < 1) {
             $menu_options = array_keys($repositories) + [
@@ -89,7 +89,7 @@ class Version extends Command
         ];
 
         foreach ($repositories as $repo_package => $repo_url) {
-            if (count($package_names) < 1 || ! in_array($repo_package, $package_names)) {
+            if (count($package_names) < 1 || ! in_array($repo_package, $package_names, true)) {
                 $result['skipped'][] = $repo_package;
                 continue;
             }
